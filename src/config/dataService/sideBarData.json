@@ -1,0 +1,37 @@
+[
+    {
+      "title": "Dashboard",
+      "itemId": "/admin",
+      "elemBefore": "() => <Icon name='inbox' />"
+    },
+    {
+      "title": "Purchase",
+      "itemId": 0,
+      "elemBefore": "() => <Icon name='users' />",
+      "subNav": [
+        {
+          "title": "New",
+          "itemId": "/purchase/add"
+        },
+        {
+          "title": "All",
+          "itemId": "/purchase"
+        }
+      ]
+    },
+    {
+      "title": "Sale",
+      "itemId": 1,
+      "elemBefore": "() => <Icon name='users' />",
+      "subNav": [
+        {
+          "title": "New",
+          "itemId": "/sale/add"
+        },
+        {
+          "title": "All",
+          "itemId": "/sale/all"
+        }
+      ]
+    }
+  ]

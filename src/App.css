@@ -1,0 +1,79 @@
+ol,
+ul {
+  padding-left: 0;
+}
+.btn,
+.btn:focus,
+.btn:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+/* Custom Table Css */
+.custom-table thead th {
+  background-color: #303f9f;
+  color: #fff;
+}
+.table > :not(:first-child) {
+  border-top: 1px solid #ddd;
+}
+
+/* React Data Table  */
+.gzECfY {
+  padding: 0 !important;
+}
+.rdt_TableCol,
+.rdt_TableHeader {
+  background-color: #303f9f;
+  color: #fff;
+  font-weight: 800;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-left: 1px solid #fff;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.rdt_TableCol:last-child,
+.rdt_TableHeader:last-child {
+  width: 100%;
+  max-width: 150px;
+  min-width: 150px;
+}
+.rdt_TableCell {
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+.rdt_TableCell:first-child {
+  border-left: 1px solid rgba(0, 0, 0, 0.12);
+}
+.rdt_TableCell:last-child {
+  width: 100%;
+  max-width: 150px;
+  min-width: 150px;
+}
+
+.rdt_TableCell .btn {
+  position: relative;
+}
+.rdt_TableCell .btn::after {
+  display: inline-block;
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+.modal-header {
+  background-color: #303f9f;
+  color: #fff;
+}
+/* bootstrap btn */
+.btn-close {
+  opacity: 1;
+  filter: brightness(0) invert(1);
+}
+.btn-close:focus {
+  box-shadow: none;
+  outline: none;
+}
+.bowUGI {
+  padding: 0px;
+}
