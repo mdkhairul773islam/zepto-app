@@ -9,7 +9,7 @@ function ProtectedRoute({ component: Component, ...restOfProps }) {
     <Route
       {...restOfProps}
       render={(props) =>
-        isLoggedin ? <Component {...props} /> : <Redirect to="/" />
+        isLoggedin ? <Component {...props} /> : <Redirect to="/login" />
       }
     />
   );
