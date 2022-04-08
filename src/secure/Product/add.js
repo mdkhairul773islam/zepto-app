@@ -49,7 +49,7 @@ function Add(props) {
   });
 
   useEffect(() => {
-    document.title = "Add New Product | React Dashboard";
+    document.title = "Add New Product | Admin Dashboard";
     dispatch(category());
     dispatch(brand());
     dispatch(unit());

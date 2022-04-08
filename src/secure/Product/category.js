@@ -79,7 +79,7 @@ function Category(props) {
     };
 
     useEffect(() => {
-        document.title = "Category | React Dashboard";
+        document.title = "Category | Admin Dashboard";
         getCategory(currentPage, perPage);
     }, [currentPage, perPage]);
 

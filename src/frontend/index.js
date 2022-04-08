@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 
 import "../dist/frontend/css/master.css";
 import "../dist/frontend/css/home.css";
 
-export default function index() {
+export default function Index() {
+  useLayoutEffect(() => {
+    document.title = "EURA ASIA SUPPLIES | E-Comarce Site";
+  }, []);
+
   return (
     <>
       <nav className="contact_nav">

@@ -23,13 +23,13 @@ const AdminWraper = (props, { children }) => {
   useEffect(() => {
     localStorage.setItem("aside_close", isAside);
     localStorage.setItem("dark-mode", dark);
-    document.title = "React Dashboard";
+    document.title = "Admin Dashboard";
   }, [isAside, dark]);
 
   useEffect(() => {
     const loadData = async () => {
       // Wait for 100 ml second
-      await new Promise((r) => setTimeout(r, 100));
+      await new Promise((r) => setTimeout(r, 60));
       // Toggle loading state
       setLoading((loading) => !loading);
     };

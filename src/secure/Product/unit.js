@@ -76,7 +76,7 @@ function Unit(props) {
   };
 
   useEffect(() => {
-    document.title = "Unit | React Dashboard";
+    document.title = "Unit | Admin Dashboard";
     getUnit(currentPage, perPage);
   }, [currentPage, perPage]);
 

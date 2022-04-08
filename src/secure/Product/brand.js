@@ -76,7 +76,7 @@ function Brand(props) {
 
 
     useEffect(() => {
-        document.title = "Brand | React Dashboard";
+        document.title = "Brand | Admin Dashboard";
         getBrand(currentPage, perPage);
     }, [currentPage, perPage]);
 

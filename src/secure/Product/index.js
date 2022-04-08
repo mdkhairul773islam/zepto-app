@@ -35,7 +35,7 @@ function Index(props) {
   }, [totalDataRows]);
 
   useEffect(() => {
-    document.title = "Product List | React Dashboard";
+    document.title = "Product List | Admin Dashboard";
     dispatch(productList(currentPage, perPage));
 
   }, [currentPage, dispatch, perPage]);
