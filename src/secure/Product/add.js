@@ -187,6 +187,13 @@ function Add(props) {
                   </Form.Group>
 
                   <Form.Group as={Row} className="mb-2">
+                    {/* <Col md={4} lg={4} xl={4} xxl={4} xs={12}>
+                      <Form.Label>
+                        Image <span className="text-danger">*</span>{" "}
+                      </Form.Label>
+                      <Form.Control type="file" {...register("image", { required: true })} size="sm" />
+                    </Col>
+                     */}
                     <Col className="mt-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <FormCheck.Label className="me-2 mt-4">
                         Status
