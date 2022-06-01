@@ -26,6 +26,7 @@ const login = (data, addToast) => {
       }
     } catch (err) {
       dispatch(loginErr(err));
+      addToast(err.message, { appearance: "error" });
     }
   };
 };
