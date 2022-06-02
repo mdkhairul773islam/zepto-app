@@ -74,6 +74,7 @@ function Add(props) {
   const handleUnitChange = (e) => {
     setValue("unit_id", e.value);
   };
+
   const onSubmit = (data, e) => {
     const {
       name,
@@ -84,16 +85,22 @@ function Add(props) {
       purchase_price,
       file,
     } = data;
+    let image = [];
+    for (let i = 0; i < file.length; i++) {
+      image.push(data.file[i]);
+    }
+    let FromData = new FormData();
+    FromData.append("name", name);
+    FromData.append("category_id", category_id);
+    FromData.append("brand_id", brand_id);
+    FromData.append("unit_id", unit_id);
+    FromData.append("purchase_price", purchase_price);
+    FromData.append("sale_price", sale_price);
+    image.forEach((element, i) => {
+      FromData.append("photo", element);
+    });
 
-    const formData = new FormData();
-    formData.append("file", file[0]);
-    formData.append("name", name);
-    formData.append("category_id", category_id);
-    formData.append("brand_id", brand_id);
-    formData.append("unit_id", unit_id);
-    formData.append("purchase_price", purchase_price);
-    formData.append("sale_price", sale_price);
-    dispatch(product(formData, addToast, history));
+    dispatch(product(FromData, addToast, history));
     //e.target.reset();
   };
 
@@ -113,7 +120,6 @@ function Add(props) {
               </Card.Header>
               <Card.Body>
                 <Form
-                  method="post"
                   onSubmit={handleSubmit(onSubmit)}
                   encType="multipart/form-data"
                 >
@@ -163,6 +169,7 @@ function Add(props) {
                       ></Select>
                     </Col>
                   </Form.Group>
+
                   <Form.Group as={Row} className="mb-2">
                     <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <Form.Label>Purchase Price</Form.Label>
@@ -201,20 +208,21 @@ function Add(props) {
                       ></Select>
                     </Col>
                   </Form.Group>
+
                   <Form.Group as={Row} className="mb-2">
                     <Col md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <Form.Label>
                         Image <span className="text-danger">*</span>{" "}
                       </Form.Label>
-
                       <Form.Control
                         type="file"
                         {...register("file", { required: true })}
+                        accept=".xlsx,.xls,image/*"
                         size="sm"
                       />
                     </Col>
 
-                    <Col className="mt-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
+                    {/* <Col className="mt-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <FormCheck.Label className="me-2 mt-4">
                         Status
                       </FormCheck.Label>
@@ -235,7 +243,7 @@ function Add(props) {
                         id="two"
                         {...register("status")}
                       />
-                    </Col>
+                    </Col> */}
                   </Form.Group>
                   <hr />
                   <Button
