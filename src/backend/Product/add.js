@@ -80,8 +80,12 @@ function Add(props) {
   };
 
   const onSubmit = (data, e) => {
-    console.log('data', data);
-    dispatch(product(data, addToast, history));
+    const formData = new FormData();
+    console.log('Dad', data.photo[0])
+    formData.append("name", data.name);
+    formData.append("photo", data.photo[0]);
+
+    dispatch(product(formData, addToast, history));
     // e.target.reset();
   };
 
@@ -100,7 +104,7 @@ function Add(props) {
                 Add New Product
               </Card.Header>
               <Card.Body>
-                <Form onSubmit={handleSubmit(onSubmit)} enctype="multipart/form-data">
+                <Form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
                   <Form.Group as={Row} className="mb-2">
                     <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <Form.Label>
