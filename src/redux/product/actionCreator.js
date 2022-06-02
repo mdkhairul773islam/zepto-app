@@ -3,12 +3,11 @@ import { DataService } from "../../config/dataService/dataService";
 const { productBegin, productSuccess, productGet, productErr } = actions;
 
 const product = (data, addToast, history) => {
-  console.log('fromData', data);
   return async (dispatch) => {
     try {
       dispatch(productBegin());
       const res = await DataService.post("product-store", data);
-      console.log('dataREs', res.data)
+      console.log("getRe", res.data);
       if (res.data.success) {
         addToast(res.data.success, { appearance: "success" });
         history.push("/product/all");
@@ -28,7 +27,9 @@ const productList = (currentPage = 1, perPage = 10) => {
   return async (dispatch) => {
     try {
       dispatch(productBegin());
-      const res = await DataService.get(`product?page=${currentPage}&per_page=${perPage}&delay=1`);
+      const res = await DataService.get(
+        `product?page=${currentPage}&per_page=${perPage}&delay=1`
+      );
       dispatch(productSuccess(res.data));
     } catch (err) {
       dispatch(productErr(err));
@@ -99,4 +100,11 @@ const productDelete = (id, addToast) => {
   };
 };
 
-export { product, productList, productOptionList, productEdit, productUpdate, productDelete };
+export {
+  product,
+  productList,
+  productOptionList,
+  productEdit,
+  productUpdate,
+  productDelete,
+};

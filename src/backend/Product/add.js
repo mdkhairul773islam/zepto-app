@@ -22,6 +22,7 @@ import { category } from "../../redux/category/actionCreator";
 import { brand } from "../../redux/brand/actionCreator";
 import { unit } from "../../redux/unit/actionCreator";
 import { product } from "../../redux/product/actionCreator";
+import { de } from "date-fns/locale";
 
 function Add(props) {
   const { addToast } = useToasts();
@@ -55,12 +56,7 @@ function Add(props) {
     dispatch(unit());
   }, [dispatch]);
 
-  const {
-    setValue,
-    register,
-    handleSubmit,
-    formState
-  } = useForm({
+  const { setValue, register, handleSubmit, formState } = useForm({
     defaultValues: {
       purchase_price: "0",
       sale_price: "0",
@@ -80,13 +76,32 @@ function Add(props) {
   };
 
   const onSubmit = (data, e) => {
-    const formData = new FormData();
-    console.log('Dad', data.photo[0])
-    formData.append("name", data.name);
-    formData.append("photo", data.photo[0]);
+    const {
+      name,
+      category_id,
+      brand_id,
+      unit_id,
+      sale_price,
+      purchase_price,
+      file,
+    } = data;
+    let image = [];
+    for (let i = 0; i < file.length; i++) {
+      image.push(data.file[i]);
+    }
+    let FromData = new FormData();
+    FromData.append("name", name);
+    FromData.append("category_id", category_id);
+    FromData.append("brand_id", brand_id);
+    FromData.append("unit_id", unit_id);
+    FromData.append("purchase_price", purchase_price);
+    FromData.append("sale_price", sale_price);
+    image.forEach((element, i) => {
+      FromData.append("photo", element);
+    });
 
-    dispatch(product(formData, addToast, history));
-    // e.target.reset();
+    dispatch(product(FromData, addToast, history));
+    //e.target.reset();
   };
 
   return (
@@ -104,7 +119,10 @@ function Add(props) {
                 Add New Product
               </Card.Header>
               <Card.Body>
-                <Form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
+                <Form
+                  onSubmit={handleSubmit(onSubmit)}
+                  encType="multipart/form-data"
+                >
                   <Form.Group as={Row} className="mb-2">
                     <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <Form.Label>
@@ -196,10 +214,15 @@ function Add(props) {
                       <Form.Label>
                         Image <span className="text-danger">*</span>{" "}
                       </Form.Label>
-                      <Form.Control type="file" {...register("photo", { required: true })} size="sm" />
+                      <Form.Control
+                        type="file"
+                        {...register("file", { required: true })}
+                        accept=".xlsx,.xls,image/*"
+                        size="sm"
+                      />
                     </Col>
 
-                    <Col className="mt-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
+                    {/* <Col className="mt-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <FormCheck.Label className="me-2 mt-4">
                         Status
                       </FormCheck.Label>
@@ -220,7 +243,7 @@ function Add(props) {
                         id="two"
                         {...register("status")}
                       />
-                    </Col>
+                    </Col> */}
                   </Form.Group>
                   <hr />
                   <Button
@@ -236,8 +259,8 @@ function Add(props) {
             </Card>
           </Col>
         </Row>
-      </Container >
-    </AdminWraper >
+      </Container>
+    </AdminWraper>
   );
 }
 
