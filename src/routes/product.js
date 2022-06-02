@@ -1,13 +1,13 @@
 import React from "react";
 import ProtectedRoute from "../components/ProtectedRoute";
 
-import Unit from "../secure/Product/unit";
-import Brand from "../secure/Product/brand";
-import Category from "../secure/Product/category";
-import AddProduct from "../secure/Product/add";
-import AllProduct from "../secure/Product/index";
-import ProductDetails from "../secure/Product/show";
-import ProductEdit from "../secure/Product/edit";
+import Unit from "../backend/Product/unit";
+import Brand from "../backend/Product/brand";
+import Category from "../backend/Product/category";
+import AddProduct from "../backend/Product/add";
+import AllProduct from "../backend/Product/index";
+import ProductDetails from "../backend/Product/show";
+import ProductEdit from "../backend/Product/edit";
 
 const Product = [
     <ProtectedRoute path="/product/all" component={AllProduct} key="all" />,

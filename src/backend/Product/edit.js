@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import AdminWraper from "../../components/layouts/AdminWraper";
-import Navbar from "../../secure/Product/navbar";
+import Navbar from "../../backend/Product/navbar";
 import {
   Container,
   Row,
@@ -14,16 +14,18 @@ import {
 
 import { useToasts } from "react-toast-notifications";
 import { useForm } from "react-hook-form";
-import Select from "react-select";
-
 // use redux
 import { useDispatch, useSelector } from "react-redux";
 import { category } from "../../redux/category/actionCreator";
 import { brand } from "../../redux/brand/actionCreator";
 import { unit } from "../../redux/unit/actionCreator";
-import { product } from "../../redux/product/actionCreator";
+import { productEdit, productUpdate } from "../../redux/product/actionCreator";
 
-function Add(props) {
+function Edit(props) {
+  const [getCategory, setGetCategory] = useState();
+  const [getBrand, setGetBrand] = useState();
+  const [getUnit, setGetUnit] = useState();
+
   const { addToast } = useToasts();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -32,6 +34,7 @@ function Add(props) {
   const categories = useSelector((state) => state.categoryReducer.categoryList);
   const brandItems = useSelector((state) => state.brandReducer.brandList);
   const units = useSelector((state) => state.unitReducer.unitList);
+  const getProduct = useSelector((state) => state.productReducer.product);
 
   const categoryList = categories.map((item) => {
     const { name: label, id: value, ...rest } = item;
@@ -48,19 +51,16 @@ function Add(props) {
     return { value, label, ...rest };
   });
 
+  const id = props.match.params.id;
+
   useEffect(() => {
-    document.title = "Add New Product | Admin Dashboard";
+    dispatch(productEdit(id));
     dispatch(category());
     dispatch(brand());
     dispatch(unit());
-  }, [dispatch]);
+  }, [dispatch, id]);
 
-  const {
-    setValue,
-    register,
-    handleSubmit,
-    formState
-  } = useForm({
+  const { setValue, register, handleSubmit, reset } = useForm({
     defaultValues: {
       purchase_price: "0",
       sale_price: "0",
@@ -68,21 +68,33 @@ function Add(props) {
   });
 
   const handleCategoryChange = (e) => {
-    setValue("category_id", e.value);
+    setValue("getProduct.category_id", e.target.value);
+    setGetCategory(e.target.value);
   };
 
   const handleBrandChange = (e) => {
-    setValue("brand_id", e.value);
+    setValue("getProduct.brand_id", e.target.value);
+    setGetBrand(e.target.value);
   };
 
   const handleUnitChange = (e) => {
-    setValue("unit_id", e.value);
+    setValue("getProduct.unit_id", e.target.value);
+    setGetUnit(e.target.value);
   };
 
   const onSubmit = (data, e) => {
-    dispatch(product(data, addToast, history));
-    e.target.reset();
+    dispatch(productUpdate(data.getProduct, addToast, history));
   };
+
+  useEffect(() => {
+    document.title = "Edit Product | Admin Dashboard";
+    setGetCategory(getProduct.category_id);
+    setGetBrand(getProduct.brand_id);
+    setGetUnit(getProduct.unit_id);
+    reset({
+      getProduct,
+    });
+  }, [getProduct, reset]);
 
   return (
     <AdminWraper menuOpen="product">
@@ -96,7 +108,7 @@ function Add(props) {
           <Col>
             <Card>
               <Card.Header as="h4" className="fw-bold">
-                Add New Product
+                Edit Product
               </Card.Header>
               <Card.Body>
                 <Form onSubmit={handleSubmit(onSubmit)}>
@@ -107,9 +119,8 @@ function Add(props) {
                       </Form.Label>
                       <Form.Control
                         type="text"
-                        {...register("name", { required: true })}
+                        {...register("getProduct.name", { required: false })}
                         placeholder="Product Name"
-                        required
                       />
                     </Col>
 
@@ -117,33 +128,46 @@ function Add(props) {
                       <Form.Label>
                         Category <span className="text-danger">*</span>{" "}
                       </Form.Label>
-                      <Select
+                      <Form.Select
+                        aria-label="Chose Category"
+                        value={getCategory == null ? "" : getCategory}
                         onChange={handleCategoryChange}
                         ref={(e) => {
-                          register("category_id", { required: true });
+                          register("getProduct.category_id", {
+                            required: false,
+                          });
                         }}
-                        options={categoryList}
-                        isSearchable={true}
-                        placeholder="Chose Category"
-                        required
-                      ></Select>
+                      >
+                        <option>Chose Category</option>
+                        {categoryList.map(({ value, label }, index) => (
+                          <option key={index} value={value}>
+                            {label}
+                          </option>
+                        ))}
+                      </Form.Select>
                     </Col>
 
                     <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <Form.Label>
                         Brand <span className="text-danger">*</span>{" "}
                       </Form.Label>
-                      <Select
+                      <Form.Select
+                        aria-label="Chose Brand"
+                        value={getBrand == null ? "" : getBrand}
                         onChange={handleBrandChange}
                         ref={(e) => {
-                          register("brand_id", { required: true });
+                          register("getProduct.brand_id", {
+                            required: false,
+                          });
                         }}
-                        type="text"
-                        options={brandList}
-                        isSearchable={true}
-                        placeholder="Chose Brand"
-                        required
-                      ></Select>
+                      >
+                        <option>Chose Brand</option>
+                        {brandList.map(({ value, label }, index) => (
+                          <option key={index} value={value}>
+                            {label}
+                          </option>
+                        ))}
+                      </Form.Select>
                     </Col>
                   </Form.Group>
 
@@ -153,7 +177,9 @@ function Add(props) {
                       <Form.Control
                         type="number"
                         name="purchase_price"
-                        {...register("purchase_price", { required: true })}
+                        {...register("getProduct.purchase_price", {
+                          required: false,
+                        })}
                         placeholder="0.0"
                       />
                     </Col>
@@ -163,7 +189,9 @@ function Add(props) {
                       <Form.Control
                         type="number"
                         name="sale_price"
-                        {...register("sale_price", { required: true })}
+                        {...register("getProduct.sale_price", {
+                          required: false,
+                        })}
                         placeholder="0.0"
                       />
                     </Col>
@@ -172,28 +200,27 @@ function Add(props) {
                       <Form.Label>
                         Unit <span className="text-danger">*</span>{" "}
                       </Form.Label>
-                      <Select
+                      <Form.Select
+                        aria-label="Chose Unit"
+                        value={getUnit == null ? "" : getUnit}
                         onChange={handleUnitChange}
                         ref={(e) => {
-                          register("unit_id", { required: true });
+                          register("getProduct.unit_id", {
+                            required: false,
+                          });
                         }}
-                        type="text"
-                        options={unitList}
-                        isSearchable={true}
-                        placeholder="Chose Unit"
-                        required
-                      ></Select>
+                      >
+                        <option>Chose Unit</option>
+                        {unitList.map(({ value, label }, index) => (
+                          <option key={index} value={value}>
+                            {label}
+                          </option>
+                        ))}
+                      </Form.Select>
                     </Col>
                   </Form.Group>
 
                   <Form.Group as={Row} className="mb-2">
-                    {/* <Col md={4} lg={4} xl={4} xxl={4} xs={12}>
-                      <Form.Label>
-                        Image <span className="text-danger">*</span>{" "}
-                      </Form.Label>
-                      <Form.Control type="file" {...register("image", { required: true })} size="sm" />
-                    </Col>
-                     */}
                     <Col className="mt-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <FormCheck.Label className="me-2 mt-4">
                         Status
@@ -205,7 +232,7 @@ function Add(props) {
                         type="radio"
                         checked
                         id="one"
-                        {...register("status")}
+                        {...register("getProduct.status")}
                       />
                       <Form.Check
                         inline
@@ -213,17 +240,13 @@ function Add(props) {
                         label="Not Available"
                         type="radio"
                         id="two"
-                        {...register("status")}
+                        {...register("getProduct.status")}
                       />
                     </Col>
                   </Form.Group>
                   <hr />
-                  <Button
-                    disabled={formState.isSubmitting}
-                    variant="primary"
-                    type="submit"
-                  >
-                    Submit
+                  <Button variant="success" type="submit">
+                    Update
                   </Button>
                 </Form>
               </Card.Body>
@@ -236,4 +259,4 @@ function Add(props) {
   );
 }
 
-export default Add;
+export default Edit;

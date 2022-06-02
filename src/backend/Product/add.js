@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import AdminWraper from "../../components/layouts/AdminWraper";
-import Navbar from "../../secure/Product/navbar";
+import Navbar from "../../backend/Product/navbar";
 import {
   Container,
   Row,
@@ -14,18 +14,16 @@ import {
 
 import { useToasts } from "react-toast-notifications";
 import { useForm } from "react-hook-form";
+import Select from "react-select";
+
 // use redux
 import { useDispatch, useSelector } from "react-redux";
 import { category } from "../../redux/category/actionCreator";
 import { brand } from "../../redux/brand/actionCreator";
 import { unit } from "../../redux/unit/actionCreator";
-import { productEdit, productUpdate } from "../../redux/product/actionCreator";
+import { product } from "../../redux/product/actionCreator";
 
-function Edit(props) {
-  const [getCategory, setGetCategory] = useState();
-  const [getBrand, setGetBrand] = useState();
-  const [getUnit, setGetUnit] = useState();
-
+function Add(props) {
   const { addToast } = useToasts();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -34,7 +32,6 @@ function Edit(props) {
   const categories = useSelector((state) => state.categoryReducer.categoryList);
   const brandItems = useSelector((state) => state.brandReducer.brandList);
   const units = useSelector((state) => state.unitReducer.unitList);
-  const getProduct = useSelector((state) => state.productReducer.product);
 
   const categoryList = categories.map((item) => {
     const { name: label, id: value, ...rest } = item;
@@ -51,16 +48,19 @@ function Edit(props) {
     return { value, label, ...rest };
   });
 
-  const id = props.match.params.id;
-
   useEffect(() => {
-    dispatch(productEdit(id));
+    document.title = "Add New Product | Admin Dashboard";
     dispatch(category());
     dispatch(brand());
     dispatch(unit());
-  }, [dispatch, id]);
+  }, [dispatch]);
 
-  const { setValue, register, handleSubmit, reset } = useForm({
+  const {
+    setValue,
+    register,
+    handleSubmit,
+    formState
+  } = useForm({
     defaultValues: {
       purchase_price: "0",
       sale_price: "0",
@@ -68,33 +68,22 @@ function Edit(props) {
   });
 
   const handleCategoryChange = (e) => {
-    setValue("getProduct.category_id", e.target.value);
-    setGetCategory(e.target.value);
+    setValue("category_id", e.value);
   };
 
   const handleBrandChange = (e) => {
-    setValue("getProduct.brand_id", e.target.value);
-    setGetBrand(e.target.value);
+    setValue("brand_id", e.value);
   };
 
   const handleUnitChange = (e) => {
-    setValue("getProduct.unit_id", e.target.value);
-    setGetUnit(e.target.value);
+    setValue("unit_id", e.value);
   };
 
   const onSubmit = (data, e) => {
-    dispatch(productUpdate(data.getProduct, addToast, history));
+    console.log('data', data);
+    dispatch(product(data, addToast, history));
+    // e.target.reset();
   };
-
-  useEffect(() => {
-    document.title = "Edit Product | Admin Dashboard";
-    setGetCategory(getProduct.category_id);
-    setGetBrand(getProduct.brand_id);
-    setGetUnit(getProduct.unit_id);
-    reset({
-      getProduct,
-    });
-  }, [getProduct, reset]);
 
   return (
     <AdminWraper menuOpen="product">
@@ -108,10 +97,10 @@ function Edit(props) {
           <Col>
             <Card>
               <Card.Header as="h4" className="fw-bold">
-                Edit Product
+                Add New Product
               </Card.Header>
               <Card.Body>
-                <Form onSubmit={handleSubmit(onSubmit)}>
+                <Form onSubmit={handleSubmit(onSubmit)} enctype="multipart/form-data">
                   <Form.Group as={Row} className="mb-2">
                     <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <Form.Label>
@@ -119,8 +108,9 @@ function Edit(props) {
                       </Form.Label>
                       <Form.Control
                         type="text"
-                        {...register("getProduct.name", { required: false })}
+                        {...register("name", { required: true })}
                         placeholder="Product Name"
+                        required
                       />
                     </Col>
 
@@ -128,46 +118,33 @@ function Edit(props) {
                       <Form.Label>
                         Category <span className="text-danger">*</span>{" "}
                       </Form.Label>
-                      <Form.Select
-                        aria-label="Chose Category"
-                        value={getCategory == null ? "" : getCategory}
+                      <Select
                         onChange={handleCategoryChange}
                         ref={(e) => {
-                          register("getProduct.category_id", {
-                            required: false,
-                          });
+                          register("category_id", { required: true });
                         }}
-                      >
-                        <option>Chose Category</option>
-                        {categoryList.map(({ value, label }, index) => (
-                          <option key={index} value={value}>
-                            {label}
-                          </option>
-                        ))}
-                      </Form.Select>
+                        options={categoryList}
+                        isSearchable={true}
+                        placeholder="Chose Category"
+                        required
+                      ></Select>
                     </Col>
 
                     <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <Form.Label>
                         Brand <span className="text-danger">*</span>{" "}
                       </Form.Label>
-                      <Form.Select
-                        aria-label="Chose Brand"
-                        value={getBrand == null ? "" : getBrand}
+                      <Select
                         onChange={handleBrandChange}
                         ref={(e) => {
-                          register("getProduct.brand_id", {
-                            required: false,
-                          });
+                          register("brand_id", { required: true });
                         }}
-                      >
-                        <option>Chose Brand</option>
-                        {brandList.map(({ value, label }, index) => (
-                          <option key={index} value={value}>
-                            {label}
-                          </option>
-                        ))}
-                      </Form.Select>
+                        type="text"
+                        options={brandList}
+                        isSearchable={true}
+                        placeholder="Chose Brand"
+                        required
+                      ></Select>
                     </Col>
                   </Form.Group>
 
@@ -177,9 +154,7 @@ function Edit(props) {
                       <Form.Control
                         type="number"
                         name="purchase_price"
-                        {...register("getProduct.purchase_price", {
-                          required: false,
-                        })}
+                        {...register("purchase_price", { required: true })}
                         placeholder="0.0"
                       />
                     </Col>
@@ -189,9 +164,7 @@ function Edit(props) {
                       <Form.Control
                         type="number"
                         name="sale_price"
-                        {...register("getProduct.sale_price", {
-                          required: false,
-                        })}
+                        {...register("sale_price", { required: true })}
                         placeholder="0.0"
                       />
                     </Col>
@@ -200,27 +173,28 @@ function Edit(props) {
                       <Form.Label>
                         Unit <span className="text-danger">*</span>{" "}
                       </Form.Label>
-                      <Form.Select
-                        aria-label="Chose Unit"
-                        value={getUnit == null ? "" : getUnit}
+                      <Select
                         onChange={handleUnitChange}
                         ref={(e) => {
-                          register("getProduct.unit_id", {
-                            required: false,
-                          });
+                          register("unit_id", { required: true });
                         }}
-                      >
-                        <option>Chose Unit</option>
-                        {unitList.map(({ value, label }, index) => (
-                          <option key={index} value={value}>
-                            {label}
-                          </option>
-                        ))}
-                      </Form.Select>
+                        type="text"
+                        options={unitList}
+                        isSearchable={true}
+                        placeholder="Chose Unit"
+                        required
+                      ></Select>
                     </Col>
                   </Form.Group>
 
                   <Form.Group as={Row} className="mb-2">
+                    <Col md={4} lg={4} xl={4} xxl={4} xs={12}>
+                      <Form.Label>
+                        Image <span className="text-danger">*</span>{" "}
+                      </Form.Label>
+                      <Form.Control type="file" {...register("photo", { required: true })} size="sm" />
+                    </Col>
+
                     <Col className="mt-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <FormCheck.Label className="me-2 mt-4">
                         Status
@@ -232,7 +206,7 @@ function Edit(props) {
                         type="radio"
                         checked
                         id="one"
-                        {...register("getProduct.status")}
+                        {...register("status")}
                       />
                       <Form.Check
                         inline
@@ -240,13 +214,17 @@ function Edit(props) {
                         label="Not Available"
                         type="radio"
                         id="two"
-                        {...register("getProduct.status")}
+                        {...register("status")}
                       />
                     </Col>
                   </Form.Group>
                   <hr />
-                  <Button variant="success" type="submit">
-                    Update
+                  <Button
+                    disabled={formState.isSubmitting}
+                    variant="primary"
+                    type="submit"
+                  >
+                    Submit
                   </Button>
                 </Form>
               </Card.Body>
@@ -254,9 +232,9 @@ function Edit(props) {
             </Card>
           </Col>
         </Row>
-      </Container>
-    </AdminWraper>
+      </Container >
+    </AdminWraper >
   );
 }
 
-export default Edit;
+export default Add;

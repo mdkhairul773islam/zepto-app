@@ -6,6 +6,7 @@ const product = (data, addToast, history) => {
   return async (dispatch) => {
     try {
       dispatch(productBegin());
+      console.log('red', data);
       const res = await DataService.post("product-store", data);
       if (res.data.success) {
         addToast(res.data.success, { appearance: "success" });

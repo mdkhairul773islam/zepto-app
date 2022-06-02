@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-import SideBar from "../../secure/SideBar/SideBar";
-import TopHeader from "../../secure/TopHeader/TopHeader";
+import SideBar from "../../backend/SideBar/SideBar";
+import TopHeader from "../../backend/TopHeader/TopHeader";
 
 const AdminWraper = (props, { children }) => {
   const [loading, setLoading] = useState(true);

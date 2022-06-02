@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { useForm } from "react-hook-form";
 import AdminWraper from "../../components/layouts/AdminWraper";
-import Navbar from "../../secure/Product/navbar";
+import Navbar from "../../backend/Product/navbar";
 
 import { DataService } from "../../config/dataService/dataService";
 import DataTable from "../../components/DataTable/Table";

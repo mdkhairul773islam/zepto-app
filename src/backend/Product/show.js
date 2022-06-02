@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import AdminWraper from "../../components/layouts/AdminWraper";
-import Navbar from "../../secure/Product/navbar";
+import Navbar from "../../backend/Product/navbar";
 import { Container, Row, Col, Card, Button, Table } from "react-bootstrap";
 
 function Show(props) {
