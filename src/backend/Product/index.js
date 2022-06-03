@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { productList, productDelete } from "../../redux/product/actionCreator";
 
 import { useToasts } from "react-toast-notifications";
+import { serverPath } from "../../utility/utility";
 
 function Index(props) {
   // get data from redux
@@ -80,7 +81,15 @@ function Index(props) {
       name: "Unit",
       selector: (row) => (row.unit != null ? row.unit.unit : "N/A"),
     },
-
+    {
+      name: "Photo",
+      selector: (row) => (row.unit != null ? row.unit.unit : "N/A"),
+      cell: (row) => (
+        <>
+          {row.photo != null ? <img src={serverPath(row.photo)} className='img-fluid shadow-4' alt="" /> : ''}
+        </>
+      ),
+    },
     {
       name: "Action",
       cell: (row) => (

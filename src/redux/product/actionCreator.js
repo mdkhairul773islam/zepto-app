@@ -7,7 +7,6 @@ const product = (data, addToast, history) => {
     try {
       dispatch(productBegin());
       const res = await DataService.post("product-store", data);
-      console.log('serverData', res);
       if (res.data.success) {
         addToast(res.data.success, { appearance: "success" });
         history.push("/product/all");

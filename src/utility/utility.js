@@ -51,6 +51,10 @@ const getShowroom = () => {
   return showroomList;
 };
 
+const serverPath = (file = '') => {
+  return process.env.REACT_APP_LOCAL_SERVER_PATH + file;
+}
+
 export {
   ellipsis,
   toUpperCase,
@@ -59,4 +63,5 @@ export {
   numberFormat,
   getDate,
   getShowroom,
+  serverPath
 };
