@@ -28,7 +28,9 @@ const productList = (currentPage = 1, perPage = 10) => {
   return async (dispatch) => {
     try {
       dispatch(productBegin());
-      const res = await DataService.get(`product?page=${currentPage}&per_page=${perPage}&delay=1`);
+      const res = await DataService.get(
+        `product?page=${currentPage}&per_page=${perPage}&delay=1`
+      );
       dispatch(productSuccess(res.data));
     } catch (err) {
       dispatch(productErr(err));
@@ -99,4 +101,11 @@ const productDelete = (id, addToast) => {
   };
 };
 
-export { product, productList, productOptionList, productEdit, productUpdate, productDelete };
+export {
+  product,
+  productList,
+  productOptionList,
+  productEdit,
+  productUpdate,
+  productDelete,
+};
