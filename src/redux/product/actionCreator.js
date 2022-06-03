@@ -2,13 +2,13 @@ import actions from "./actions";
 import { DataService } from "../../config/dataService/dataService";
 const { productBegin, productSuccess, productGet, productErr } = actions;
 
-const product = (data, addToast, history) => {
-  console.log('fromData', data);
+const product = (formData, addToast, history) => {
+  console.log('fromData', formData);
   return async (dispatch) => {
     try {
       dispatch(productBegin());
-      const res = await DataService.post("product-store", data);
-      console.log('dataREs', res.data)
+      const res = await DataService.post("product-store", formData);
+      console.log('serverData', res.data);
       if (res.data.success) {
         addToast(res.data.success, { appearance: "success" });
         history.push("/product/all");

@@ -11,7 +11,7 @@ const client = axios.create({
   baseURL: API_ENDPOINT,
   headers: {
     Authorization: `Bearer ${getItem("token")}`,
-    "Content-Type": "application/json",
+    //"Content-Type": "application/json",
   },
 });
 
