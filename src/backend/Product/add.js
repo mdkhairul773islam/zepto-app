@@ -11,7 +11,6 @@ import {
   FormCheck,
   Button,
 } from "react-bootstrap";
-
 import { useToasts } from "react-toast-notifications";
 import { useForm } from "react-hook-form";
 import Select from "react-select";
@@ -22,7 +21,6 @@ import { category } from "../../redux/category/actionCreator";
 import { brand } from "../../redux/brand/actionCreator";
 import { unit } from "../../redux/unit/actionCreator";
 import { product } from "../../redux/product/actionCreator";
-import { de } from "date-fns/locale";
 
 function Add(props) {
   const { addToast } = useToasts();
@@ -75,33 +73,31 @@ function Add(props) {
     setValue("unit_id", e.value);
   };
 
-
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
-      fileReader.readAsDataURL(file)
+      fileReader.readAsDataURL(file);
       fileReader.onload = () => {
         resolve(fileReader.result);
-      }
+      };
       fileReader.onerror = (error) => {
         reject(error);
-      }
-    })
-  }
+      };
+    });
+  };
 
   const onSubmit = async (data, e) => {
     const base64 = await convertBase64(data.photo[0]);
     const params = new URLSearchParams();
 
-    params.append('name', data.name);
-    params.append('category_id', data.category_id);
-    params.append('brand_id', data.brand_id);
-    params.append('unit_id', data.unit_id);
-    params.append('purchase_price', data.purchase_price);
-    params.append('sale_price', data.sale_price);
-    params.append('status', data.status);
+    params.append("name", data.name);
+    params.append("category_id", data.category_id);
+    params.append("brand_id", data.brand_id);
+    params.append("unit_id", data.unit_id);
+    params.append("purchase_price", data.purchase_price);
+    params.append("sale_price", data.sale_price);
+    params.append("status", data.status);
     params.append("photo", base64);
-
 
     dispatch(product(params, addToast, history));
     e.target.reset();
@@ -122,7 +118,10 @@ function Add(props) {
                 Add New Product
               </Card.Header>
               <Card.Body>
-                <Form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
+                <Form
+                  onSubmit={handleSubmit(onSubmit)}
+                  encType="multipart/form-data"
+                >
                   <Form.Group as={Row} className="mb-2">
                     <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <Form.Label>
