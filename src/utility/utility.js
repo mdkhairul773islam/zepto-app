@@ -52,7 +52,7 @@ const getShowroom = () => {
 };
 
 const serverPath = (file = '') => {
-  return process.env.REACT_APP_LOCAL_SERVER_PATH + file;
+  return process.env.REACT_APP_SERVER_PATH + file;
 }
 
 export {
