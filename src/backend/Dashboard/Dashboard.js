@@ -1,4 +1,6 @@
 import React from "react";
+import { faHeart, faSoccerBall } from '@fortawesome/free-regular-svg-icons'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AdminWraper from "../../components/layouts/AdminWraper";
 
 function Dashboard(props) {
@@ -8,6 +10,9 @@ function Dashboard(props) {
         <div className="dash_box box_1">
           <h2>Today's Income</h2>
           <h3>1,00.00 Tk</h3>
+          <FontAwesomeIcon icon={faHeart} />
+          <FontAwesomeIcon icon={faSoccerBall} />
+
         </div>
         <div className="dash_box box_2">
           <h2>Today's Income</h2>

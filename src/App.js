@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Erorr404 from "./auth/Erorr404";
 // All Routes Importet here.
 import RouterList from "./routes";
-
 import { ToastProvider } from "react-toast-notifications";
 
 function App() {
