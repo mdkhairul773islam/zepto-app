@@ -49,9 +49,12 @@ function Add(props) {
 
   useEffect(() => {
     document.title = "Add New Product | Admin Dashboard";
-    dispatch(category());
-    dispatch(brand());
-    dispatch(unit());
+    async function fetchData() {
+      await dispatch(category());
+      await dispatch(brand());
+      await dispatch(unit());
+    }
+    fetchData();
   }, [dispatch]);
 
   const { setValue, register, handleSubmit, formState } = useForm({
