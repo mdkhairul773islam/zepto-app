@@ -60,11 +60,14 @@ function Category(props) {
         setLoading(true);
         try {
             const res = await DataService.get(`category?page=${currentPage}&per_page=${perPage}`);
-            setTotalRows(res.data.total)
-            setCategory(res.data.data);
-            setLoading(false);
+            if (res.data.data.length) {
+                setTotalRows(res.data.total)
+                setCategory(res.data.data);
+                setLoading(false);
+            }
         } catch (error) {
             console.log("error");
+            setLoading(false);
         }
     };
 

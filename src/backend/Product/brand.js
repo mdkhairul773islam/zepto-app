@@ -56,11 +56,14 @@ function Brand(props) {
         setLoading(true);
         try {
             const res = await DataService.get(`brand?page=${currentPage}&per_page=${perPage}`);
-            setTotalRows(res.data.total)
-            setBrands(res.data.data);
-            setLoading(false);
+            if (res.data.data.length) {
+                setTotalRows(res.data.total)
+                setBrands(res.data.data);
+                setLoading(false);
+            }
         } catch (error) {
             console.log("error");
+            setLoading(false);
         }
     };
 

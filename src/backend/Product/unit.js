@@ -57,11 +57,14 @@ function Unit(props) {
     setLoading(true);
     try {
       const res = await DataService.get(`unit?page=${currentPage}&per_page=${perPage}`);
-      setTotalRows(res.data.total);
-      setUnits(res.data.data);
-      setLoading(false);
+      if (res.data.data.length) {
+        setTotalRows(res.data.total);
+        setUnits(res.data.data);
+        setLoading(false);
+      }
     } catch (error) {
       console.log("error");
+      setLoading(false);
     }
   };
 
