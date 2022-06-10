@@ -19,13 +19,13 @@
     "react-data-table-component": "^7.4.5",
     "react-datepicker": "^4.3.0",
     "react-dom": "^17.0.2",
-    "react-error-overlay": "^6.0.11",
+    "react-error-overlay": "6.0.11",
     "react-hook-form": "^7.20.5",
     "react-loading-skeleton": "^3.0.0",
     "react-redux": "^7.2.5",
     "react-router": "^5.2.1",
     "react-router-dom": "^5.3.0",
-    "react-scripts": "^3.4.4",
+    "react-scripts": "^5.0.1",
     "react-select": "^5.2.0",
     "react-toast-notifications": "^2.5.1",
     "redux": "^4.1.1",
@@ -61,6 +61,10 @@
       "browser": true,
       "node": true
     }
+  },
+  "resolutions": {
+    "//": "See https://github.com/facebook/create-react-app/issues/11773",
+    "react-error-overlay": "6.0.11"
   },
   "browserslist": {
     "production": [
