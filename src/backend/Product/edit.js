@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import AdminWraper from "../../components/layouts/AdminWraper";
 import Navbar from "../../backend/Product/navbar";
+import { serverPath } from "../../utility/utility";
 import {
   Container,
   Row,
@@ -221,6 +222,17 @@ function Edit(props) {
                   </Form.Group>
 
                   <Form.Group as={Row} className="mb-2">
+                    <Col md={4} lg={4} xl={4} xxl={4} xs={12}>
+                      <Form.Label>
+                        Image <span className="text-danger">*</span>{" "}
+                      </Form.Label>
+                      {getProduct.photo != null ? <img src={serverPath(getProduct.photo)} className='w-5' alt="" /> : ''}
+                      <Form.Control
+                        type="file"
+                        {...register("photo", { required: true })}
+                        size="sm"
+                      />
+                    </Col>
                     <Col className="mt-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <FormCheck.Label className="me-2 mt-4">
                         Status
