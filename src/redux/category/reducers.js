@@ -15,6 +15,7 @@ const initState = {
 
 const Category = (state = initState, action) => {
   const { type, data, err } = action;
+
   switch (type) {
     case CATEGORY_BEGIN:
       return {
@@ -24,7 +25,7 @@ const Category = (state = initState, action) => {
     case CATEGORY_SUCCESS:
       return {
         ...state,
-        categoryList: typeof data.data !== 'undefined' ? data.data : [],
+        categoryList: data.length ? data : [],
         loading: false,
       };
     case CATEGORY_ERR:

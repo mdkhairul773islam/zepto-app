@@ -24,7 +24,7 @@ const Brand = (state = initState, action) => {
     case BRAND_SUCCESS:
       return {
         ...state,
-        brandList: typeof data.data !== 'undefined' ? data.data : [],
+        brandList: data.length ? data : [],
         loading: false,
       };
     case BRAND_ERR:

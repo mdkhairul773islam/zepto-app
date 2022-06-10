@@ -24,7 +24,7 @@ const Unit = (state = initState, action) => {
     case UNIT_SUCCESS:
       return {
         ...state,
-        unitList: typeof data.data !== 'undefined' ? data.data : [],
+        unitList: data.length ? data : [],
         loading: false,
       };
     case UNIT_ERR:
