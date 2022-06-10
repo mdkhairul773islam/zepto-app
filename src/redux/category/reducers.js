@@ -24,7 +24,7 @@ const Category = (state = initState, action) => {
     case CATEGORY_SUCCESS:
       return {
         ...state,
-        categoryList: data,
+        categoryList: typeof data.data !== 'undefined' ? data.data : [],
         loading: false,
       };
     case CATEGORY_ERR:
