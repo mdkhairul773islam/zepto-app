@@ -27,7 +27,7 @@ const actions = {
   productErr: (err) => {
     return {
       type: actions.PRODUCT_ERR,
-      err,
+      err: err,
     };
   },
 };

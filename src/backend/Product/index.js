@@ -16,6 +16,7 @@ function Index(props) {
   // get data from redux
   const dispatch = useDispatch();
   const data = useSelector((state) => state.productReducer.productList);
+
   const totalDataRows = useSelector((state) => state.productReducer.totalRows);
   const loading = useSelector((state) => state.productReducer.loading);
 

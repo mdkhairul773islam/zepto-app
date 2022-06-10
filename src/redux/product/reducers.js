@@ -26,14 +26,14 @@ const Product = (state = initState, action) => {
     case PRODUCT_SUCCESS:
       return {
         ...state,
-        productList: (data.data !== undefined ? data.data : data),
+        productList: typeof data.data !== 'undefined' ? data.data : [],
         totalRows: data.total,
         loading: false,
       };
     case PRODUCT_GET:
       return {
         ...state,
-        product: data,
+        product: typeof data.data !== 'undefined' ? data.data : {},
       };
     case PRODUCT_ERR:
       return {
