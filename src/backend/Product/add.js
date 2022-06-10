@@ -78,7 +78,7 @@ function Add(props) {
   };
 
   const onSubmit = async (data, e) => {
-    const photo = await fileConvertBase64(data.photo[0]);
+
     const params = new URLSearchParams();
 
     params.append("name", data.name);
@@ -88,7 +88,11 @@ function Add(props) {
     params.append("purchase_price", data.purchase_price);
     params.append("sale_price", data.sale_price);
     params.append("status", data.status);
-    params.append("photo", photo);
+
+    if (data.photo[0] && typeof data.photo[0] != "undefined") {
+      const photo = await fileConvertBase64(data.photo[0]);
+      params.append("photo", photo);
+    }
 
     dispatch(product(params, addToast, history));
     e.target.reset();
@@ -201,12 +205,12 @@ function Add(props) {
                   <Form.Group as={Row} className="mb-2">
                     <Col md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <Form.Label>
-                        Image <span className="text-danger">*</span>{" "}
+                        Image <span className="text-danger"></span>{" "}
                       </Form.Label>
 
                       <Form.Control
                         type="file"
-                        {...register("photo", { required: true })}
+                        {...register("photo")}
                         size="sm"
                       />
                     </Col>

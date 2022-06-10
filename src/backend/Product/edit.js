@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import AdminWraper from "../../components/layouts/AdminWraper";
 import Navbar from "../../backend/Product/navbar";
+import fileConvertBase64 from "../../utility/fileConvertBase64";
+import { serverPath } from "../../utility/utility";
 import {
   Container,
   Row,
@@ -82,8 +84,23 @@ function Edit(props) {
     setGetUnit(e.target.value);
   };
 
-  const onSubmit = (data, e) => {
-    dispatch(productUpdate(data.getProduct, addToast, history));
+  const onSubmit = async (data, e) => {
+    const product = data.getProduct;
+
+    const params = new URLSearchParams();
+    params.append("id", product.id);
+    params.append("name", product.name);
+    params.append("category_id", product.category_id);
+    params.append("brand_id", product.brand_id);
+    params.append("unit_id", product.unit_id);
+    params.append("purchase_price", product.purchase_price);
+    params.append("sale_price", product.sale_price);
+    params.append("status", product.status);
+    if (data.new_photo[0] && typeof data.new_photo[0] != 'undefined') {
+      const photo = await fileConvertBase64(data.new_photo[0]);
+      params.append("new_photo", photo);
+    }
+    await dispatch(productUpdate(params, addToast, history));
   };
 
   useEffect(() => {
@@ -221,6 +238,17 @@ function Edit(props) {
                   </Form.Group>
 
                   <Form.Group as={Row} className="mb-2">
+                    <Col md={4} lg={4} xl={4} xxl={4} xs={12}>
+                      <Form.Label>
+                        Image <span className="text-danger"></span>{" "}
+                      </Form.Label>
+                      {getProduct.photo != null ? <img src={serverPath(getProduct.photo)} className='w-5' alt="" /> : ''}
+                      <Form.Control
+                        type="file"
+                        {...register("new_photo")}
+                        size="sm"
+                      />
+                    </Col>
                     <Col className="mt-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <FormCheck.Label className="me-2 mt-4">
                         Status
