@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import AdminWraper from "../../components/layouts/AdminWraper";
 import Navbar from "../../backend/Product/navbar";
+import fileConvertBase64 from "../../utility/fileConvertBase64";
 import {
   Container,
   Row,
@@ -76,21 +77,8 @@ function Add(props) {
     setValue("unit_id", e.value);
   };
 
-  const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      };
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
-
   const onSubmit = async (data, e) => {
-    const base64 = await convertBase64(data.photo[0]);
+    const photo = await fileConvertBase64(data.photo[0]);
     const params = new URLSearchParams();
 
     params.append("name", data.name);
@@ -100,7 +88,7 @@ function Add(props) {
     params.append("purchase_price", data.purchase_price);
     params.append("sale_price", data.sale_price);
     params.append("status", data.status);
-    params.append("photo", base64);
+    params.append("photo", photo);
 
     dispatch(product(params, addToast, history));
     e.target.reset();
