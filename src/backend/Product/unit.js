@@ -42,12 +42,18 @@ function Unit(props) {
     setLoading(true);
     try {
       const res = await DataService.post("unit-store", data);
-      addToast("Saved Successfully", { appearance: "success" });
-      setTotalRows(res.data.total);
-      setUnits(res.data);
+      if (res.data.success) {
+        addToast(res.data.success, { appearance: "success" });
+        getUnit();
+      }
+      if (res.data.warning) {
+        addToast(res.data.warning, { appearance: "warning" });
+        getUnit();
+      }
       setLoading(false);
     } catch (error) {
       console.log("error");
+      setLoading(false);
     }
     e.target.reset();
   };
@@ -105,8 +111,15 @@ function Unit(props) {
     try {
       setLoading(true);
       const res = await DataService.post("unit-update", { id: id, unit: unit });
-      addToast("Updated Successfully", { appearance: "info" });
-      setUnits(res.data);
+
+      if (res.data.success) {
+        addToast(res.data.success, { appearance: "info" });
+        getUnit();
+      }
+      if (res.data.warning) {
+        addToast(res.data.warning, { appearance: "warning" });
+        getUnit();
+      }
       setLoading(false);
       setShow(false);
     } catch (error) {
@@ -121,8 +134,10 @@ function Unit(props) {
       var confirmDelete = window.confirm("Want to delete?");
       if (confirmDelete) {
         const res = await DataService.get(`/unit-destroy/${id}`);
-        addToast("Unit Successfully Deleted", { appearance: "error" });
-        setUnits(res.data);
+        if (res.data.success) {
+          addToast(res.data.success, { appearance: "error" });
+          getUnit();
+        }
       }
     } catch (error) {
       console.log("error");
