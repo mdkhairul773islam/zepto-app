@@ -42,9 +42,14 @@ function Brand(props) {
         setLoading(true);
         try {
             const res = await DataService.post("brand-store", data);
-            addToast("Saved Successfully", { appearance: "success" });
-            setTotalRows(res.data.total);
-            setBrands(res.data);
+            if (res.data.success) {
+                addToast(res.data.success, { appearance: "info" });
+                getBrand();
+            }
+            if (res.data.warning) {
+                addToast(res.data.warning, { appearance: "warning" });
+                getBrand();
+            }
             setLoading(false);
         } catch (error) {
             console.log("error");
@@ -101,14 +106,14 @@ function Brand(props) {
     };
 
     const onSubmitUpdate = async (data, e) => {
-
         const { id, name } = data.editBrand;
-
         try {
             setLoading(true);
             const res = await DataService.post("brand-update", { id: id, name: name });
-            addToast("Updated Successfully", { appearance: "info" });
-            setBrands(res.data);
+            if (res.data.success) {
+                addToast(res.data.success, { appearance: "info" });
+                getBrand();
+            }
             setLoading(false);
             setShow(false);
         } catch (error) {
@@ -123,8 +128,10 @@ function Brand(props) {
             var confirmDelete = window.confirm("Want to delete?");
             if (confirmDelete) {
                 const res = await DataService.get(`/brand-destroy/${id}`);
-                addToast("Brand Successfully Deleted", { appearance: "error" });
-                setBrands(res.data);
+                if (res.data.success) {
+                    addToast(res.data.success, { appearance: "error" });
+                    getBrand();
+                }
             }
         } catch (error) {
             console.log("error");

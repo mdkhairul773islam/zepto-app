@@ -44,9 +44,14 @@ function Category(props) {
         setLoading(true);
         try {
             const res = await DataService.post("category-store", data);
-            addToast("Saved Successfully", { appearance: "success" });
-            setCategory(res.data);
-            setTotalRows(res.data.total);
+            if (res.data.success) {
+                addToast(res.data.success, { appearance: "success" });
+                getCategory();
+            }
+            if (res.data.warning) {
+                addToast(res.data.warning, { appearance: "warning" });
+                getCategory();
+            }
             setLoading(false);
         } catch (error) {
             console.log("error");
@@ -112,8 +117,14 @@ function Category(props) {
         try {
             setLoading(true);
             const res = await DataService.post("category-update", { id: id, name: name });
-            addToast("Updated Successfully", { appearance: "info" });
-            setCategory(res.data);
+            if (res.data.success) {
+                addToast(res.data.success, { appearance: "success" });
+                getCategory();
+            }
+            if (res.data.warning) {
+                addToast(res.data.warning, { appearance: "warning" });
+                getCategory();
+            }
             setLoading(false);
             setShow(false);
         } catch (error) {
@@ -128,8 +139,8 @@ function Category(props) {
             var confirmDelete = window.confirm("Want to delete?");
             if (confirmDelete) {
                 const res = await DataService.get(`/category-destroy/${id}`);
-                addToast("Successfully Deleted", { appearance: "error" });
-                setCategory(res.data);
+                addToast(res.data.success, { appearance: "error" });
+                getCategory();
             }
         } catch (error) {
             console.log("error");

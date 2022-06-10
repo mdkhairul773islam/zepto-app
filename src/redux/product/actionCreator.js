@@ -86,7 +86,7 @@ const productDelete = (id, addToast) => {
       dispatch(productBegin());
       const res = await DataService.get(`/product-destroy/${id}`);
       if (res.data) {
-        addToast("Product successfully deleted", { appearance: "success" });
+        addToast("Product successfully deleted", { appearance: "error" });
         dispatch(productSuccess(res.data));
       }
 
