@@ -14,7 +14,7 @@ const login = (data, addToast) => {
     try {
       dispatch(loginBegin());
       const res = await DataService.post("login", data);
-      if (res.data.token !== undefined) {
+      if (typeof res.data.token !== "undefined") {
         window.localStorage.setItem("token", res.data.token);
         window.localStorage.setItem("isLoggedin", true);
         addToast("Admin Successfully Loggedin.", { appearance: "success" });

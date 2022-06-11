@@ -21,13 +21,12 @@ function Login() {
   const dispatch = useDispatch();
 
   const isLoggedin = useSelector((state) => state.authReducer.isLoggedin);
-  //const loading = useSelector((state) => state.authReducer.loading);
 
   const { register, handleSubmit, formState } = useForm({
     defaultValues: {
       email: "admin@gmail.com",
       password: "admin",
-      scope: "admin"
+      scope: "admin",
     },
   });
 
@@ -79,7 +78,12 @@ function Login() {
                   </div>
                   <Link to="/">Forgot password</Link>
                 </div>
-                <button type="submit" className="submit_btn adad" onSubmit={handleSubmit(onSubmit)} disabled={formState.isSubmitting}>
+                <button
+                  type="submit"
+                  className="submit_btn adad"
+                  onSubmit={handleSubmit(onSubmit)}
+                  disabled={formState.isSubmitting}
+                >
                   Login
                 </button>
               </form>
@@ -89,10 +93,7 @@ function Login() {
           <div className="company_title">
             <div className="container_box">
               <div className="company_brand">
-                <img
-                  src={logo}
-                  alt=""
-                />
+                <img src={logo} alt="" />
                 <h3>Zepto Apps</h3>
               </div>
               <div className="company_info">
@@ -117,12 +118,12 @@ function Login() {
                     Bkash
                   </h4>
                   <p>
-                    <i className="icon ion-ios-arrow-dropright-circle"></i>{" "}
-                    0100 00000 (Personal)
+                    <i className="icon ion-ios-arrow-dropright-circle"></i> 0100
+                    00000 (Personal)
                   </p>
                   <p>
-                    <i className="icon ion-ios-arrow-dropright-circle"></i>{" "}
-                    0100 00000 (Personal)
+                    <i className="icon ion-ios-arrow-dropright-circle"></i> 0100
+                    00000 (Personal)
                   </p>
                 </div>
                 <div className="payment_info">
@@ -130,8 +131,8 @@ function Login() {
                     <img src={rocket} alt="" /> Rocket
                   </h4>
                   <p>
-                    <i className="icon ion-ios-arrow-dropright-circle"></i>{" "}
-                    0100 00000 (Personal)
+                    <i className="icon ion-ios-arrow-dropright-circle"></i> 0100
+                    00000 (Personal)
                   </p>
                 </div>
                 <div className="payment_info">
