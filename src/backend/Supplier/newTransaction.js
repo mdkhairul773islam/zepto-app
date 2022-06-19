@@ -1,25 +1,73 @@
-import React, { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import AdminWraper from "../../components/layouts/AdminWraper";
-import Navbar from "../../backend/Supplier/navbar";
+import Navbar from "./navbar";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
-import { useToasts } from "react-toast-notifications";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import Select from "react-select";
+import DatePicker from "react-datepicker";
+import { getDate } from "../../utility/utility";
 
-function Add(props) {
-    const { addToast } = useToasts();
-    const history = useHistory();
+
+function NewTransaction(props) {
+    const [startDate, setStartDate] = useState(new Date());
+
+    const showroomList = [
+        { label: "A", value: "001" },
+        { label: "B", value: "002" },
+    ];
+
+    const supplierList = [
+        { label: "A", value: "001" },
+        { label: "B", value: "002" },
+    ];
+
+    const transactionTypeList = [
+        { label: "Paid To Supplier", value: "payment" },
+        { label: "Receive From Supplier", value: "receive" },
+    ];
+
+    const payemtTypeList = [
+        { label: "Cash", value: "cash" },
+        { label: "Bank", value: "bank" },
+        { label: "Cheque", value: "cheque" },
+        { label: "bKsah", value: "bKash" },
+        { label: "T.T", value: "tt" },
+        { label: "Cash To T.T", value: "cash_to_tt" },
+    ];
+
+    const {
+        control,
+        setValue,
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        defaultValues: {},
+    });
+
+    const onSubmit = (data, e) => {
+        console.log("data", getDate(data.dateInput));
+    };
+
+    const handleShowroomChange = (e) => {
+        setValue("showroom", e.value);
+    };
+
+    const handleSupplierChange = (e) => {
+        setValue("name", e.value);
+    };
+
+    const handleTransactionTypeChange = (e) => {
+        setValue("transactionType", e.value);
+    };
+
+    const handlePaymentTypeChange = (e) => {
+        setValue("paymentType", e.value);
+    };
 
     useEffect(() => {
-        document.title = "Add New Warehouse | Admin Dashboard";
-    }, []);
-
-    const { register, handleSubmit, formState } = useForm({});
-
-    const onSubmit = async (data, e) => {
-        console.log("data", data);
-        e.target.reset();
-    };
+        document.title = "Add New Transaction | React Dashboard";
+    }, [setValue]);
 
     return (
         <AdminWraper menuOpen="supplier">
@@ -37,88 +85,217 @@ function Add(props) {
                             </Card.Header>
                             <Card.Body>
                                 <Form onSubmit={handleSubmit(onSubmit)}>
-                                    <Form.Group as={Row} className="mb-2">
-                                        <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
-                                            <Form.Label>
-                                                Warehouse <span className="text-danger">*</span>
-                                            </Form.Label>
-                                            <Form.Select aria-label="Default select example">
-                                                <option selected disabled value="">Warehouse List</option>
-                                                <option value="1">W-1</option>
-                                                <option value="2">W-2</option>
-                                            </Form.Select>
-                                        </Col>
-                                        <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
-                                            <Form.Label>
-                                                Name <span className="text-danger">*</span>
-                                            </Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                {...register("name", { required: true })}
-                                                placeholder="Supplier Name"
-                                                required
-                                            />
-                                        </Col>
-
-                                        <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
-                                            <Form.Label>
-                                                Contact Person <span className="text-danger"></span>
-                                            </Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                {...register("contact_person")}
-                                                placeholder="Contact Person Name"
-                                            />
-                                        </Col>
-
-                                        <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
-                                            <Form.Label>
-                                                Mobile <span className="text-danger">*</span>{" "}
-                                            </Form.Label>
-                                            <Form.Control
-                                                {...register("mobile", { required: true })}
-                                                placeholder="Mobile No"
-                                                required
-                                            />
-                                        </Col>
-                                        <Col md={4} lg={4} xl={4} xxl={4} xs={12}>
-                                            <Form.Label>Inital Balance </Form.Label>
-                                            <Row>
-                                                <Col md={6}>
-                                                    <Form.Control
-                                                        type="number"
-                                                        {...register("inital_balance", { required: true })}
-                                                        placeholder="0.0"
+                                    <Form.Group as={Row} className="mb-3">
+                                        <Form.Label column sm={3} className="text-sm-end">
+                                            Date <span className="text-danger">*</span>
+                                        </Form.Label>
+                                        <Col sm={5}>
+                                            <Controller
+                                                control={control}
+                                                name="dateInput"
+                                                render={({ field }) => (
+                                                    <DatePicker
+                                                        className="form-control"
+                                                        placeholderText="Select date"
+                                                        onChange={(date) =>
+                                                            field.onChange(date, setStartDate(date))
+                                                        }
+                                                        selected={startDate}
+                                                        dateFormat="yyyy-MM-dd"
                                                     />
-                                                </Col>
-                                                <Col md={6}>
-                                                    <Form.Select aria-label="Default select example">
-                                                        <option selected disabled value="">Status</option>
-                                                        <option value="payable">Payable</option>
-                                                        <option value="receivable">Receivable</option>
-                                                    </Form.Select>
-                                                </Col>
-                                            </Row>
+                                                )}
+                                            />
                                         </Col>
                                     </Form.Group>
-                                    <Form.Group as={Row} className="mb-2">
-                                        <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
-                                            <Form.Label>Address </Form.Label>
+
+                                    <Form.Group as={Row} className="mb-3">
+                                        <Form.Label column sm={3} className="text-sm-end">
+                                            Warehouse <span className="text-danger">*</span>
+                                        </Form.Label>
+                                        <Col sm={5}>
+                                            <Select
+                                                onChange={handleShowroomChange}
+                                                ref={(e) => {
+                                                    register("warehouse", { required: true });
+                                                }}
+                                                type="text"
+                                                options={showroomList}
+                                                isSearchable={true}
+                                                placeholder="Chose Showroom"
+                                                required
+                                            ></Select>
+                                            {errors.showroom &&
+                                                errors.showroom.type === "required" && (
+                                                    <span class="text-danger">Showroom is required</span>
+                                                )}
+                                        </Col>
+                                    </Form.Group>
+
+                                    <Form.Group as={Row} className="mb-3">
+                                        <Form.Label column sm={3} className="text-sm-end">
+                                            Name
+                                        </Form.Label>
+                                        <Col sm={5}>
+                                            <Select
+                                                onChange={handleSupplierChange}
+                                                ref={(e) => {
+                                                    register("name", { required: false });
+                                                }}
+                                                type="text"
+                                                options={supplierList}
+                                                isSearchable={true}
+                                                placeholder="Chose Supplier Name"
+                                                required
+                                            ></Select>
+                                            {errors.name && errors.name.type === "required" && (
+                                                <span class="text-danger">
+                                                    Supplier name is required
+                                                </span>
+                                            )}
+                                        </Col>
+                                    </Form.Group>
+
+                                    <Form.Group as={Row} className="mb-3">
+                                        <Form.Label column sm={3} className="text-sm-end">
+                                            Balance (TK) <span className="text-danger">*</span>
+                                        </Form.Label>
+                                        <Col sm={3}>
+                                            <Form.Control
+                                                type="text"
+                                                {...register("balance")}
+                                                placeholder="0.00"
+                                                readOnly
+                                            />
+                                        </Col>
+                                        <Col sm={2}>
+                                            <Form.Control
+                                                type="text"
+                                                {...register("balance_status", { required: false })}
+                                                placeholder="Balance Status"
+                                                readOnly
+                                                required
+                                            />
+                                        </Col>
+                                    </Form.Group>
+
+                                    <Form.Group as={Row} className="mb-3">
+                                        <Form.Label column sm={3} className="text-sm-end">
+                                            Transaction Type
+                                        </Form.Label>
+                                        <Col sm={5}>
+                                            <Select
+                                                onChange={handleTransactionTypeChange}
+                                                ref={(e) => {
+                                                    register("transactionType", { required: true });
+                                                }}
+                                                type="text"
+                                                options={transactionTypeList}
+                                                isSearchable={true}
+                                                placeholder="Chose Transaction Type"
+                                                required
+                                            ></Select>
+                                            {errors.transactionType &&
+                                                errors.transactionType.type === "required" && (
+                                                    <span class="text-danger">Showroom is required</span>
+                                                )}
+                                        </Col>
+                                    </Form.Group>
+
+                                    <Form.Group as={Row} className="mb-3">
+                                        <Form.Label column sm={3} className="text-sm-end">
+                                            Payment Type
+                                        </Form.Label>
+                                        <Col sm={3}>
+                                            <Select
+                                                onChange={handlePaymentTypeChange}
+                                                ref={(e) => {
+                                                    register("paymentType", { required: true });
+                                                }}
+                                                type="text"
+                                                options={payemtTypeList}
+                                                isSearchable={true}
+                                                placeholder="Chose Payment Type"
+                                                required
+                                            ></Select>
+                                            {errors.paymentType &&
+                                                errors.paymentType.type === "required" && (
+                                                    <span class="text-danger">Showroom is required</span>
+                                                )}
+                                        </Col>
+                                        <Col sm={2}>
+                                            <Form.Control
+                                                type="number"
+                                                {...register("payment", { required: true })}
+                                                placeholder="Amount (0.00)"
+                                                required
+                                            />
+                                            {errors.payment && errors.payment.type === "required" && (
+                                                <span class="text-danger">Showroom is required</span>
+                                            )}
+                                        </Col>
+                                    </Form.Group>
+
+                                    <Form.Group as={Row} className="mb-3">
+                                        <Form.Label column sm={3} className="text-sm-end">
+                                            Total Balance (TK) <span className="text-danger">*</span>
+                                        </Form.Label>
+                                        <Col sm={3}>
+                                            <Form.Control
+                                                type="text"
+                                                {...register("total_balance", { required: true })}
+                                                placeholder="0.00"
+                                                readOnly
+                                                required
+                                            />
+                                        </Col>
+                                        <Col sm={2}>
+                                            <Form.Control
+                                                type="text"
+                                                {...register("total_balance_status", {
+                                                    required: false,
+                                                })}
+                                                placeholder="Total Balance Status"
+                                                readOnly
+                                                required
+                                            />
+                                        </Col>
+                                    </Form.Group>
+
+                                    <Form.Group as={Row} className="mb-3">
+                                        <Form.Label column sm={3} className="text-sm-end">
+                                            Remarks
+                                        </Form.Label>
+                                        <Col sm={5}>
                                             <Form.Control
                                                 as="textarea"
-                                                {...register("address")}
                                                 rows={3}
+                                                {...register("remarks", { required: false })}
+                                                placeholder="Remarks"
                                             />
                                         </Col>
                                     </Form.Group>
+
+                                    <Form.Group as={Row} className="mb-3">
+                                        <Form.Label column sm={3} className="text-sm-end">
+                                            Paid By
+                                        </Form.Label>
+                                        <Col sm={5}>
+                                            <Form.Control
+                                                type="text"
+                                                {...register("paid_by", { required: false })}
+                                                placeholder="Paid By"
+                                            />
+                                        </Col>
+                                    </Form.Group>
+
                                     <hr />
-                                    <Button
-                                        disabled={formState.isSubmitting}
-                                        variant="primary"
-                                        type="submit"
-                                    >
-                                        Submit
-                                    </Button>
+                                    <Form.Group as={Row} className="mb-3">
+                                        <Form.Label column sm={8} className="text-sm-end">
+                                            <Button variant="primary" type="submit">
+                                                Save
+                                            </Button>
+                                        </Form.Label>
+                                    </Form.Group>
                                 </Form>
                             </Card.Body>
                             <Card.Footer className="text-muted">&nbsp;</Card.Footer>
@@ -126,8 +303,8 @@ function Add(props) {
                     </Col>
                 </Row>
             </Container>
-        </AdminWraper >
+        </AdminWraper>
     );
 }
 
-export default Add;
+export default NewTransaction;

@@ -141,6 +141,34 @@ function SideBar(props) {
             </ul>
           </li>
           <li
+            data-id="client"
+            className={`dropdown ${menuOpen === "client" ? "active" : ""}`}
+            onClick={menuOpenFn}
+          >
+            <Link to="#">
+              <i className="fas fa-user-plus"></i>
+              <span className="menu_title">Client</span>
+              <span className="menu_arrow">
+                <i className="icon ion-ios-arrow-forward right"></i>
+                <i className="icon ion-ios-arrow-down down"></i>
+              </span>
+            </Link>
+            <ul>
+              <li>
+                <Link to="/client/add">Add Client</Link>
+              </li>
+              <li>
+                <Link to="/client/all">All Client</Link>
+              </li>
+              <li>
+                <Link to="/client/new-transaction">New Transaction</Link>
+              </li>
+              <li>
+                <Link to="/client/all-transaction">All Transaction</Link>
+              </li>
+            </ul>
+          </li>
+          <li
             data-id="privilege"
             className={`dropdown ${menuOpen === "privilege" ? "active" : ""}`}
             onClick={menuOpenFn}
