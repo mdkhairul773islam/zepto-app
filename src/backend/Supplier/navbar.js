@@ -20,6 +20,22 @@ function Navbar(props) {
           All Supplier
         </NavLink>
       </li>
+      <li>
+        <NavLink
+          to="/supplier/new-transaction"
+          className={(isActive) => (isActive ? "active" : "")}
+        >
+          New Transaction
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/supplier/all-transaction"
+          className={(isActive) => (isActive ? "active" : "")}
+        >
+          All Transaction
+        </NavLink>
+      </li>
     </ul>
   );
 }

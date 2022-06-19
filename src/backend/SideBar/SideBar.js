@@ -132,6 +132,12 @@ function SideBar(props) {
               <li>
                 <Link to="/supplier/all">All Supplier</Link>
               </li>
+              <li>
+                <Link to="/supplier/new-transaction">New Transaction</Link>
+              </li>
+              <li>
+                <Link to="/supplier/all-transaction">All Transaction</Link>
+              </li>
             </ul>
           </li>
           <li
