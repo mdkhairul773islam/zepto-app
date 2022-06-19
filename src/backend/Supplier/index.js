@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import AdminWraper from "../../components/layouts/AdminWraper";
-import Navbar from "../../backend/Warehouse/navbar";
+import Navbar from "../../backend/Supplier/navbar";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import DataTable from "../../components/DataTable/Table";
 import { useToasts } from "react-toast-notifications";
@@ -28,7 +28,7 @@ function Index(props) {
   }, [totalDataRows]);
 
   useEffect(() => {
-    document.title = "Warehouse List | Admin Dashboard";
+    document.title = "Supplier List | Admin Dashboard";
   }, []);
 
   const handlePageChange = (currentPage) => {
@@ -98,7 +98,7 @@ function Index(props) {
   ];
 
   return (
-    <AdminWraper menuOpen="warehouse">
+    <AdminWraper menuOpen="supplier">
       <Container className="p-0" fluid>
         <Row>
           <div className="body_nav">
@@ -109,7 +109,7 @@ function Index(props) {
           <Col>
             <Card>
               <Card.Header as="h4" className="fw-bold">
-                All Warehouse
+                All Supplier
                 <Button
                   to="#"
                   className="btn btn-light btn-xl float-end px-1 py-0"

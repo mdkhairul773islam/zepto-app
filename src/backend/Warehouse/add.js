@@ -11,7 +11,7 @@ function Add(props) {
   const history = useHistory();
 
   useEffect(() => {
-    document.title = "Add New Product | Admin Dashboard";
+    document.title = "Add New Warehouse | Admin Dashboard";
   }, []);
 
   const { register, handleSubmit, formState } = useForm({});

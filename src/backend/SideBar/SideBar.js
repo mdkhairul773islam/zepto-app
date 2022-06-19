@@ -55,7 +55,7 @@ function SideBar(props) {
             onClick={menuOpenFn}
           >
             <Link to="/admin">
-              <i className="fas fa-tachometer-alt"></i>
+              <i class="fab fa-stack-overflow"></i>
               <span className="menu_title">Dashboard</span>
             </Link>
           </li>
@@ -65,7 +65,7 @@ function SideBar(props) {
             onClick={menuOpenFn}
           >
             <Link to="#">
-              <i className="fas fa-cart-arrow-down"></i>
+              <i class="fab fa-product-hunt"></i>
               <span className="menu_title">Product</span>
               <span className="menu_arrow">
                 <i className="icon ion-ios-arrow-forward right"></i>
@@ -96,7 +96,7 @@ function SideBar(props) {
             onClick={menuOpenFn}
           >
             <Link to="#">
-              <i className="fas fa-cart-arrow-down"></i>
+              <i className="fas fa-bezier-curve"></i>
               <span className="menu_title">Warehouse</span>
               <span className="menu_arrow">
                 <i className="icon ion-ios-arrow-forward right"></i>
@@ -109,6 +109,28 @@ function SideBar(props) {
               </li>
               <li>
                 <Link to="/warehouse/all">All Warehouse</Link>
+              </li>
+            </ul>
+          </li>
+          <li
+            data-id="supplier"
+            className={`dropdown ${menuOpen === "supplier" ? "active" : ""}`}
+            onClick={menuOpenFn}
+          >
+            <Link to="#">
+              <i className="fas fa-user"></i>
+              <span className="menu_title">Supplier</span>
+              <span className="menu_arrow">
+                <i className="icon ion-ios-arrow-forward right"></i>
+                <i className="icon ion-ios-arrow-down down"></i>
+              </span>
+            </Link>
+            <ul>
+              <li>
+                <Link to="/supplier/add">Add Supplier</Link>
+              </li>
+              <li>
+                <Link to="/supplier/all">All Supplier</Link>
               </li>
             </ul>
           </li>
