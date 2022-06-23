@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import AdminWraper from "../../components/layouts/AdminWraper";
-import Navbar from "../../backend/Supplier/navbar";
+import Navbar from "./navbar";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import DataTable from "../../components/DataTable/Table";
 
@@ -16,12 +16,11 @@ import {
 
 import { useToasts } from "react-toast-notifications";
 
-function Index(props) {
+function TransactionHistory(props) {
   // get data from redux
   const dispatch = useDispatch();
   const data = useSelector((state) => state.supplierReducer.supplierList);
   const loading = useSelector((state) => state.supplierReducer.loading);
-  const totalDataRows = useSelector((state) => state.supplierReducer.totalRows);
 
   const { addToast } = useToasts();
   const history = useHistory();
@@ -33,35 +32,21 @@ function Index(props) {
 
   const columns = [
     {
-      name: "Sl",
-      selector: (row, index) => index + 1,
-      maxWidth: "20px",
+      name: "Date",
+      selector: (row) =>
+        row.date != null ? toFilter(row.date) : "N/A",
     },
     {
       name: "Name",
       selector: (row) => row.name,
     },
     {
-      name: "Contact Person",
-      selector: (row) =>
-        row.contact_person != null ? toFilter(row.contact_person) : "N/A",
-    },
-    {
-      name: "Address",
-      selector: (row) => (row.address != null ? row.address : "N/A"),
-    },
-    {
       name: "Mobile",
       selector: (row) => (row.mobile != null ? row.mobile : "N/A"),
     },
     {
-      name: "Initial Balance",
-      selector: (row) => numberFormat(row.initial_balance),
-      center: true,
-    },
-    {
-      name: "Current Balance",
-      selector: (row) => "0",
+      name: "Payment",
+      selector: (row) => numberFormat(row.payment),
       center: true,
     },
     {
@@ -69,14 +54,14 @@ function Index(props) {
       cell: (row) => (
         <>
           <Link
-            to={`/supplier/view/${row.id}`}
+            to={`/supplier/transaction-view/${row.id}`}
             className="btn btn-primary btn-sm m-1"
           >
             <i className="fas fa-eye fa-sm"></i>
           </Link>
 
           <Link
-            to={`/supplier/edit/${row.id}`}
+            to={`/supplier/transaction-edit/${row.id}`}
             className="btn btn-success btn-sm m-1"
           >
             <i className="fas fa-pen fa-sm"></i>
@@ -94,34 +79,10 @@ function Index(props) {
       className: "action-width",
     },
   ];
-
-  const [totalRows, setTotalRows] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
-
-  useEffect(() => {
-    setTotalRows(totalDataRows);
-  }, [totalDataRows]);
-
   useEffect(() => {
     document.title = "Supplier List | React Dashboard";
-    dispatch(supplierList(currentPage, perPage));
-  }, [currentPage, dispatch, perPage]);
-
-  const handlePageChange = (currentPage) => {
-    setCurrentPage(currentPage);
-    dispatch(supplierList(currentPage));
-  };
-
-  const handlePerRowsChange = async (perPage, currentPage) => {
-    setPerPage(perPage);
-    dispatch(supplierList(currentPage, perPage));
-  };
-
-  const totalInitialBalance = data.reduce(
-    (totalBalance, row) => totalBalance + parseFloat(row.initial_balance),
-    0
-  );
+    dispatch(supplierList());
+  }, [dispatch]);
 
   return (
     <AdminWraper menuOpen="supplier">
@@ -145,19 +106,7 @@ function Index(props) {
                 </Button>
               </Card.Header>
               <Card.Body>
-                <DataTable
-                  columns={columns}
-                  data={data}
-                  loading={loading}
-                  totalRows={totalRows}
-                  currentPage={currentPage}
-                  perPage={perPage}
-                  handlePerRowsChange={handlePerRowsChange}
-                  handlePageChange={handlePageChange}
-                />
-                <p className="text-center fw-bold">
-                  Total Initial Balance: {totalInitialBalance} Tk
-                </p>
+                <DataTable columns={columns} data={data} loading={loading} />
               </Card.Body>
               <Card.Footer className="text-muted">&nbsp;</Card.Footer>
             </Card>
@@ -168,4 +117,4 @@ function Index(props) {
   );
 }
 
-export default Index;
+export default TransactionHistory;

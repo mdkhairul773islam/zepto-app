@@ -7,9 +7,9 @@ import DataTable from "../../components/DataTable/Table";
 import { useToasts } from "react-toast-notifications";
 
 function Index(props) {
-  const data = [];
+  const data = [{}];
 
-  const totalDataRows = [];
+  const totalDataRows = 10;
   const loading = false;
 
   const { addToast } = useToasts();

@@ -7,9 +7,24 @@ import DataTable from "../../components/DataTable/Table";
 import { useToasts } from "react-toast-notifications";
 
 function Index(props) {
-  const data = [];
+  const data = [
+    {
+      id: 1,
+      name: "Warehouse A",
+      manager_name: "Khairul Islam",
+      mobile: "01707536945",
+      address: "Dhaka Bangladesh",
+    },
+    {
+      id: 2,
+      name: "Warehouse B",
+      manager_name: "Go Islam",
+      mobile: "01707536940",
+      address: "Dhaka Bangladesh, Dhaka",
+    },
+  ];
 
-  const totalDataRows = [];
+  const totalDataRows = 10;
   const loading = false;
 
   const { addToast } = useToasts();
@@ -50,35 +65,23 @@ function Index(props) {
       selector: (row) => row.name,
     },
     {
-      name: "Category",
-      selector: (row) => (row.category != null ? row.category.name : "N/A"),
+      name: "Manager",
+      selector: (row) => (row.manager_name != null ? row.manager_name : "N/A"),
     },
     {
-      name: "Brand",
-      selector: (row) => (row.brand != null ? row.brand.name : "N/A"),
+      name: "Mobile",
+      selector: (row) => (row.mobile != null ? row.mobile : "N/A"),
     },
     {
-      name: "Purchase Price",
-      selector: (row) => row.purchase_price,
-    },
-    {
-      name: "Sale Price",
-      selector: (row) => row.sale_price,
-    },
-    {
-      name: "Unit",
-      selector: (row) => (row.unit != null ? row.unit.unit : "N/A"),
-    },
-    {
-      name: "Photo",
-      selector: (row) => (row.unit != null ? row.unit.unit : "N/A"),
+      name: "Address",
+      selector: (row) => row.address,
     },
     {
       name: "Action",
       cell: (row) => (
         <>
           <Link
-            to={`/product/edit/${row.id}`}
+            to={`/warehouse/edit/${row.id}`}
             className="btn btn-success btn-sm m-1"
           >
             <i className="fas fa-pen fa-sm"></i>

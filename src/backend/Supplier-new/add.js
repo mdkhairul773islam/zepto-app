@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import AdminWraper from "../../components/layouts/AdminWraper";
-import Navbar from "../../backend/Warehouse/navbar";
+import Navbar from "../../backend/Supplier/navbar";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import { useToasts } from "react-toast-notifications";
 import { useForm } from "react-hook-form";
@@ -22,7 +22,7 @@ function Add(props) {
   };
 
   return (
-    <AdminWraper menuOpen="warehouse">
+    <AdminWraper menuOpen="supplier">
       <Container className="p-0" fluid>
         <Row>
           <div className="body_nav">
@@ -33,11 +33,21 @@ function Add(props) {
           <Col>
             <Card>
               <Card.Header as="h4" className="fw-bold">
-                Add New Warehouse
+                Add New
               </Card.Header>
               <Card.Body>
                 <Form onSubmit={handleSubmit(onSubmit)}>
                   <Form.Group as={Row} className="mb-2">
+                    <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
+                      <Form.Label>
+                        Warehouse <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Select aria-label="Default select example">
+                        <option selected disabled value="">Warehouse List</option>
+                        <option value="1">W-1</option>
+                        <option value="2">W-2</option>
+                      </Form.Select>
+                    </Col>
                     <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <Form.Label>
                         Name <span className="text-danger">*</span>
@@ -45,19 +55,19 @@ function Add(props) {
                       <Form.Control
                         type="text"
                         {...register("name", { required: true })}
-                        placeholder="Warehouse Name"
+                        placeholder="Supplier Name"
                         required
                       />
                     </Col>
 
                     <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <Form.Label>
-                        Manager <span className="text-danger"></span>
+                        Contact Person <span className="text-danger"></span>
                       </Form.Label>
                       <Form.Control
                         type="text"
-                        {...register("manager_name")}
-                        placeholder="Manager Name"
+                        {...register("contact_person")}
+                        placeholder="Contact Person Name"
                       />
                     </Col>
 
@@ -66,11 +76,29 @@ function Add(props) {
                         Mobile <span className="text-danger">*</span>{" "}
                       </Form.Label>
                       <Form.Control
-                        type="text"
                         {...register("mobile", { required: true })}
                         placeholder="Mobile No"
                         required
                       />
+                    </Col>
+                    <Col md={4} lg={4} xl={4} xxl={4} xs={12}>
+                      <Form.Label>Inital Balance </Form.Label>
+                      <Row>
+                        <Col md={6}>
+                          <Form.Control
+                            type="number"
+                            {...register("inital_balance", { required: true })}
+                            placeholder="0.0"
+                          />
+                        </Col>
+                        <Col md={6}>
+                          <Form.Select aria-label="Default select example">
+                            <option selected disabled value="">Status</option>
+                            <option value="payable">Payable</option>
+                            <option value="receivable">Receivable</option>
+                          </Form.Select>
+                        </Col>
+                      </Row>
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row} className="mb-2">
@@ -80,15 +108,6 @@ function Add(props) {
                         as="textarea"
                         {...register("address")}
                         rows={3}
-                      />
-                    </Col>
-
-                    <Col md={4} lg={4} xl={4} xxl={4} xs={12}>
-                      <Form.Label>Prefix </Form.Label>
-                      <Form.Control
-                        name="prefix"
-                        {...register("prefix", { required: true })}
-                        placeholder="WarehouseAbc"
                       />
                     </Col>
                   </Form.Group>
@@ -107,7 +126,7 @@ function Add(props) {
           </Col>
         </Row>
       </Container>
-    </AdminWraper>
+    </AdminWraper >
   );
 }
 

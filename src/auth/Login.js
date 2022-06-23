@@ -94,7 +94,7 @@ function Login() {
             <div className="container_box">
               <div className="company_brand">
                 <img src={logo} alt="" />
-                <h3>Zepto Apps</h3>
+                <h3>Freelance iT Lab</h3>
               </div>
               <div className="company_info">
                 <div className="info">

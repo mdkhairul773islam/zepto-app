@@ -1,49 +1,51 @@
 import React from "react";
+
 import ProtectedRoute from "../components/ProtectedRoute";
 
 import AddSupplier from "../backend/Supplier/add";
 import AllSupplier from "../backend/Supplier/index";
+import SupplierDetails from "../backend/Supplier/show";
 import SupplierEdit from "../backend/Supplier/edit";
-import SupplierDetails from "../backend/Supplier/details";
-
-import NewTransaction from "../backend/Supplier/newTransaction";
-import AllTransaction from "../backend/Supplier/allTransaction";
-import EditTransaction from "../backend/Supplier/editTransaction";
-import InvoiceTransaction from "../backend/Supplier/invoiceTransaction";
+import AddTransaction from "../backend/Supplier/addTransaction";
+import TransactionHistory from "../backend/Supplier/transactionHistory";
+import TransactionDetails from "../backend/Supplier/transactionDetails";
+import TransactionEdit from "../backend/Supplier/transactionEdit";
 
 const Supplier = [
-    <ProtectedRoute path="/supplier/all" component={AllSupplier} key="all" />,
-    <ProtectedRoute path="/supplier/add" component={AddSupplier} key="add" />,
+  <ProtectedRoute path="/supplier/all" component={AllSupplier} key="all" />,
+  <ProtectedRoute path="/supplier/add" component={AddSupplier} key="add" />,
+  <ProtectedRoute
+    path="/supplier/add-transaction"
+    component={AddTransaction}
+    key="addTransaction"
+  />,
+  <ProtectedRoute
+    path="/supplier/transaction-histrory"
+    component={TransactionHistory}
+    key="transactionHistory"
+  />,
 
-    <ProtectedRoute
-        path="/supplier/edit/:id"
-        component={SupplierEdit}
-        key="edit"
-    />,
+  <ProtectedRoute
+    path="/supplier/view/:id"
+    component={SupplierDetails}
+    key="show"
+  />,
+  <ProtectedRoute
+    path="/supplier/edit/:id"
+    component={SupplierEdit}
+    key="edit"
+  />,
 
-    <ProtectedRoute
-        path="/supplier/details/:id"
-        component={SupplierDetails}
-        key="details"
-    />,
-
-
-    <ProtectedRoute path="/supplier/all-transaction" component={AllTransaction} key="all-transaction" />,
-    <ProtectedRoute path="/supplier/new-transaction" component={NewTransaction} key="new-transaction" />,
-
-    <ProtectedRoute
-        path="/supplier/transaction/edit/:id"
-        component={EditTransaction}
-        key="edit-transaction"
-    />,
-
-    <ProtectedRoute
-        path="/supplier/transaction/invoice/:id"
-        component={InvoiceTransaction}
-        key="invoice-transaction"
-    />,
-
-
+  <ProtectedRoute
+    path="/supplier/transaction-view/:id"
+    component={TransactionDetails}
+    key="show"
+  />,
+  <ProtectedRoute
+    path="/supplier/transaction-edit/:id"
+    component={TransactionEdit}
+    key="transactionEdit"
+  />,
 ];
 
 export default Supplier;

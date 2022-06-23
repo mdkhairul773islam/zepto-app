@@ -55,7 +55,7 @@ function SideBar(props) {
             onClick={menuOpenFn}
           >
             <Link to="/admin">
-              <i class="fab fa-stack-overflow"></i>
+              <i className="fab fa-stack-overflow"></i>
               <span className="menu_title">Dashboard</span>
             </Link>
           </li>
@@ -65,7 +65,7 @@ function SideBar(props) {
             onClick={menuOpenFn}
           >
             <Link to="#">
-              <i class="fab fa-product-hunt"></i>
+              <i className="fab fa-product-hunt"></i>
               <span className="menu_title">Product</span>
               <span className="menu_arrow">
                 <i className="icon ion-ios-arrow-forward right"></i>
@@ -118,7 +118,7 @@ function SideBar(props) {
             onClick={menuOpenFn}
           >
             <Link to="#">
-              <i className="fas fa-user"></i>
+              <i className="fas fa-users"></i>
               <span className="menu_title">Supplier</span>
               <span className="menu_arrow">
                 <i className="icon ion-ios-arrow-forward right"></i>
@@ -133,10 +133,10 @@ function SideBar(props) {
                 <Link to="/supplier/all">All Supplier</Link>
               </li>
               <li>
-                <Link to="/supplier/new-transaction">New Transaction</Link>
+                <Link to="/supplier/add-transaction">Add Transaction</Link>
               </li>
               <li>
-                <Link to="/supplier/all-transaction">All Transaction</Link>
+                <Link to="/supplier/transaction-histrory">All Transaction</Link>
               </li>
             </ul>
           </li>
