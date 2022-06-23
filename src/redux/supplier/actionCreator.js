@@ -41,7 +41,9 @@ const showroomWiseSupplierList = (showroom_id) => {
   return async (dispatch) => {
     try {
       dispatch(supplierBegin());
-      const res = await DataService.get(`showroom-wise-supplier/${showroom_id}`);
+      const res = await DataService.get(
+        `showroom-wise-supplier/${showroom_id}`
+      );
       dispatch(supplierSuccess(res.data));
     } catch (err) {
       dispatch(supplierErr(err));

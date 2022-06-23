@@ -19,6 +19,7 @@ import { useToasts } from "react-toast-notifications";
 function Index(props) {
   // get data from redux
   const dispatch = useDispatch();
+
   const data = useSelector((state) => state.supplierReducer.supplierList);
   const loading = useSelector((state) => state.supplierReducer.loading);
   const totalDataRows = useSelector((state) => state.supplierReducer.totalRows);
