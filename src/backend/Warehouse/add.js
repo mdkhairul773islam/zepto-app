@@ -11,11 +11,8 @@ import { useForm } from "react-hook-form";
 function Add(props) {
   const { addToast } = useToasts();
   const history = useHistory();
-  const { validatorMessage, setValidatorMessage } = useState({
-    mobile: '',
-    address: 'address',
-    prefix: ''
-  });
+  const [errorMessage, setMessage] = useState({});
+
   useEffect(() => {
     document.title = "Add New Warehouse | Admin Dashboard";
   }, []);
@@ -30,15 +27,14 @@ function Add(props) {
         history.push("/warehouse/all");
       } else if (res.data.warning) {
         addToast(res.data.warning, { appearance: "warning" });
-      }
-      else if (res.data.validator) {
+      } else if (res.data.validator) {
+        setMessage({
+          ...errorMessage,
+          mobile: res.data.message.mobile,
+          address: res.data.message.address,
+          prefix: res.data.message.prefix,
+        });
         addToast(res.data.validator, { appearance: "warning" });
-        const message = {
-          mobile: typeof res.data.message.mobile !== 'undefined' ? res.data.message.mobile : '',
-          address: typeof res.data.message.address !== 'undefined' ? res.data.message.address : '',
-          prefix: typeof res.data.message.prefix !== 'undefined' ? res.data.message.prefix : ''
-        }
-        setValidatorMessage(message);
       }
     } catch (error) {
       console.log("error");
@@ -64,7 +60,7 @@ function Add(props) {
                   <Form.Group as={Row} className="mb-2">
                     <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <Form.Label>
-                        Name <span className="text-danger">*</span> {validatorMessage}
+                        Name <span className="text-danger">*</span>{" "}
                       </Form.Label>
                       <Form.Control
                         type="text"
@@ -95,7 +91,7 @@ function Add(props) {
                         placeholder="Mobile No"
                         required
                       />
-                      <p>The mobile has already been taken.</p>
+                      <p>{errorMessage.mobile}</p>
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row} className="mb-2">
@@ -106,6 +102,7 @@ function Add(props) {
                         {...register("address")}
                         rows={3}
                       />
+                      <p>{errorMessage.address}</p>
                     </Col>
 
                     <Col md={4} lg={4} xl={4} xxl={4} xs={12}>
@@ -115,6 +112,7 @@ function Add(props) {
                         {...register("prefix", { required: true })}
                         placeholder="WarehouseAbc"
                       />
+                      <p>{errorMessage.prefix}</p>
                     </Col>
                   </Form.Group>
                   <hr />
