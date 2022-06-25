@@ -1,24 +1,48 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import AdminWraper from "../../components/layouts/AdminWraper";
 import Navbar from "../../backend/Warehouse/navbar";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
+
+import { DataService } from "../../config/dataService/dataService";
 import { useToasts } from "react-toast-notifications";
 import { useForm } from "react-hook-form";
 
 function Add(props) {
   const { addToast } = useToasts();
   const history = useHistory();
-
+  const { validatorMessage, setValidatorMessage } = useState({
+    mobile: '',
+    address: 'address',
+    prefix: ''
+  });
   useEffect(() => {
     document.title = "Add New Warehouse | Admin Dashboard";
   }, []);
 
   const { register, handleSubmit, formState } = useForm({});
-
   const onSubmit = async (data, e) => {
-    console.log("data", data);
-    e.target.reset();
+    try {
+      const res = await DataService.post("warehouse", data);
+      if (res.data.success) {
+        e.target.reset();
+        addToast(res.data.success, { appearance: "info" });
+        history.push("/warehouse/all");
+      } else if (res.data.warning) {
+        addToast(res.data.warning, { appearance: "warning" });
+      }
+      else if (res.data.validator) {
+        addToast(res.data.validator, { appearance: "warning" });
+        const message = {
+          mobile: typeof res.data.message.mobile !== 'undefined' ? res.data.message.mobile : '',
+          address: typeof res.data.message.address !== 'undefined' ? res.data.message.address : '',
+          prefix: typeof res.data.message.prefix !== 'undefined' ? res.data.message.prefix : ''
+        }
+        setValidatorMessage(message);
+      }
+    } catch (error) {
+      console.log("error");
+    }
   };
 
   return (
@@ -40,7 +64,7 @@ function Add(props) {
                   <Form.Group as={Row} className="mb-2">
                     <Col className="mb-2" md={4} lg={4} xl={4} xxl={4} xs={12}>
                       <Form.Label>
-                        Name <span className="text-danger">*</span>
+                        Name <span className="text-danger">*</span> {validatorMessage}
                       </Form.Label>
                       <Form.Control
                         type="text"
@@ -71,6 +95,7 @@ function Add(props) {
                         placeholder="Mobile No"
                         required
                       />
+                      <p>The mobile has already been taken.</p>
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row} className="mb-2">
