@@ -1,58 +1,73 @@
 import React, { useState, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AdminWraper from "../../components/layouts/AdminWraper";
 import Navbar from "../../backend/Warehouse/navbar";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
+
+import { DataService } from "../../config/dataService/dataService";
 import DataTable from "../../components/DataTable/Table";
 import { useToasts } from "react-toast-notifications";
 
 function Index(props) {
-  const data = [
-    {
-      id: 1,
-      name: "Warehouse A",
-      manager_name: "Khairul Islam",
-      mobile: "01707536945",
-      address: "Dhaka Bangladesh",
-    },
-    {
-      id: 2,
-      name: "Warehouse B",
-      manager_name: "Go Islam",
-      mobile: "01707536940",
-      address: "Dhaka Bangladesh, Dhaka",
-    },
-  ];
-
-  const totalDataRows = 10;
-  const loading = false;
-
   const { addToast } = useToasts();
-  const history = useHistory();
+  const [perPage, setPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [totalRows, setTotalRows] = useState(0);
+  const [wharehouse, setWarehouse] = useState([]);
 
-  const handleDeleteClick = (e) => {
-    var id = e.target.id;
+  const getWarehouse = async function getWarehouse(
+    currentPage = 1,
+    perPage = 10
+  ) {
+    setLoading(true);
+    try {
+      const res = await DataService.get(
+        `warehouse?page=${currentPage}&per_page=${perPage}`
+      );
+      if (res.data.data.length) {
+        setTotalRows(res.data.total);
+        setWarehouse(res.data.data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log("error");
+      setLoading(false);
+    }
   };
 
-  const [totalRows, setTotalRows] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
-
-  useEffect(() => {
-    setTotalRows(totalDataRows);
-  }, [totalDataRows]);
-
-  useEffect(() => {
-    document.title = "Warehouse List | Admin Dashboard";
-  }, []);
+  const handleDeleteClick = async (e) => {
+    try {
+      var id = e.target.id;
+      var confirmDelete = window.confirm("Want to delete?");
+      if (confirmDelete) {
+        const res = await DataService.get(`/warehouse/${id}`);
+        console.log("data", res);
+        if (res.data.success) {
+          setWarehouse(res.data.data);
+          addToast(res.data.success, { appearance: "error" });
+          getWarehouse();
+        }
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  };
 
   const handlePageChange = (currentPage) => {
     setCurrentPage(currentPage);
+    getWarehouse(currentPage);
   };
 
   const handlePerRowsChange = async (perPage, currentPage) => {
     setPerPage(perPage);
+    getWarehouse(currentPage, perPage);
   };
+
+  useEffect(() => {
+    document.title = "Warehouse List | Admin Dashboard";
+    getWarehouse(currentPage, perPage);
+  }, [currentPage, perPage]);
 
   const columns = [
     {
@@ -75,6 +90,7 @@ function Index(props) {
     {
       name: "Address",
       selector: (row) => row.address,
+      width: "100px",
     },
     {
       name: "Action",
@@ -124,7 +140,7 @@ function Index(props) {
               <Card.Body>
                 <DataTable
                   columns={columns}
-                  data={data}
+                  data={wharehouse}
                   loading={loading}
                   totalRows={totalRows}
                   currentPage={currentPage}

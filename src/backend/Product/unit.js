@@ -58,11 +58,12 @@ function Unit(props) {
     e.target.reset();
   };
 
-
   const getUnit = async function getUnit(currentPage = 1, perPage = 10) {
     setLoading(true);
     try {
-      const res = await DataService.get(`unit?page=${currentPage}&per_page=${perPage}`);
+      const res = await DataService.get(
+        `unit?page=${currentPage}&per_page=${perPage}`
+      );
       if (res.data.data.length) {
         setTotalRows(res.data.total);
         setUnits(res.data.data);
@@ -76,7 +77,7 @@ function Unit(props) {
 
   const handlePageChange = (currentPage) => {
     setCurrentPage(currentPage);
-    getUnit(currentPage)
+    getUnit(currentPage);
   };
 
   const handlePerRowsChange = async (perPage, currentPage) => {
@@ -242,9 +243,12 @@ function Unit(props) {
               </Card.Header>
               <Card.Body>
                 <DataTable
-                  columns={columns} data={units}
-                  loading={loading} totalRows={totalRows}
-                  currentPage={currentPage} perPage={perPage}
+                  columns={columns}
+                  data={units}
+                  loading={loading}
+                  totalRows={totalRows}
+                  currentPage={currentPage}
+                  perPage={perPage}
                   handlePerRowsChange={handlePerRowsChange}
                   handlePageChange={handlePageChange}
                 />
