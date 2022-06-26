@@ -20,7 +20,8 @@ function Edit(props) {
   const history = useHistory();
 
   const dispatch = useDispatch();
-  const getSupplier = useSelector((state) => state.supplierReducer.supplier);
+  var getSupplier = useSelector((state) => state.supplierReducer.supplier);
+  const status = getSupplier.initial_balance >= 0 ? "receivable" : "payable";
 
   const { setValue, register, handleSubmit, reset } = useForm();
 
@@ -47,6 +48,8 @@ function Edit(props) {
 
     reset({ getSupplier });
   }, [getSupplier, reset]);
+
+  getSupplier = { ...getSupplier, balance_status: status };
 
   return (
     <AdminWraper menuOpen="supplier">

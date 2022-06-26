@@ -48,10 +48,6 @@ function Index(props) {
         row.contact_person != null ? toFilter(row.contact_person) : "N/A",
     },
     {
-      name: "Address",
-      selector: (row) => (row.address != null ? row.address : "N/A"),
-    },
-    {
       name: "Mobile",
       selector: (row) => (row.mobile != null ? row.mobile : "N/A"),
     },
