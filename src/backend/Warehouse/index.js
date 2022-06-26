@@ -41,11 +41,10 @@ function Index(props) {
       var id = e.target.id;
       var confirmDelete = window.confirm("Want to delete?");
       if (confirmDelete) {
-        const res = await DataService.get(`/warehouse/${id}`);
-        console.log("data", res);
+        const res = await DataService.get(`/warehouse-destroy/${id}`);
         if (res.data.success) {
           setWarehouse(res.data.data);
-          addToast(res.data.success, { appearance: "error" });
+          addToast(res.data.success, { appearance: "success" });
           getWarehouse();
         }
       }

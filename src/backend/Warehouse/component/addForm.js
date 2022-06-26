@@ -14,7 +14,7 @@ function AddForm(props) {
   const { register, handleSubmit, formState } = useForm({});
   const onSubmit = async (data, e) => {
     try {
-      const res = await DataService.post("warehouse", data);
+      const res = await DataService.post("warehouse-store", data);
       if (res.data.success) {
         e.target.reset();
         addToast(res.data.success, { appearance: "info" });

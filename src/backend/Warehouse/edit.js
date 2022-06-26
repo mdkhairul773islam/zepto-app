@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import AdminWraper from "../../components/layouts/AdminWraper";
 import Navbar from "../../backend/Warehouse/navbar";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
+
+import { DataService } from "../../config/dataService/dataService";
 import { useToasts } from "react-toast-notifications";
 import { useForm } from "react-hook-form";
 
@@ -10,8 +12,25 @@ function Add(props) {
   const { addToast } = useToasts();
   const history = useHistory();
 
+  const id = props.match.params.id;
+  const [wharehouse, setWarehouse] = useState([]);
+
+  const getWarehouse = async function getWarehouse(id) {
+    try {
+      const res = await DataService.get(
+        `warehouse-edit/${id}`
+      );
+      if (res.data.length) {
+        setWarehouse(res.data);
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  };
+
   useEffect(() => {
-    document.title = "Add New Warehouse | Admin Dashboard";
+    document.title = "Edit Warehouse | Admin Dashboard";
+    getWarehouse(id);
   }, []);
 
   const { register, handleSubmit, formState } = useForm({});
