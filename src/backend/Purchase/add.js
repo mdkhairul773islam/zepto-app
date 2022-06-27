@@ -23,9 +23,7 @@ import {
   supplierInfo,
 } from "../../redux/supplier/actionCreator";
 import { productOptionList } from "../../redux/product/actionCreator";
-
-import { getShowroom } from "../../utility/utility";
-const showroomList = getShowroom();
+import { warehouse } from "../../redux/helper/actionCreator";
 
 function Purchase(props) {
   const dispatch = useDispatch();
@@ -33,7 +31,9 @@ function Purchase(props) {
   const supllierList = useSelector(
     (state) => state.supplierReducer.supplierList
   );
-
+  const warehouseList = useSelector(
+    (state) => state.helperReducer.warehouseList
+  );
   const supllierInfoDetails = useSelector(
     (state) => state.supplierReducer.supplier
   );
@@ -162,7 +162,7 @@ function Purchase(props) {
                     >
                       <Select
                         type="text"
-                        options={showroomList}
+                        options={warehouseList}
                         onChange={(e) => getSupplierListFn(e)}
                         isSearchable={true}
                         placeholder="Chose Showroom"

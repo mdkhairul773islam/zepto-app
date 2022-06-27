@@ -43,17 +43,27 @@ const getDate = (str) => {
   }
 };
 
-const getShowroom = () => {
-  const showroomList = [
-    { label: "Showroom-1", value: "0001" },
-    { label: "Showroom-2", value: "0002" },
+const getPaymentMethods = () => {
+  return [
+    { label: "Cash", value: "cash" },
+    { label: "Bank", value: "bank" },
+    { label: "Cheque", value: "cheque" },
+    { label: "bKsah", value: "bKash" },
+    { label: "T.T", value: "tt" },
+    { label: "Cash To T.T", value: "cash_to_tt" },
   ];
-  return showroomList;
 };
 
-const serverPath = (file = '') => {
+const getTransactionTypes = () => {
+  return [
+    { label: "Paid To Supplier", value: "payment" },
+    { label: "Receive From Supplier", value: "receive" },
+  ];
+};
+
+const serverPath = (file = "") => {
   return process.env.REACT_APP_SERVER_PATH + file;
-}
+};
 
 export {
   ellipsis,
@@ -62,6 +72,7 @@ export {
   toFilter,
   numberFormat,
   getDate,
-  getShowroom,
-  serverPath
+  getPaymentMethods,
+  getTransactionTypes,
+  serverPath,
 };

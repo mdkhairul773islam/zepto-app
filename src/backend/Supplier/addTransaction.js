@@ -9,13 +9,20 @@ import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import { useToasts } from "react-toast-notifications";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
-import { getDate } from "../../utility/utility";
+import {
+  getDate,
+  getPaymentMethods,
+  getTransactionTypes,
+} from "../../utility/utility";
 
 import { Controller, useForm } from "react-hook-form";
 
 // use redux
 import { useDispatch, useSelector } from "react-redux";
 import { warehouse, suplier } from "../../redux/helper/actionCreator";
+
+const paymentMethodList = getPaymentMethods();
+const transactionTypeList = getTransactionTypes();
 
 function AddTransaction(props) {
   const history = useHistory();
@@ -28,20 +35,6 @@ function AddTransaction(props) {
     (state) => state.helperReducer.warehouseList
   );
   const suplierList = useSelector((state) => state.helperReducer.suplierList);
-
-  const transactionTypeList = [
-    { label: "Paid To Supplier", value: "payment" },
-    { label: "Receive From Supplier", value: "receive" },
-  ];
-
-  const payemtTypeList = [
-    { label: "Cash", value: "cash" },
-    { label: "Bank", value: "bank" },
-    { label: "Cheque", value: "cheque" },
-    { label: "bKsah", value: "bKash" },
-    { label: "T.T", value: "tt" },
-    { label: "Cash To T.T", value: "cash_to_tt" },
-  ];
 
   const {
     control,
@@ -60,23 +53,23 @@ function AddTransaction(props) {
   };
 
   const handleShowroomChange = (e) => {
-    setValue("showroom", e.value);
+    setValue("warehouse", e.value);
   };
 
   const handleSupplierChange = (e) => {
-    setValue("name", e.value);
+    setValue("suplier", e.value);
   };
 
   const handleTransactionTypeChange = (e) => {
-    setValue("transactionType", e.value);
+    setValue("transaction_type", e.value);
   };
 
-  const handlePaymentTypeChange = (e) => {
-    setValue("paymentType", e.value);
+  const handlePaymentMethodChange = (e) => {
+    setValue("payment_method", e.value);
   };
 
   useEffect(() => {
-    document.title = "Add New Transaction | React Dashboard";
+    document.title = "Add New Transaction | Dashboard";
   }, [setValue]);
 
   useEffect(() => {
@@ -225,12 +218,12 @@ function AddTransaction(props) {
                     </Form.Label>
                     <Col sm={3}>
                       <Select
-                        onChange={handlePaymentTypeChange}
+                        onChange={handlePaymentMethodChange}
                         ref={(e) => {
                           register("payment_method", { required: true });
                         }}
                         type="text"
-                        options={payemtTypeList}
+                        options={paymentMethodList}
                         isSearchable={true}
                         placeholder="Chose Payment Method"
                       ></Select>
@@ -260,7 +253,7 @@ function AddTransaction(props) {
                     <Col sm={3}>
                       <Form.Control
                         type="text"
-                        {...register("total_balance", { required: true })}
+                        {...register("total_balance")}
                         placeholder="0.00"
                         readOnly
                       />
