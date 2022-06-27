@@ -1,30 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
+
 import AdminWraper from "../../components/layouts/AdminWraper";
 import Navbar from "../../backend/Supplier/navbar";
+
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 
 import { useToasts } from "react-toast-notifications";
-import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import { getDate } from "../../utility/utility";
+
+import { Controller, useForm } from "react-hook-form";
 
 // use redux
 import { useDispatch, useSelector } from "react-redux";
 import { warehouse, suplier } from "../../redux/helper/actionCreator";
 
 function AddTransaction(props) {
+  const history = useHistory();
+  const { addToast } = useToasts();
+  const [startDate, setStartDate] = useState(new Date());
+
   // get data from redux
   const dispatch = useDispatch();
   const warehouseList = useSelector(
     (state) => state.helperReducer.warehouseList
   );
   const suplierList = useSelector((state) => state.helperReducer.suplierList);
-
-  const [startDate, setStartDate] = useState(new Date());
-  const { addToast } = useToasts();
-  const history = useHistory();
 
   const transactionTypeList = [
     { label: "Paid To Supplier", value: "payment" },
@@ -122,24 +125,23 @@ function AddTransaction(props) {
 
                   <Form.Group as={Row} className="mb-3">
                     <Form.Label column sm={3} className="text-sm-end">
-                      Showroom <span className="text-danger">*</span>
+                      Warehouse <span className="text-danger">*</span>
                     </Form.Label>
                     <Col sm={5}>
                       <Select
                         onChange={handleShowroomChange}
                         ref={(e) => {
-                          register("showroom", { required: true });
+                          register("warehouse", { required: true });
                         }}
                         type="text"
                         options={warehouseList}
                         isSearchable={true}
                         placeholder="Chose Warehouse"
-                        required
                       ></Select>
-                      {errors.showroom &&
-                        errors.showroom.type === "required" && (
+                      {errors.warehouse &&
+                        errors.warehouse.type === "required" && (
                           <span className="text-danger">
-                            Showroom is required
+                            Warehouse is required
                           </span>
                         )}
                     </Col>
@@ -153,7 +155,7 @@ function AddTransaction(props) {
                       <Select
                         onChange={handleSupplierChange}
                         ref={(e) => {
-                          register("name", { required: false });
+                          register("suplier", { required: true });
                         }}
                         type="text"
                         options={suplierList}
@@ -161,7 +163,7 @@ function AddTransaction(props) {
                         placeholder="Chose Supplier Name"
                         required
                       ></Select>
-                      {errors.name && errors.name.type === "required" && (
+                      {errors.suplier && errors.suplier.type === "required" && (
                         <span className="text-danger">
                           Supplier name is required
                         </span>
@@ -200,7 +202,7 @@ function AddTransaction(props) {
                       <Select
                         onChange={handleTransactionTypeChange}
                         ref={(e) => {
-                          register("transactionType", { required: true });
+                          register("transaction_type", { required: true });
                         }}
                         type="text"
                         options={transactionTypeList}
@@ -208,10 +210,10 @@ function AddTransaction(props) {
                         placeholder="Chose Transaction Type"
                         required
                       ></Select>
-                      {errors.transactionType &&
-                        errors.transactionType.type === "required" && (
+                      {errors.transaction_type &&
+                        errors.transaction_type.type === "required" && (
                           <span className="text-danger">
-                            Showroom is required
+                            Transaction Type is required
                           </span>
                         )}
                     </Col>
@@ -219,24 +221,23 @@ function AddTransaction(props) {
 
                   <Form.Group as={Row} className="mb-3">
                     <Form.Label column sm={3} className="text-sm-end">
-                      Payment Type
+                      Payment Method
                     </Form.Label>
                     <Col sm={3}>
                       <Select
                         onChange={handlePaymentTypeChange}
                         ref={(e) => {
-                          register("paymentType", { required: true });
+                          register("payment_method", { required: true });
                         }}
                         type="text"
                         options={payemtTypeList}
                         isSearchable={true}
-                        placeholder="Chose Payment Type"
-                        required
+                        placeholder="Chose Payment Method"
                       ></Select>
-                      {errors.paymentType &&
-                        errors.paymentType.type === "required" && (
+                      {errors.payment_method &&
+                        errors.payment_method === "required" && (
                           <span className="text-danger">
-                            Showroom is required
+                            Payment Method is required
                           </span>
                         )}
                     </Col>
@@ -245,12 +246,9 @@ function AddTransaction(props) {
                         type="number"
                         {...register("payment", { required: true })}
                         placeholder="Amount (0.00)"
-                        required
                       />
                       {errors.payment && errors.payment.type === "required" && (
-                        <span className="text-danger">
-                          Showroom is required
-                        </span>
+                        <span className="text-danger">Amount is required</span>
                       )}
                     </Col>
                   </Form.Group>
@@ -265,16 +263,15 @@ function AddTransaction(props) {
                         {...register("total_balance", { required: true })}
                         placeholder="0.00"
                         readOnly
-                        required
                       />
                     </Col>
                     <Col sm={2}>
                       <Form.Control
                         type="text"
-                        {...register("total_balance_status", {
+                        {...register("balance_status", {
                           required: false,
                         })}
-                        placeholder="Total Balance Status"
+                        placeholder="Balance Status"
                         readOnly
                         required
                       />
