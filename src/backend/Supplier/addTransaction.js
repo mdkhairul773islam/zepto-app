@@ -20,11 +20,7 @@ function AddTransaction(props) {
   const warehouseList = useSelector(
     (state) => state.helperReducer.warehouseList
   );
-
   const suplierList = useSelector((state) => state.helperReducer.suplierList);
-  const supplierList = [];
-  console.log("warehouseList", warehouseList);
-  console.log("supplierList", suplierList);
 
   const [startDate, setStartDate] = useState(new Date());
   const { addToast } = useToasts();
@@ -160,7 +156,7 @@ function AddTransaction(props) {
                           register("name", { required: false });
                         }}
                         type="text"
-                        options={supplierList}
+                        options={suplierList}
                         isSearchable={true}
                         placeholder="Chose Supplier Name"
                         required
