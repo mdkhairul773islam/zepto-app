@@ -9,18 +9,25 @@ import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import { getDate } from "../../utility/utility";
-// use redux
-import { useDispatch } from "react-redux";
-import { supplier } from "../../redux/supplier/actionCreator";
+import { helperFunction } from "../../utility/helper";
 
-import { getShowroom } from "../../utility/utility";
-const showroomList = getShowroom();
+// use redux
+import { useDispatch, useSelector } from "react-redux";
+import { warehouse } from "../../redux/helper/actionCreator";
+import { supplier } from "../../redux/helper/actionCreator";
 
 function AddTransaction(props) {
+
+  // get data from redux
+  const dispatch = useDispatch();
+  const warehouseList = useSelector((state) => state.helperReducer.dataList);
+  console.log('da', helperFunction.warehouseList().then((x)=>{
+    console.log(x.data);
+  }));
+
   const [startDate, setStartDate] = useState(new Date());
   const { addToast } = useToasts();
   const history = useHistory();
-  const dispatch = useDispatch();
 
   const supplierList = [
     { label: "A", value: "001" },
@@ -77,6 +84,12 @@ function AddTransaction(props) {
     document.title = "Add New Transaction | React Dashboard";
   }, [setValue]);
 
+  useEffect(() => {
+    dispatch(warehouse());
+  }, [dispatch]);
+
+
+
   return (
     <AdminWraper menuOpen="supplier">
       <Container className="p-0" fluid>
@@ -127,9 +140,9 @@ function AddTransaction(props) {
                           register("showroom", { required: true });
                         }}
                         type="text"
-                        options={showroomList}
+                        options={warehouseList}
                         isSearchable={true}
-                        placeholder="Chose Showroom"
+                        placeholder="Chose Warehouse"
                         required
                       ></Select>
                       {errors.showroom &&

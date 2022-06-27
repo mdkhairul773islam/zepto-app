@@ -6,6 +6,7 @@ import brandReducer from "./brand/reducers";
 import unitReducer from "./unit/reducers";
 import productReducer from "./product/reducers";
 import supplierReducer from "./supplier/reducers";
+import helperReducer from "./helper/reducers";
 
 export default combineReducers({
   authReducer,
@@ -15,4 +16,5 @@ export default combineReducers({
   unitReducer,
   productReducer,
   supplierReducer,
+  helperReducer
 });
