@@ -1,9 +1,11 @@
 import actions from "./actions";
 
-const { HELPER_BEGIN, HELPER_SUCCESS, HELPER_ERR } = actions;
+const { HELPER_BEGIN, WAREHOUSE_SUCCESS, SUPLIER_SUCCESS, HELPER_ERR } =
+  actions;
 
 const initState = {
-  dataList: [],
+  warehouseList: [],
+  suplierList: [],
   loading: false,
   error: "",
 };
@@ -21,10 +23,16 @@ const Helper = (state = initState, action) => {
         ...state,
         loading: true,
       };
-    case HELPER_SUCCESS:
+    case WAREHOUSE_SUCCESS:
       return {
         ...state,
-        dataList: data.length ? data : [],
+        warehouseList: data.length ? data : [],
+        loading: false,
+      };
+    case SUPLIER_SUCCESS:
+      return {
+        ...state,
+        suplierList: data.length ? data : [],
         loading: false,
       };
     case HELPER_ERR:

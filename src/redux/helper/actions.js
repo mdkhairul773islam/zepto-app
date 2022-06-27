@@ -1,6 +1,7 @@
 const actions = {
   HELPER_BEGIN: "HELPER_BEGIN",
-  HELPER_SUCCESS: "HELPER_SUCCESS",
+  WAREHOUSE_SUCCESS: "WAREHOUSE_SUCCESS",
+  SUPLIER_SUCCESS: "SUPLIER_SUCCESS",
   HELPER_ERR: "HELPER_ERR",
 
   helperBegin: () => {
@@ -9,9 +10,15 @@ const actions = {
     };
   },
 
-  helperSuccess: (data) => {
+  warehouseSuccess: (data) => {
     return {
-      type: actions.HELPER_SUCCESS,
+      type: actions.WAREHOUSE_SUCCESS,
+      data,
+    };
+  },
+  suplierSuccess: (data) => {
+    return {
+      type: actions.SUPLIER_SUCCESS,
       data,
     };
   },

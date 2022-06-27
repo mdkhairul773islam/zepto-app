@@ -1,17 +1,29 @@
 import actions from "./actions";
 import { DataService } from "../../config/dataService/dataService";
-const { helperBegin, helperSuccess, helperErr } = actions;
+const { helperBegin, warehouseSuccess, suplierSuccess, helperErr } = actions;
 
 const warehouse = () => {
   return async (dispatch) => {
     try {
       dispatch(helperBegin());
       const res = await DataService.get("warehouse-list");
-      dispatch(helperSuccess(res.data));
+      dispatch(warehouseSuccess(res.data));
     } catch (err) {
       dispatch(helperErr(err));
     }
   };
 };
 
-export { warehouse };
+const suplier = () => {
+  return async (dispatch) => {
+    try {
+      dispatch(helperBegin());
+      const res = await DataService.get("supplier-list");
+      dispatch(suplierSuccess(res.data));
+    } catch (err) {
+      dispatch(helperErr(err));
+    }
+  };
+};
+
+export { warehouse, suplier };

@@ -16,5 +16,5 @@ export default combineReducers({
   unitReducer,
   productReducer,
   supplierReducer,
-  helperReducer
+  helperReducer,
 });

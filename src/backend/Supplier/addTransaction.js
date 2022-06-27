@@ -9,30 +9,26 @@ import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import { getDate } from "../../utility/utility";
-import { helperFunction } from "../../utility/helper";
 
 // use redux
 import { useDispatch, useSelector } from "react-redux";
-import { warehouse } from "../../redux/helper/actionCreator";
-import { supplier } from "../../redux/helper/actionCreator";
+import { warehouse, suplier } from "../../redux/helper/actionCreator";
 
 function AddTransaction(props) {
-
   // get data from redux
   const dispatch = useDispatch();
-  const warehouseList = useSelector((state) => state.helperReducer.dataList);
-  console.log('da', helperFunction.warehouseList().then((x)=>{
-    console.log(x.data);
-  }));
+  const warehouseList = useSelector(
+    (state) => state.helperReducer.warehouseList
+  );
+
+  const suplierList = useSelector((state) => state.helperReducer.suplierList);
+  const supplierList = [];
+  console.log("warehouseList", warehouseList);
+  console.log("supplierList", suplierList);
 
   const [startDate, setStartDate] = useState(new Date());
   const { addToast } = useToasts();
   const history = useHistory();
-
-  const supplierList = [
-    { label: "A", value: "001" },
-    { label: "B", value: "002" },
-  ];
 
   const transactionTypeList = [
     { label: "Paid To Supplier", value: "payment" },
@@ -86,9 +82,8 @@ function AddTransaction(props) {
 
   useEffect(() => {
     dispatch(warehouse());
+    dispatch(suplier());
   }, [dispatch]);
-
-
 
   return (
     <AdminWraper menuOpen="supplier">
@@ -316,7 +311,6 @@ function AddTransaction(props) {
                       />
                     </Col>
                   </Form.Group>
-
                   <hr />
                   <Form.Group as={Row} className="mb-3">
                     <Form.Label column sm={8} className="text-sm-end">
