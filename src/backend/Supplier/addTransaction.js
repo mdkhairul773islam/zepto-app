@@ -19,7 +19,7 @@ import { Controller, useForm } from "react-hook-form";
 
 // use redux
 import { useDispatch, useSelector } from "react-redux";
-import { warehouse, suplier } from "../../redux/helper/actionCreator";
+import { warehouse, suplier, supplierTransactionDetailsFn } from "../../redux/helper/actionCreator";
 
 const paymentMethodList = getPaymentMethods();
 const transactionTypeList = getTransactionTypes();
@@ -52,12 +52,13 @@ function AddTransaction(props) {
     //e.target.reset();
   };
 
-  const handleShowroomChange = (e) => {
+  const handleWarehouseChange = (e) => {
     setValue("warehouse", e.value);
   };
 
   const handleSupplierChange = (e) => {
     setValue("suplier", e.value);
+    dispatch(supplierTransactionDetailsFn(e));
   };
 
   const handleTransactionTypeChange = (e) => {
@@ -122,7 +123,7 @@ function AddTransaction(props) {
                     </Form.Label>
                     <Col sm={5}>
                       <Select
-                        onChange={handleShowroomChange}
+                        onChange={handleWarehouseChange}
                         ref={(e) => {
                           register("warehouse", { required: true });
                         }}
