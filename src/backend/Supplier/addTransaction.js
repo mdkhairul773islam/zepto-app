@@ -19,7 +19,11 @@ import { Controller, useForm } from "react-hook-form";
 
 // use redux
 import { useDispatch, useSelector } from "react-redux";
-import { warehouse, suplier, supplierTransactionDetailsFn } from "../../redux/helper/actionCreator";
+import {
+  warehouse,
+  suplier,
+  supplierTransactionDetailsFn,
+} from "../../redux/helper/actionCreator";
 
 const paymentMethodList = getPaymentMethods();
 const transactionTypeList = getTransactionTypes();
@@ -66,7 +70,7 @@ function AddTransaction(props) {
   };
 
   const handlePaymentMethodChange = (e) => {
-    setValue("payment_method", e.value);
+    setValue("transaction_method", e.value);
   };
 
   useEffect(() => {
@@ -125,15 +129,15 @@ function AddTransaction(props) {
                       <Select
                         onChange={handleWarehouseChange}
                         ref={(e) => {
-                          register("warehouse", { required: true });
+                          register("warehouse_code", { required: true });
                         }}
                         type="text"
                         options={warehouseList}
                         isSearchable={true}
                         placeholder="Chose Warehouse"
                       ></Select>
-                      {errors.warehouse &&
-                        errors.warehouse.type === "required" && (
+                      {errors.warehouse_code &&
+                        errors.warehouse_code.type === "required" && (
                           <span className="text-danger">
                             Warehouse is required
                           </span>
@@ -215,21 +219,21 @@ function AddTransaction(props) {
 
                   <Form.Group as={Row} className="mb-3">
                     <Form.Label column sm={3} className="text-sm-end">
-                      Payment Method
+                      Transaction Method
                     </Form.Label>
                     <Col sm={3}>
                       <Select
                         onChange={handlePaymentMethodChange}
                         ref={(e) => {
-                          register("payment_method", { required: true });
+                          register("transaction_method", { required: true });
                         }}
                         type="text"
                         options={paymentMethodList}
                         isSearchable={true}
                         placeholder="Chose Payment Method"
                       ></Select>
-                      {errors.payment_method &&
-                        errors.payment_method === "required" && (
+                      {errors.transaction_method &&
+                        errors.transaction_method === "required" && (
                           <span className="text-danger">
                             Payment Method is required
                           </span>
@@ -244,6 +248,26 @@ function AddTransaction(props) {
                       {errors.payment && errors.payment.type === "required" && (
                         <span className="text-danger">Amount is required</span>
                       )}
+                    </Col>
+                  </Form.Group>
+
+                  <Form.Group as={Row} className="mb-3">
+                    <Form.Label column sm={3} className="text-sm-end">
+                      Others Amount
+                    </Form.Label>
+                    <Col sm={3}>
+                      <Form.Control
+                        type="number"
+                        {...register("remission", { required: false })}
+                        placeholder="Remission (0.00)"
+                      />
+                    </Col>
+                    <Col sm={2}>
+                      <Form.Control
+                        type="number"
+                        {...register("comission", { required: false })}
+                        placeholder="Comission (0.00)"
+                      />
                     </Col>
                   </Form.Group>
 

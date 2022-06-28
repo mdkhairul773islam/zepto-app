@@ -1,6 +1,12 @@
 import actions from "./actions";
 import { DataService } from "../../config/dataService/dataService";
-const { helperBegin, warehouseSuccess, suplierSuccess, suplierTransactionDetailsSuccess, helperErr } = actions;
+const {
+  helperBegin,
+  warehouseSuccess,
+  suplierSuccess,
+  suplierTransactionDetailsSuccess,
+  helperErr,
+} = actions;
 
 const warehouse = () => {
   return async (dispatch) => {
