@@ -43,6 +43,14 @@ class DataService {
     });
   }
 
+  static delete(path = "") {
+    return client({
+      method: "DELETE",
+      url: path,
+      headers: { ...authHeader() },
+    });
+  }
+
   static put(path = "", data = {}) {
     return client({
       method: "PUT",
