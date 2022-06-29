@@ -33,11 +33,11 @@ const suplier = () => {
 };
 
 const supplierTransactionDetailsFn = (e) => {
-  console.log(e);
+  const {code} = e;
   return async (dispatch) => {
     try {
       dispatch(helperBegin());
-      const res = await DataService.get("supplier-list");
+      const res = await DataService.get(`supplier-transaction-details/${code}`);
       dispatch(suplierTransactionDetailsSuccess(res.data));
     } catch (err) {
       dispatch(helperErr(err));
