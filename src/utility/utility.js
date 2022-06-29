@@ -61,6 +61,13 @@ const getTransactionTypes = () => {
   ];
 };
 
+const getBalanceStatusList = () => {
+  return [
+    { label: "Payable", value: "payable" },
+    { label: "Receivable", value: "receivable" },
+  ];
+};
+
 const serverPath = (file = "") => {
   return process.env.REACT_APP_SERVER_PATH + file;
 };
@@ -74,5 +81,6 @@ export {
   getDate,
   getPaymentMethods,
   getTransactionTypes,
+  getBalanceStatusList,
   serverPath,
 };

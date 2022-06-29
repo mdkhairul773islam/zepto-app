@@ -1,11 +1,12 @@
 import actions from "./actions";
 
-const { HELPER_BEGIN, WAREHOUSE_SUCCESS, SUPLIER_SUCCESS, HELPER_ERR } =
+const { HELPER_BEGIN, WAREHOUSE_SUCCESS, SUPLIER_SUCCESS, SUPLIER_TRANSACTION_DETAILS_SUCCESS, HELPER_ERR } =
   actions;
 
 const initState = {
   warehouseList: [],
   suplierList: [],
+  partyBalance: [],
   loading: false,
   error: "",
 };
@@ -33,6 +34,12 @@ const Helper = (state = initState, action) => {
       return {
         ...state,
         suplierList: data.length ? data : [],
+        loading: false,
+      };
+    case SUPLIER_TRANSACTION_DETAILS_SUCCESS:
+      return {
+        ...state,
+        partyBalance: data,
         loading: false,
       };
     case HELPER_ERR:
