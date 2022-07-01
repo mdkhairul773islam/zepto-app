@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Scrollbars } from "react-custom-scrollbars";
+import { Scrollbars } from 'react-custom-scrollbars-2';
 import { Link } from "react-router-dom";
 function SideBar(props) {
   const [menuOpen, setMenuOpen] = useState(props.menuOpen);
