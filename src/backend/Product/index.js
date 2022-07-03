@@ -9,7 +9,6 @@ import DataTable from "../../components/DataTable/Table";
 import { useDispatch, useSelector } from "react-redux";
 import { productList, productDelete } from "../../redux/product/actionCreator";
 
-import { toast } from 'react-toastify';
 import { serverPath } from "../../utility/utility";
 
 function Index(props) {
@@ -25,7 +24,7 @@ function Index(props) {
 
   const handleDeleteClick = (e) => {
     var id = e.target.id;
-    dispatch(productDelete(id, addToast, history));
+    dispatch(productDelete(id, history));
   };
 
   const [totalRows, setTotalRows] = useState(0);
