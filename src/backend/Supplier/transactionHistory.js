@@ -14,7 +14,7 @@ import {
   supplierDelete,
 } from "../../redux/supplier/actionCreator";
 
-import { useToasts } from "react-toast-notifications";
+import { toast } from 'react-toastify';
 
 function TransactionHistory(props) {
   // get data from redux
@@ -22,7 +22,7 @@ function TransactionHistory(props) {
   const data = useSelector((state) => state.supplierReducer.supplierList);
   const loading = useSelector((state) => state.supplierReducer.loading);
 
-  const { addToast } = useToasts();
+ 
   const history = useHistory();
 
   const handleDeleteClick = (e) => {

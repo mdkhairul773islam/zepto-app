@@ -3,11 +3,11 @@ import { useHistory } from "react-router-dom";
 import AdminWraper from "../../components/layouts/AdminWraper";
 import Navbar from "../../backend/Supplier/navbar";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
-import { useToasts } from "react-toast-notifications";
+import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 
 function Add(props) {
-    const { addToast } = useToasts();
+   
     const history = useHistory();
 
     useEffect(() => {

@@ -6,7 +6,7 @@ import Navbar from "../../backend/Product/navbar";
 
 import { DataService } from "../../config/dataService/dataService";
 import DataTable from "../../components/DataTable/Table";
-import { useToasts } from "react-toast-notifications";
+import { toast } from 'react-toastify';
 
 import {
   Container,
@@ -27,7 +27,7 @@ function Brand(props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
 
-  const { addToast } = useToasts();
+ 
   const handleClose = () => setShow(false);
 
   /* Brand database store here */
@@ -42,11 +42,15 @@ function Brand(props) {
     try {
       const res = await DataService.post("brand-store", data);
       if (res.data.success) {
-        addToast(res.data.success, { appearance: "info" });
+        toast.success(res.data.success, {
+          position: toast.POSITION.TOP_CENTER
+        });
         getBrand();
       }
       if (res.data.warning) {
-        addToast(res.data.warning, { appearance: "warning" });
+        toast.warn(res.data.warning, {
+          position: toast.POSITION.TOP_CENTER
+        });
         getBrand();
       }
       setLoading(false);
@@ -114,7 +118,9 @@ function Brand(props) {
         name: name,
       });
       if (res.data.success) {
-        addToast(res.data.success, { appearance: "info" });
+        toast.info(res.data.success, {
+          position: toast.POSITION.TOP_CENTER
+        });
         getBrand();
       }
       setLoading(false);
@@ -132,7 +138,9 @@ function Brand(props) {
       if (confirmDelete) {
         const res = await DataService.get(`/brand-destroy/${id}`);
         if (res.data.success) {
-          addToast(res.data.success, { appearance: "error" });
+          toast.success(res.data.success, {
+            position: toast.POSITION.TOP_CENTER
+          });
           getBrand();
         }
       }

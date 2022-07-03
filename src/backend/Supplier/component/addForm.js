@@ -2,7 +2,6 @@ import React, {useEffect} from "react";
 import { useHistory } from "react-router-dom";
 import {  Row, Col, Form, Button } from "react-bootstrap";
 
-import { useToasts } from "react-toast-notifications";
 import { useForm } from "react-hook-form";
 import Select from "react-select";
 
@@ -14,7 +13,7 @@ import {warehouse} from "../../../redux/helper/actionCreator";
 import {getBalanceStatusList} from "../../../utility/utility";
 
 const AddForm = () => {
-    const { addToast } = useToasts();
+   
     const history = useHistory();
 
     const dispatch = useDispatch();
@@ -30,7 +29,7 @@ const AddForm = () => {
     });
   
     const onSubmit = (data, e) => {
-      dispatch(supplier(data, addToast, history));
+      dispatch(supplier(data, history));
     };
   
     const handleBalanceStatusChange = (e) => {

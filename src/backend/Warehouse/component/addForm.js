@@ -3,24 +3,27 @@ import { useHistory } from "react-router-dom";
 import { Row, Col, Form, Button } from "react-bootstrap";
 
 import { DataService } from "../../../config/dataService/dataService";
-import { useToasts } from "react-toast-notifications";
 import { useForm } from "react-hook-form";
+import { toast } from 'react-toastify';
 
 function AddForm(props) {
-  const { addToast } = useToasts();
   const history = useHistory();
   const [errorMessage, setMessage] = useState({});
-
   const { register, handleSubmit, formState } = useForm({});
+
   const onSubmit = async (data, e) => {
     try {
       const res = await DataService.post("warehouse-store", data);
       if (res.data.success) {
         e.target.reset();
-        addToast(res.data.success, { appearance: "info" });
+        toast.success(res.data.success, {
+          position: toast.POSITION.TOP_CENTER
+        });
         history.push("/warehouse/all");
       } else if (res.data.warning) {
-        addToast(res.data.warning, { appearance: "warning" });
+        toast.warn(res.data.warning, {
+          position: toast.POSITION.TOP_CENTER
+        });
       } else if (res.data.validator) {
         setMessage({
           ...errorMessage,
@@ -28,7 +31,9 @@ function AddForm(props) {
           address: res.data.message.address,
           prefix: res.data.message.prefix,
         });
-        addToast(res.data.validator, { appearance: "warning" });
+        toast.error(res.data.validator, {
+          position: toast.POSITION.TOP_CENTER
+        });
       }
     } catch (error) {
       console.log("error");

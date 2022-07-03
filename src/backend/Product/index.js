@@ -9,7 +9,7 @@ import DataTable from "../../components/DataTable/Table";
 import { useDispatch, useSelector } from "react-redux";
 import { productList, productDelete } from "../../redux/product/actionCreator";
 
-import { useToasts } from "react-toast-notifications";
+import { toast } from 'react-toastify';
 import { serverPath } from "../../utility/utility";
 
 function Index(props) {
@@ -20,7 +20,7 @@ function Index(props) {
   const totalDataRows = useSelector((state) => state.productReducer.totalRows);
   const loading = useSelector((state) => state.productReducer.loading);
 
-  const { addToast } = useToasts();
+ 
   const history = useHistory();
 
   const handleDeleteClick = (e) => {

@@ -1,13 +1,15 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Erorr404 from "./auth/Erorr404";
+
 // All Routes Importet here.
 import RouterList from "./routes";
-import { ToastProvider } from "react-toast-notifications";
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 function App() {
   return (
-    <ToastProvider autoDismiss autoDismissTimeout={5000} placement="top-right">
       <div className="App">
         <Router>
           <Switch>
@@ -15,8 +17,8 @@ function App() {
             <Route component={Erorr404} />
           </Switch>
         </Router>
+        <ToastContainer />
       </div>
-    </ToastProvider>
   );
 }
 

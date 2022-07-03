@@ -14,7 +14,6 @@ import {
   Button,
 } from "react-bootstrap";
 
-import { useToasts } from "react-toast-notifications";
 import { useForm } from "react-hook-form";
 // use redux
 import { useDispatch, useSelector } from "react-redux";
@@ -28,7 +27,7 @@ function Edit(props) {
   const [getBrand, setGetBrand] = useState();
   const [getUnit, setGetUnit] = useState();
 
-  const { addToast } = useToasts();
+ 
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -100,7 +99,7 @@ function Edit(props) {
       const photo = await fileConvertBase64(data.new_photo[0]);
       params.append("new_photo", photo);
     }
-    await dispatch(productUpdate(params, addToast, history));
+    await dispatch(productUpdate(params, history));
   };
 
   useEffect(() => {

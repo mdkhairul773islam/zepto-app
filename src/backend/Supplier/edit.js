@@ -11,12 +11,11 @@ import {
   supplierUpdate,
 } from "../../redux/supplier/actionCreator";
 
-import { useToasts } from "react-toast-notifications";
 import { useForm } from "react-hook-form";
 
 function Edit(props) {
   const [getBstatus, setGetBstatus] = useState();
-  const { addToast } = useToasts();
+ 
   const history = useHistory();
 
   const dispatch = useDispatch();
@@ -33,7 +32,7 @@ function Edit(props) {
   const id = props.match.params.id;
   const onSubmit = (data, e) => {
     setValue("getSupplier.balance_status", getBstatus);
-    dispatch(supplierUpdate(data.getSupplier, addToast, history));
+    dispatch(supplierUpdate(data.getSupplier, history));
   };
 
   useEffect(() => {

@@ -14,8 +14,6 @@ import {
   supplierDelete,
 } from "../../redux/supplier/actionCreator";
 
-import { useToasts } from "react-toast-notifications";
-
 function Index(props) {
   // get data from redux
   const dispatch = useDispatch();
@@ -24,12 +22,15 @@ function Index(props) {
   const loading = useSelector((state) => state.supplierReducer.loading);
   const totalDataRows = useSelector((state) => state.supplierReducer.totalRows);
 
-  const { addToast } = useToasts();
+ 
   const history = useHistory();
 
   const handleDeleteClick = (e) => {
     var id = e.target.id;
-    dispatch(supplierDelete(id, addToast, history));
+    var confirmDelete = window.confirm("Want to delete?");
+    if(confirmDelete){
+      dispatch(supplierDelete(id, history));
+    }
   };
 
   const columns = [

@@ -3,13 +3,13 @@ import { useHistory } from "react-router-dom";
 import { Row, Col, Form, Button } from "react-bootstrap";
 
 import { DataService } from "../../../config/dataService/dataService";
-import { useToasts } from "react-toast-notifications";
+import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 
 function EditForm(props) {
   const { register, handleSubmit, formState, reset } = useForm({});
 
-  const { addToast } = useToasts();
+ 
   const history = useHistory();
 
   const id = props.id;
@@ -50,10 +50,14 @@ function EditForm(props) {
       });
       if (res.data.success) {
         e.target.reset();
-        addToast(res.data.success, { appearance: "success" });
+        toast.success(res.data.success, {
+          position: toast.POSITION.TOP_CENTER
+        });
         history.push("/warehouse/all");
       } else if (res.data.warning) {
-        addToast(res.data.warning, { appearance: "warning" });
+        toast.warn(res.data.warning, {
+          position: toast.POSITION.TOP_CENTER
+        });
       } else if (res.data.validator) {
         setMessage({
           ...errorMessage,
@@ -61,7 +65,9 @@ function EditForm(props) {
           address: res.data.message.address,
           prefix: res.data.message.prefix,
         });
-        addToast(res.data.validator, { appearance: "error" });
+        toast.error(res.data.validator, {
+          position: toast.POSITION.TOP_CENTER
+        });
       }
     } catch (error) {
       console.log("error");

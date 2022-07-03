@@ -14,10 +14,10 @@ import { login } from "../redux/authentication/actionCreator";
 import { Redirect } from "react-router-dom";
 
 import { useForm } from "react-hook-form";
-import { useToasts } from "react-toast-notifications";
+import { toast } from 'react-toastify';
 
 function Login() {
-  const { addToast } = useToasts();
+ 
   const dispatch = useDispatch();
 
   const isLoggedin = useSelector((state) => state.authReducer.isLoggedin);
@@ -31,7 +31,7 @@ function Login() {
   });
 
   const onSubmit = (data, e) => {
-    dispatch(login(data, addToast));
+    dispatch(login(data));
     e.target.reset();
   };
 

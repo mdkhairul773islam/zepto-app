@@ -1,5 +1,7 @@
 import actions from "./actions";
+import { toast } from 'react-toastify';
 import { DataService } from "../../config/dataService/dataService";
+
 const {
   loginBegin,
   loginSuccess,
@@ -9,7 +11,7 @@ const {
   logoutErr,
 } = actions;
 
-const login = (data, addToast) => {
+const login = (data) => {
   return async (dispatch) => {
     try {
       dispatch(loginBegin());
@@ -17,31 +19,42 @@ const login = (data, addToast) => {
       if (typeof res.data.token !== "undefined") {
         window.localStorage.setItem("token", res.data.token);
         window.localStorage.setItem("isLoggedin", true);
-        addToast("Admin Successfully Loggedin.", { appearance: "success" });
+        toast.success("Admin Successfully Loggedin.", {
+          position: toast.POSITION.TOP_CENTER
+        });
         dispatch(loginSuccess(res.data));
       } else {
         window.localStorage.removeItem("token");
         window.localStorage.removeItem("isLoggedin");
-        addToast("Admin Successfully Not Loggedin.", { appearance: "error" });
+        toast.error("Admin Successfully Not Loggedin.", {
+          position: toast.POSITION.TOP_CENTER
+        });
       }
     } catch (err) {
       dispatch(loginErr(err));
-      addToast(err.message, { appearance: "error" });
+      toast.error(err.message, {
+        position: toast.POSITION.TOP_CENTER
+      });
     }
   };
 };
 
-const logOut = (addToast) => {
+const logOut = () => {
   return async (dispatch) => {
     try {
       dispatch(logoutBegin());
       window.localStorage.removeItem("isLoggedin");
       dispatch(logoutSuccess(null));
       window.localStorage.removeItem("token");
-      addToast("Admin Successfully Logout.", { appearance: "success" });
+      toast.success("Admin Successfully Logout.", {
+        position: toast.POSITION.TOP_CENTER
+      });
+      
     } catch (err) {
       dispatch(logoutErr(err));
-      addToast("Admin Successfully Not Logout.", { appearance: "error" });
+      toast.error("Admin Successfully Not Logout.", {
+        position: toast.POSITION.TOP_CENTER
+      });
     }
   };
 };

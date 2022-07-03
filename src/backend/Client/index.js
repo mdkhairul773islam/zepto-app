@@ -4,7 +4,7 @@ import AdminWraper from "../../components/layouts/AdminWraper";
 import Navbar from "./navbar";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import DataTable from "../../components/DataTable/Table";
-import { useToasts } from "react-toast-notifications";
+import { toast } from 'react-toastify';
 
 function Index(props) {
   const data = [{}];
@@ -12,7 +12,7 @@ function Index(props) {
   const totalDataRows = 10;
   const loading = false;
 
-  const { addToast } = useToasts();
+ 
   const history = useHistory();
 
   const handleDeleteClick = (e) => {

@@ -7,7 +7,7 @@ import Navbar from "../../backend/Product/navbar";
 import { DataService } from "../../config/dataService/dataService";
 import DataTable from "../../components/DataTable/Table";
 
-import { useToasts } from "react-toast-notifications";
+import { toast } from 'react-toastify';
 
 import {
     Container,
@@ -30,7 +30,7 @@ function Category(props) {
     const [currentPage, setCurrentPage] = useState(1);
     const [perPage, setPerPage] = useState(10);
 
-    const { addToast } = useToasts();
+   
     const handleClose = () => setShow(false);
 
     /* Category database store here */
@@ -45,11 +45,15 @@ function Category(props) {
         try {
             const res = await DataService.post("category-store", data);
             if (res.data.success) {
-                addToast(res.data.success, { appearance: "success" });
+                toast.success(res.data.success, {
+                    position: toast.POSITION.TOP_CENTER
+                  });
                 getCategory();
             }
             if (res.data.warning) {
-                addToast(res.data.warning, { appearance: "warning" });
+                toast(res.data.warning, {
+                    position: toast.POSITION.TOP_CENTER
+                  });
                 getCategory();
             }
             setLoading(false);
@@ -118,11 +122,15 @@ function Category(props) {
             setLoading(true);
             const res = await DataService.post("category-update", { id: id, name: name });
             if (res.data.success) {
-                addToast(res.data.success, { appearance: "success" });
+                toast.success(res.data.success, {
+                    position: toast.POSITION.TOP_CENTER
+                  });
                 getCategory();
             }
             if (res.data.warning) {
-                addToast(res.data.warning, { appearance: "warning" });
+                toast.warn(res.data.warning, {
+                    position: toast.POSITION.TOP_CENTER
+                  });
                 getCategory();
             }
             setLoading(false);
@@ -139,7 +147,9 @@ function Category(props) {
             var confirmDelete = window.confirm("Want to delete?");
             if (confirmDelete) {
                 const res = await DataService.get(`/category-destroy/${id}`);
-                addToast(res.data.success, { appearance: "error" });
+                toast.success(res.data.success, {
+                    position: toast.POSITION.TOP_CENTER
+                  });
                 getCategory();
             }
         } catch (error) {

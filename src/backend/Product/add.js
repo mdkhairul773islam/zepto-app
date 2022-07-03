@@ -12,7 +12,7 @@ import {
   FormCheck,
   Button,
 } from "react-bootstrap";
-import { useToasts } from "react-toast-notifications";
+import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import Select from "react-select";
 
@@ -24,7 +24,7 @@ import { unit } from "../../redux/unit/actionCreator";
 import { product } from "../../redux/product/actionCreator";
 
 function Add(props) {
-  const { addToast } = useToasts();
+ 
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -94,7 +94,7 @@ function Add(props) {
       params.append("photo", photo);
     }
 
-    dispatch(product(params, addToast, history));
+    dispatch(product(params, history));
     e.target.reset();
   };
 

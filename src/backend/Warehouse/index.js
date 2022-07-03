@@ -6,10 +6,10 @@ import { Container, Row, Col, Card, Button } from "react-bootstrap";
 
 import { DataService } from "../../config/dataService/dataService";
 import DataTable from "../../components/DataTable/Table";
-import { useToasts } from "react-toast-notifications";
+import { toast } from 'react-toastify';
 
 function Index(props) {
-  const { addToast } = useToasts();
+ 
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -44,7 +44,9 @@ function Index(props) {
         const res = await DataService.get(`/warehouse-destroy/${id}`);
         if (res.data.success) {
           setWarehouse(res.data.data);
-          addToast(res.data.success, { appearance: "success" });
+          toast.success(res.data.success, {
+            position: toast.POSITION.TOP_CENTER
+          });
           getWarehouse();
         }
       }

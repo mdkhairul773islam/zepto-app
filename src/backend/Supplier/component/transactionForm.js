@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import Select from "react-select";
-import { useToasts } from "react-toast-notifications";
 import { Controller, useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import {
@@ -26,7 +25,7 @@ const paymentMethodList = getPaymentMethods();
 const transactionTypeList = getTransactionTypes();
 
 const TransactionForm = () => {
-    const { addToast } = useToasts();
+   
     const history = useHistory();
     const [startDate, setStartDate] = useState(new Date());
 
@@ -50,7 +49,7 @@ const TransactionForm = () => {
     const onSubmit = (data, e) => {
         const { date } = data;
         const formData = {...data, date: typeof date !=='undefined' ?  getDate(date): getDate(startDate)};
-        dispatch(transaction(formData, addToast, history));
+        dispatch(transaction(formData, history));
         e.target.reset();
     };
 
