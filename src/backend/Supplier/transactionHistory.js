@@ -14,8 +14,6 @@ import {
   supplierDelete,
 } from "../../redux/supplier/actionCreator";
 
-import { toast } from 'react-toastify';
-
 function TransactionHistory(props) {
   // get data from redux
   const dispatch = useDispatch();
@@ -27,7 +25,7 @@ function TransactionHistory(props) {
 
   const handleDeleteClick = (e) => {
     var id = e.target.id;
-    dispatch(supplierDelete(id, addToast, history));
+    dispatch(supplierDelete(id, history));
   };
 
   const columns = [
