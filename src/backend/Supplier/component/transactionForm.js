@@ -28,22 +28,25 @@ const TransactionForm = () => {
    
     const history = useHistory();
     const [startDate, setStartDate] = useState(new Date());
-
+    
     // get data from redux
     const dispatch = useDispatch();
     const warehouseList = useSelector(
         (state) => state.helperReducer.warehouseList
     );
+
     const suplierList = useSelector((state) => state.helperReducer.suplierList);
     const {balance, status} = useSelector((state) => state.helperReducer.partyBalance);
+
     const {
         control,
         setValue,
         register,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm({
-        defaultValues: {},
+        defaultValues: {party_code:''},
     });
 
     const onSubmit = (data, e) => {
@@ -54,11 +57,14 @@ const TransactionForm = () => {
     };
 
     const handleWarehouseChange = (e) => {
-        setValue("warehouse_id", e.value);
+      const warehouse_id = e.value;
+        setValue("warehouse_id", warehouse_id);
+        dispatch(suplier(warehouse_id));
     };
 
     const handleSupplierChange = (e) => {
         setValue("party_code", e.code);
+        setValue("balance", 0);
         dispatch(supplierTransactionDetailsFn(e));
     };
 
@@ -72,8 +78,11 @@ const TransactionForm = () => {
 
     useEffect(() => {
         dispatch(warehouse());
-        dispatch(suplier());
     }, [dispatch]);
+
+    useEffect(() => {
+      reset({balance, status});
+    }, [reset, balance, status]);
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
@@ -155,7 +164,7 @@ const TransactionForm = () => {
       <Col sm={3}>
         <Form.Control
           type="text"
-          value={balance}
+          {...register('balance')}
           placeholder="0.00"
           readOnly
         />
@@ -163,7 +172,7 @@ const TransactionForm = () => {
       <Col sm={2}>
         <Form.Control
           type="text"
-          value={status}
+          {...register('status')}
           placeholder="Balance Status"
           readOnly
           required

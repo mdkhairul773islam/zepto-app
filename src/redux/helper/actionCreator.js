@@ -20,11 +20,11 @@ const warehouse = () => {
   };
 };
 
-const suplier = () => {
+const suplier = (warehouse_id) => {
   return async (dispatch) => {
     try {
       dispatch(helperBegin());
-      const res = await DataService.get("supplier-list");
+      const res = await DataService.get(`supplier-list/${warehouse_id}`);
       dispatch(suplierSuccess(res.data));
     } catch (err) {
       dispatch(helperErr(err));

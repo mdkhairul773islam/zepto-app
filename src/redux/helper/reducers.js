@@ -6,7 +6,7 @@ const { HELPER_BEGIN, WAREHOUSE_SUCCESS, SUPLIER_SUCCESS, SUPLIER_TRANSACTION_DE
 const initState = {
   warehouseList: [],
   suplierList: [],
-  partyBalance: [],
+  partyBalance: {},
   loading: false,
   error: "",
 };
