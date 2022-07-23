@@ -34,9 +34,7 @@ const TransactionForm = () => {
       (state) => state.helperReducer.warehouseList
       );
       
-      const suplierList = useSelector((state) => state.helperReducer.suplierList);
-      const suplierDefaultValue = { label: "Select Suplier", value: 0 }
-
+    const suplierList = useSelector((state) => state.helperReducer.suplierList);
     const {balance, status} = useSelector((state) => state.helperReducer.partyBalance);
 
     const {
@@ -49,14 +47,14 @@ const TransactionForm = () => {
     } = useForm({
         defaultValues: {
           date:startDate,
-          balance: 0,
+          balance: "",
           balance_status: "",
-          comission: 0,
+          comission: "",
           paid_by: "",
           party_code: "",
-          payment: 0,
+          payment: "",
           remark: "",
-          remission: 0,
+          remission: "",
           status: "",
           total_balance: 0,
           transaction_method: "",
@@ -71,18 +69,20 @@ const TransactionForm = () => {
       console.log('formData', formData);
 
       dispatch(transaction(formData, history));
-        //e.target.reset();
+        e.target.reset();
     };
     
     const handleWarehouseChange = (e) => {
-      setValue("balance", 0);
-      setValue("status", "-");
+      setValue("balance", "");
+      setValue("status", "");
       const warehouseId = e.value;
       dispatch(suplier(warehouseId));
       setValue("warehouse_id", e.value);
     };
 
     const handleSupplierChange = async(e) => {
+      setValue("balance", "");
+      setValue("status", "");
       e && dispatch(supplierTransactionDetailsFn(e)) && setValue("party_code", e.value);
     };
 
@@ -136,14 +136,18 @@ const TransactionForm = () => {
         <Select
           onChange={handleWarehouseChange}
           ref={(e) => {
-            register("warehouse_id");
+            register("warehouse_id", { required: true });
           }}
           type="text"
           options={warehouseList}
           isSearchable={true}
           placeholder="Chose Warehouse"
         ></Select>
-        
+        {errors.warehouse_id && errors.warehouse_id.type === "required" && (
+          <span className="text-danger">
+            Warehouse is required
+          </span>
+        )}
       </Col>
     </Form.Group>
 
@@ -161,7 +165,7 @@ const TransactionForm = () => {
           options={suplierList}
           isSearchable={true}
           isClearable={true}
-          defaultValue={suplierDefaultValue}
+          defaultValue={{ label: "Select Suplier", value: 0 }}
           required
         ></Select>
         {errors.balance && errors.balance.type === "required" && (
@@ -179,14 +183,14 @@ const TransactionForm = () => {
       <Col sm={3}>
         <Form.Control
           type="text"
-          {...register('balance')}
+          {...register('balance', { required: true })}
           placeholder="0.00"
           readOnly
         />
         {errors.balance &&
           errors.balance.type === "required" && (
             <span className="text-danger">
-              Suplier Name & Balance amount is required
+              Balance amount is required
             </span>
           )}
       </Col>
@@ -196,7 +200,6 @@ const TransactionForm = () => {
           {...register('status')}
           placeholder="Balance Status"
           readOnly
-          required
         />
       </Col>
     </Form.Group>
@@ -209,7 +212,7 @@ const TransactionForm = () => {
         <Select
           onChange={handleTransactionTypeChange}
           ref={(e) => {
-            register("transaction_type", { required: false });
+            register("transaction_type", { required: true });
           }}
           type="text"
           options={transactionTypeList}
@@ -234,7 +237,7 @@ const TransactionForm = () => {
         <Select
           onChange={handlePaymentMethodChange}
           ref={(e) => {
-            register("transaction_method", { required: false });
+            register("transaction_method", { required: true });
           }}
           type="text"
           options={paymentMethodList}
@@ -251,7 +254,7 @@ const TransactionForm = () => {
       <Col sm={2}>
         <Form.Control
           type="number"
-          {...register("payment", { required: false })}
+          {...register("payment", { required: true })}
           placeholder="Amount (0.00)"
         />
         {errors.payment && errors.payment.type === "required" && (
