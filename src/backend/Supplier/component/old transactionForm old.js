@@ -28,15 +28,17 @@ const TransactionForm = () => {
    
     const history = useHistory();
     const [startDate, setStartDate] = useState(new Date());
+    const [suplierCode, setSuplierCode] = useState(null);
+
     // get data from redux
     const dispatch = useDispatch();
     const warehouseList = useSelector(
-      (state) => state.helperReducer.warehouseList
-      );
-      
-      const suplierList = useSelector((state) => state.helperReducer.suplierList);
-      const suplierDefaultValue = { label: "Select Suplier", value: 0 }
+        (state) => state.helperReducer.warehouseList
+    );
 
+    
+
+    const suplierList = useSelector((state) => state.helperReducer.suplierList);
     const {balance, status} = useSelector((state) => state.helperReducer.partyBalance);
 
     const {
@@ -44,21 +46,22 @@ const TransactionForm = () => {
         setValue,
         register,
         handleSubmit,
+        reset,
         watch,
         formState: { errors },
     } = useForm({
         defaultValues: {
-          date:startDate,
-          balance: 0,
+          balance: "",
           balance_status: "",
-          comission: 0,
+          comission: "",
+          date: "",
           paid_by: "",
           party_code: "",
-          payment: 0,
+          payment: "",
           remark: "",
-          remission: 0,
+          remission: "",
           status: "",
-          total_balance: 0,
+          total_balance: "",
           transaction_method: "",
           transaction_type: "",
           warehouse_id:""
@@ -66,24 +69,29 @@ const TransactionForm = () => {
     });
 
     const onSubmit = (data, e) => {
-      const { date } = data;
-      const formData = {...data, date: typeof date !=='undefined' ?  getDate(date): getDate(startDate)};
-      console.log('formData', formData);
 
-      dispatch(transaction(formData, history));
+        const { date } = data;
+        const formData = {...data, date: typeof date !=='undefined' ?  getDate(date): getDate(startDate)};
+        console.log("Fromdata", formData);
+        
+        //dispatch(transaction(formData, history));
         //e.target.reset();
     };
     
     const handleWarehouseChange = (e) => {
-      setValue("balance", 0);
-      setValue("status", "-");
       const warehouseId = e.value;
+      setValue("balance", "");
+      setValue("status", "");
+      setSuplierCode(null);
       dispatch(suplier(warehouseId));
-      setValue("warehouse_id", e.value);
+      setValue("warehouse_id", e.value)
     };
 
     const handleSupplierChange = async(e) => {
-      e && dispatch(supplierTransactionDetailsFn(e)) && setValue("party_code", e.value);
+      dispatch(supplierTransactionDetailsFn(e));
+      const suplier = e.label + " - " + e.mobile;
+      setSuplierCode(suplier);
+      setValue("party_code", e.value);
     };
 
     const handleTransactionTypeChange = (e) => {
@@ -93,16 +101,18 @@ const TransactionForm = () => {
     const handlePaymentMethodChange = (e) => {
       setValue("transaction_method", e.value);
     };
+ 
+    useEffect(() => {
+      reset({balance, status})
+    }, [reset, balance, status]); 
+
+
   useEffect(() => {
       dispatch(warehouse());
   }, [dispatch]);
-
-  useEffect(() => {
-    setValue("balance", balance);
-    setValue("status", status);
-  }, [balance, setValue, status]);
-
+  
   console.log(watch());
+  //console.log("warehouseList", warehouseList);
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
     <Form.Group as={Row} className="mb-3">
@@ -155,13 +165,12 @@ const TransactionForm = () => {
         <Select
           onChange={handleSupplierChange}
           ref={(e) => {
-            register("party_code", { required: true });
+            register("party_code", { required: false });
           }}
           type="text"
           options={suplierList}
-          isSearchable={true}
-          isClearable={true}
-          defaultValue={suplierDefaultValue}
+          isSearchable={false}
+          placeholder="Chose Supplier Name"
           required
         ></Select>
         {errors.balance && errors.balance.type === "required" && (
@@ -169,6 +178,7 @@ const TransactionForm = () => {
             Supplier name is required
           </span>
         )}
+        {suplierCode}
       </Col>
     </Form.Group>
 
