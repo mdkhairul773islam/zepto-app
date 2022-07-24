@@ -61,7 +61,20 @@ const TransactionForm = () => {
           transaction_type: "",
           warehouse_id:""
         },
-    });
+      });
+
+      const watchFields = watch(["balance", "total_balance", "payment", "remission", "comission"]);
+
+      
+      const handleBalanceCalculationChange = () =>{
+        console.log('da', watchFields.balance+10);
+        setValue("balance",  watchFields.balance+10);
+      };
+    
+      useEffect(() => { 
+      }, []);
+
+
 
     const onSubmit = (data, e) => {
       const { date } = data;
@@ -83,7 +96,7 @@ const TransactionForm = () => {
     const handleSupplierChange = async(e) => {
       setValue("balance", "");
       setValue("status", "");
-      e && dispatch(supplierTransactionDetailsFn(e)) && setValue("party_code", e.value);
+     await e && dispatch(supplierTransactionDetailsFn(e)) && setValue("party_code", e.value);
     };
 
     const handleTransactionTypeChange = (e) => {
@@ -102,7 +115,10 @@ const TransactionForm = () => {
     setValue("status", status);
   }, [balance, setValue, status]);
 
-  console.log(watch());
+
+  
+
+  //console.log(watch());
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
     <Form.Group as={Row} className="mb-3">
