@@ -47,7 +47,7 @@ const TransactionForm = () => {
     } = useForm({
         defaultValues: {
           date:startDate,
-          balance: "",
+          balance: 0,
           balance_status: "",
           comission: "",
           paid_by: "",
@@ -63,16 +63,32 @@ const TransactionForm = () => {
         },
       });
 
-      const watchFields = watch(["balance", "total_balance", "payment", "remission", "comission"]);
+      const mainBalance = watch("balance");
+      const paymentAmount = watch("payment");
+      const transactionType = watch("transaction_type");
+      const comission = watch("comission");
+      const remission = watch("remission");
 
-      
-      const handleBalanceCalculationChange = () =>{
-        console.log('da', watchFields.balance+10);
-        setValue("balance",  watchFields.balance+10);
-      };
-    
-      useEffect(() => { 
-      }, []);
+      /* This code for supplier balance calculation */
+       useEffect(() => { 
+        var total = 0;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        if(typeof transactionType !="undefined" && transactionType !=="" && transactionType==="receive"){
+          total = (!isNaN(parseFloat(mainBalance)) ? parseFloat(mainBalance) : 0) 
+          + (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0) 
+          + (!isNaN(parseFloat(comission)) ? parseFloat(comission) : 0)
+          - (!isNaN(parseFloat(remission)) ? parseFloat(remission) : 0)
+        }else if(typeof transactionType !="undefined" && transactionType !=="" && transactionType==="paid"){
+          total = (!isNaN(parseFloat(mainBalance)) ? parseFloat(mainBalance) : 0) 
+          - (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0) 
+          - (!isNaN(parseFloat(comission)) ? parseFloat(comission) : 0)
+          - (!isNaN(parseFloat(remission)) ? parseFloat(remission) : 0)
+        }else{
+          total = mainBalance;
+        }
+        total >= 0 ? setValue("balance_status", "Receivable") : setValue("balance_status", "Payable");
+        setValue("total_balance", total);
+      }, [paymentAmount, mainBalance, setValue, transactionType, comission, remission]); 
 
 
 
