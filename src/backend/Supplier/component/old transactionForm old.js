@@ -28,12 +28,16 @@ const TransactionForm = () => {
    
     const history = useHistory();
     const [startDate, setStartDate] = useState(new Date());
+    const [suplierCode, setSuplierCode] = useState(null);
+
     // get data from redux
     const dispatch = useDispatch();
     const warehouseList = useSelector(
-      (state) => state.helperReducer.warehouseList
-      );
-      
+        (state) => state.helperReducer.warehouseList
+    );
+
+    
+
     const suplierList = useSelector((state) => state.helperReducer.suplierList);
     const {balance, status} = useSelector((state) => state.helperReducer.partyBalance);
 
@@ -42,77 +46,52 @@ const TransactionForm = () => {
         setValue,
         register,
         handleSubmit,
+        reset,
         watch,
         formState: { errors },
     } = useForm({
         defaultValues: {
-          date:startDate,
-          balance: 0,
+          balance: "",
           balance_status: "",
           comission: "",
+          date: "",
           paid_by: "",
           party_code: "",
           payment: "",
           remark: "",
           remission: "",
           status: "",
-          total_balance: 0,
+          total_balance: "",
           transaction_method: "",
           transaction_type: "",
           warehouse_id:""
         },
-      });
-
-      const mainBalance = watch("balance");
-      const paymentAmount = watch("payment");
-      const transactionType = watch("transaction_type");
-      const comission = watch("comission");
-      const remission = watch("remission");
-
-      /* This code for supplier balance calculation */
-       useEffect(() => { 
-        var total = 0;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        if(typeof transactionType !="undefined" && transactionType !=="" && transactionType==="receive"){
-          total = (!isNaN(parseFloat(mainBalance)) ? parseFloat(mainBalance) : 0) 
-          + (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0) 
-          + (!isNaN(parseFloat(comission)) ? parseFloat(comission) : 0)
-          - (!isNaN(parseFloat(remission)) ? parseFloat(remission) : 0)
-        }else if(typeof transactionType !="undefined" && transactionType !=="" && transactionType==="paid"){
-          total = (!isNaN(parseFloat(mainBalance)) ? parseFloat(mainBalance) : 0) 
-          - (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0) 
-          - (!isNaN(parseFloat(comission)) ? parseFloat(comission) : 0)
-          - (!isNaN(parseFloat(remission)) ? parseFloat(remission) : 0)
-        }else{
-          total = mainBalance;
-        }
-        total >= 0 ? setValue("balance_status", "Receivable") : setValue("balance_status", "Payable");
-        setValue("total_balance", total);
-      }, [paymentAmount, mainBalance, setValue, transactionType, comission, remission]); 
-
-
+    });
 
     const onSubmit = (data, e) => {
-      const { date } = data;
-      const formData = {...data, date: typeof date !=='undefined' ?  getDate(date): getDate(startDate)};
-      console.log('formData', formData);
 
-      dispatch(transaction(formData, history));
-        e.target.reset();
+        const { date } = data;
+        const formData = {...data, date: typeof date !=='undefined' ?  getDate(date): getDate(startDate)};
+        console.log("Fromdata", formData);
+        
+        //dispatch(transaction(formData, history));
+        //e.target.reset();
     };
     
     const handleWarehouseChange = (e) => {
+      const warehouseId = e.value;
       setValue("balance", "");
       setValue("status", "");
-      const warehouseId = e.value;
+      setSuplierCode(null);
       dispatch(suplier(warehouseId));
-      setValue("warehouse_id", e.value);
+      setValue("warehouse_id", e.value)
     };
 
     const handleSupplierChange = async(e) => {
-      setValue("balance", "");
-      setValue("status", "");
-     await e && dispatch(supplierTransactionDetailsFn(e)) && setValue("party_code", e.value);
+      dispatch(supplierTransactionDetailsFn(e));
+      const suplier = e.label + " - " + e.mobile;
+      setSuplierCode(suplier);
+      setValue("party_code", e.value);
     };
 
     const handleTransactionTypeChange = (e) => {
@@ -122,19 +101,18 @@ const TransactionForm = () => {
     const handlePaymentMethodChange = (e) => {
       setValue("transaction_method", e.value);
     };
+ 
+    useEffect(() => {
+      reset({balance, status})
+    }, [reset, balance, status]); 
+
+
   useEffect(() => {
       dispatch(warehouse());
   }, [dispatch]);
-
-  useEffect(() => {
-    setValue("balance", balance);
-    setValue("status", status);
-  }, [balance, setValue, status]);
-
-
   
-
-  //console.log(watch());
+  console.log(watch());
+  //console.log("warehouseList", warehouseList);
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
     <Form.Group as={Row} className="mb-3">
@@ -168,18 +146,14 @@ const TransactionForm = () => {
         <Select
           onChange={handleWarehouseChange}
           ref={(e) => {
-            register("warehouse_id", { required: true });
+            register("warehouse_id");
           }}
           type="text"
           options={warehouseList}
           isSearchable={true}
           placeholder="Chose Warehouse"
         ></Select>
-        {errors.warehouse_id && errors.warehouse_id.type === "required" && (
-          <span className="text-danger">
-            Warehouse is required
-          </span>
-        )}
+        
       </Col>
     </Form.Group>
 
@@ -191,13 +165,12 @@ const TransactionForm = () => {
         <Select
           onChange={handleSupplierChange}
           ref={(e) => {
-            register("party_code", { required: true });
+            register("party_code", { required: false });
           }}
           type="text"
           options={suplierList}
-          isSearchable={true}
-          isClearable={true}
-          defaultValue={{ label: "Select Suplier", value: 0 }}
+          isSearchable={false}
+          placeholder="Chose Supplier Name"
           required
         ></Select>
         {errors.balance && errors.balance.type === "required" && (
@@ -205,6 +178,7 @@ const TransactionForm = () => {
             Supplier name is required
           </span>
         )}
+        {suplierCode}
       </Col>
     </Form.Group>
 
@@ -215,14 +189,14 @@ const TransactionForm = () => {
       <Col sm={3}>
         <Form.Control
           type="text"
-          {...register('balance', { required: true })}
+          {...register('balance')}
           placeholder="0.00"
           readOnly
         />
         {errors.balance &&
           errors.balance.type === "required" && (
             <span className="text-danger">
-              Balance amount is required
+              Suplier Name & Balance amount is required
             </span>
           )}
       </Col>
@@ -232,6 +206,7 @@ const TransactionForm = () => {
           {...register('status')}
           placeholder="Balance Status"
           readOnly
+          required
         />
       </Col>
     </Form.Group>
@@ -244,7 +219,7 @@ const TransactionForm = () => {
         <Select
           onChange={handleTransactionTypeChange}
           ref={(e) => {
-            register("transaction_type", { required: true });
+            register("transaction_type", { required: false });
           }}
           type="text"
           options={transactionTypeList}
@@ -269,7 +244,7 @@ const TransactionForm = () => {
         <Select
           onChange={handlePaymentMethodChange}
           ref={(e) => {
-            register("transaction_method", { required: true });
+            register("transaction_method", { required: false });
           }}
           type="text"
           options={paymentMethodList}
@@ -286,7 +261,7 @@ const TransactionForm = () => {
       <Col sm={2}>
         <Form.Control
           type="number"
-          {...register("payment", { required: true })}
+          {...register("payment", { required: false })}
           placeholder="Amount (0.00)"
         />
         {errors.payment && errors.payment.type === "required" && (

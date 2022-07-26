@@ -56,7 +56,7 @@ const getPaymentMethods = () => {
 
 const getTransactionTypes = () => {
   return [
-    { label: "Paid To Supplier", value: "payment" },
+    { label: "Paid To Supplier", value: "paid" },
     { label: "Receive From Supplier", value: "receive" },
   ];
 };
