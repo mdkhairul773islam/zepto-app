@@ -35,7 +35,7 @@ const TransactionForm = () => {
       );
       
     const suplierList = useSelector((state) => state.helperReducer.suplierList);
-    const {balance, status} = useSelector((state) => state.helperReducer.partyBalance);
+    const {balance, status, real_balance} = useSelector((state) => state.helperReducer.partyBalance);
 
     const {
         control,
@@ -48,6 +48,7 @@ const TransactionForm = () => {
         defaultValues: {
           date:startDate,
           balance: 0,
+          real_balance: 0,
           balance_status: "",
           comission: "",
           paid_by: "",
@@ -62,8 +63,7 @@ const TransactionForm = () => {
           warehouse_id:""
         },
       });
-
-      const mainBalance = watch("balance");
+      const currentSuplierStatus = watch("status");
       const paymentAmount = watch("payment");
       const transactionType = watch("transaction_type");
       const comission = watch("comission");
@@ -73,46 +73,53 @@ const TransactionForm = () => {
        useEffect(() => { 
         var total = 0;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        if(typeof transactionType !="undefined" && transactionType !=="" && transactionType==="receive"){
-          total = (!isNaN(parseFloat(mainBalance)) ? parseFloat(mainBalance) : 0) 
-          + (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0) 
+        if(typeof transactionType !="undefined" && transactionType !=="" && currentSuplierStatus==="Receivable"){
+          total = (!isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0) 
           + (!isNaN(parseFloat(comission)) ? parseFloat(comission) : 0)
           - (!isNaN(parseFloat(remission)) ? parseFloat(remission) : 0)
-        }else if(typeof transactionType !="undefined" && transactionType !=="" && transactionType==="paid"){
-          total = (!isNaN(parseFloat(mainBalance)) ? parseFloat(mainBalance) : 0) 
-          - (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0) 
+
+          if(transactionType==="receive"){
+            total = parseFloat(total) - (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0);
+          }else{
+            total = parseFloat(total) + (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0);
+          }
+
+        }else if(typeof transactionType !="undefined" && transactionType !=="" && currentSuplierStatus==="Payable"){
+          total = (!isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0) 
           - (!isNaN(parseFloat(comission)) ? parseFloat(comission) : 0)
           - (!isNaN(parseFloat(remission)) ? parseFloat(remission) : 0)
+
+          if(transactionType==="paid"){
+            total = parseFloat(total) + (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0);
+          }else{
+            total = parseFloat(total) - (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0);
+          }
+
         }else{
-          total = mainBalance;
+          total = (!isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0);
         }
         total >= 0 ? setValue("balance_status", "Receivable") : setValue("balance_status", "Payable");
+        total= Math.abs(total).toFixed();
         setValue("total_balance", total);
-      }, [paymentAmount, mainBalance, setValue, transactionType, comission, remission]); 
 
+      }, [paymentAmount, real_balance, setValue, transactionType, comission, remission, currentSuplierStatus]); 
 
 
     const onSubmit = (data, e) => {
       const { date } = data;
       const formData = {...data, date: typeof date !=='undefined' ?  getDate(date): getDate(startDate)};
-      console.log('formData', formData);
-
       dispatch(transaction(formData, history));
-        e.target.reset();
+      e.target.reset();
     };
     
     const handleWarehouseChange = (e) => {
-      setValue("balance", "");
-      setValue("status", "");
       const warehouseId = e.value;
       dispatch(suplier(warehouseId));
       setValue("warehouse_id", e.value);
     };
 
     const handleSupplierChange = async(e) => {
-      setValue("balance", "");
-      setValue("status", "");
-     await e && dispatch(supplierTransactionDetailsFn(e)) && setValue("party_code", e.value);
+     await e && dispatch(supplierTransactionDetailsFn(e)) && setValue("party_code", e.code);
     };
 
     const handleTransactionTypeChange = (e) => {
@@ -128,8 +135,9 @@ const TransactionForm = () => {
 
   useEffect(() => {
     setValue("balance", balance);
+    setValue("realBalance", real_balance);
     setValue("status", status);
-  }, [balance, setValue, status]);
+  }, [balance, real_balance, setValue, status]);
 
 
   
@@ -197,10 +205,10 @@ const TransactionForm = () => {
           options={suplierList}
           isSearchable={true}
           isClearable={true}
-          defaultValue={{ label: "Select Suplier", value: 0 }}
+          defaultValue={{ label: "Select Suplier", value: null }}
           required
         ></Select>
-        {errors.balance && errors.balance.type === "required" && (
+        {errors.party_code && errors.party_code.type === "required" && (
           <span className="text-danger">
             Supplier name is required
           </span>
@@ -331,7 +339,7 @@ const TransactionForm = () => {
         <Form.Control
           type="text"
           {...register("balance_status", {
-            required: false,
+            required: true,
           })}
           placeholder="Balance Status"
           readOnly
