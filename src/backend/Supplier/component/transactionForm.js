@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import Select from "react-select";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form"; 
 import DatePicker from "react-datepicker";
 import {
   getDate,
@@ -26,6 +26,24 @@ const transactionTypeList = getTransactionTypes();
 const TransactionForm = () => {
   const history = useHistory();
   const [startDate, setStartDate] = useState(new Date());
+  const defaultValues = {
+    date: startDate,
+    balance: 0,
+    real_balance: 0,
+    balance_status: "",
+    comission: "",
+    paid_by: "",
+    party_code: "",
+    payment: "",
+    remark: "",
+    remission: "",
+    status: "",
+    total_balance: 0,
+    transaction_method: "",
+    transaction_type: "",
+    warehouse_id: "",
+  };
+
   // get data from redux
   const dispatch = useDispatch();
   const warehouseList = useSelector(
@@ -33,6 +51,7 @@ const TransactionForm = () => {
   );
 
   const suplierList = useSelector((state) => state.helperReducer.suplierList);
+  
   const { balance, status, real_balance } = useSelector(
     (state) => state.helperReducer.partyBalance
   );
@@ -45,24 +64,9 @@ const TransactionForm = () => {
     watch,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      date: startDate,
-      balance: 0,
-      real_balance: 0,
-      balance_status: "",
-      comission: "",
-      paid_by: "",
-      party_code: "",
-      payment: "",
-      remark: "",
-      remission: "",
-      status: "",
-      total_balance: 0,
-      transaction_method: "",
-      transaction_type: "",
-      warehouse_id: "",
-    },
+    defaultValues: defaultValues,
   });
+
   const warehouseId = watch("warehouse_id");
   const partyCode = watch("party_code");
   const currentSuplierStatus = watch("status");
@@ -143,9 +147,9 @@ const TransactionForm = () => {
     partyCode,
   ]);
 
-  const handleWarehouseChange = (e) => {
+  const handleWarehouseChange = async (e) => {
     const warehouseId = e.value;
-    dispatch(suplier(warehouseId));
+    await dispatch(suplier(warehouseId));
     setValue("warehouse_id", e.value);
   };
 
@@ -220,6 +224,7 @@ const TransactionForm = () => {
             type="text"
             options={warehouseList}
             isSearchable={true}
+            isClearable
             placeholder="Chose Warehouse"
           ></Select>
           {errors.warehouse_id && errors.warehouse_id.type === "required" && (
@@ -241,7 +246,7 @@ const TransactionForm = () => {
             type="text"
             options={suplierList}
             isSearchable={true}
-            isClearable={true}
+            isClearable
             defaultValue={{ label: "Select Suplier", value: null }}
             required
           ></Select>

@@ -78,7 +78,7 @@ function TransactionHistory(props) {
     },
   ];
   useEffect(() => {
-    document.title = "Supplier List | React Dashboard";
+    document.title = "Suplier Transaction History | React Dashboard";
     dispatch(supplierList());
   }, [dispatch]);
 
@@ -94,7 +94,7 @@ function TransactionHistory(props) {
           <Col>
             <Card>
               <Card.Header as="h4" className="fw-bold">
-                All Supplier
+                All Transaction
                 <Button
                   to="#"
                   className="btn btn-light btn-xl float-end px-1 py-0"
