@@ -33,7 +33,7 @@ const suplier = (warehouse_id) => {
 };
 
 const supplierTransactionDetailsFn = (e) => {
-  const {code} = e;
+  const code = typeof e.code !="undefined" ? e : 0;
   return async (dispatch) => {
     try {
       dispatch(helperBegin());

@@ -143,9 +143,9 @@ const TransactionForm = () => {
     partyCode,
   ]);
 
-  const handleWarehouseChange = (e) => {
+  const handleWarehouseChange = async (e) => {
     const warehouseId = e.value;
-    dispatch(suplier(warehouseId));
+    await dispatch(suplier(warehouseId));
     setValue("warehouse_id", e.value);
   };
 
@@ -212,7 +212,6 @@ const TransactionForm = () => {
         </Form.Label>
         <Col sm={5}>
           <Select
-            // eslint-disable-next-line no-sequences
             onChange={handleWarehouseChange}
             ref={(e) => {
               register("warehouse_id", { required: true });
