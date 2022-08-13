@@ -101,7 +101,7 @@ const TransactionForm = () => {
         total >= 0 ? setValue("balance_status", "Receivable") : setValue("balance_status", "Payable");
         total= Math.abs(total).toFixed();
         setValue("total_balance", total);
-
+        
       }, [paymentAmount, real_balance, setValue, transactionType, comission, remission, currentSuplierStatus]); 
 
 
