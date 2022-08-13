@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import AdminWraper from "../../components/layouts/AdminWraper";
 import Navbar from "./navbar";
@@ -19,6 +19,7 @@ function TransactionHistory(props) {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.supplierReducer.supplierList);
   const loading = useSelector((state) => state.supplierReducer.loading);
+  const totalDataRows = useSelector((state) => state.supplierReducer.totalRows);
 
  
   const history = useHistory();
@@ -33,6 +34,10 @@ function TransactionHistory(props) {
       name: "Date",
       selector: (row) =>
         row.date != null ? toFilter(row.date) : "N/A",
+    },
+    {
+      name: "Warehouse",
+      selector: (row) => row.name,
     },
     {
       name: "Name",
@@ -77,10 +82,29 @@ function TransactionHistory(props) {
       className: "action-width",
     },
   ];
+
+  const [totalRows, setTotalRows] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+
   useEffect(() => {
-    document.title = "Supplier List | React Dashboard";
-    dispatch(supplierList());
-  }, [dispatch]);
+    setTotalRows(totalDataRows);
+  }, [totalDataRows]);
+
+  useEffect(() => {
+    document.title = "Suplier Transaction History | React Dashboard";
+    dispatch(supplierList(currentPage, perPage));
+  }, [currentPage, dispatch, perPage]);
+
+  const handlePageChange = (currentPage) => {
+    setCurrentPage(currentPage);
+    dispatch(supplierList(currentPage));
+  };
+
+  const handlePerRowsChange = async (perPage, currentPage) => {
+    setPerPage(perPage);
+    dispatch(supplierList(currentPage, perPage));
+  };
 
   return (
     <AdminWraper menuOpen="supplier">
@@ -94,7 +118,7 @@ function TransactionHistory(props) {
           <Col>
             <Card>
               <Card.Header as="h4" className="fw-bold">
-                All Supplier
+                All Transaction
                 <Button
                   to="#"
                   className="btn btn-light btn-xl float-end px-1 py-0"
@@ -104,7 +128,16 @@ function TransactionHistory(props) {
                 </Button>
               </Card.Header>
               <Card.Body>
-                <DataTable columns={columns} data={data} loading={loading} />
+                <DataTable 
+                columns={columns}
+                 data={data}
+                  loading={loading}
+                  totalRows={totalRows}
+                  currentPage={currentPage}
+                  perPage={perPage}
+                  handlePerRowsChange={handlePerRowsChange}
+                  handlePageChange={handlePageChange}
+                />
               </Card.Body>
               <Card.Footer className="text-muted">&nbsp;</Card.Footer>
             </Card>
