@@ -10,23 +10,25 @@ import { numberFormat, toFilter } from "../../utility/utility";
 // use redux
 import { useDispatch, useSelector } from "react-redux";
 import {
-  supplierList,
-  supplierDelete,
-} from "../../redux/supplier/actionCreator";
+  transactionHistory,
+  transactionDelete,
+} from "../../redux/suplierTransaction/actionCreator";
 
 function TransactionHistory(props) {
   // get data from redux
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.supplierReducer.supplierList);
-  const loading = useSelector((state) => state.supplierReducer.loading);
-  const totalDataRows = useSelector((state) => state.supplierReducer.totalRows);
+  const data = useSelector((state) => state.suplierTransactionReducerReducer.transactionList);
+  const loading = useSelector((state) => state.suplierTransactionReducerReducer.loading);
+  const totalDataRows = useSelector((state) => state.suplierTransactionReducerReducer.totalRows);
 
+
+  console.log("data", data);
  
   const history = useHistory();
 
   const handleDeleteClick = (e) => {
     var id = e.target.id;
-    dispatch(supplierDelete(id, history));
+    dispatch(transactionDelete(id, history));
   };
 
   const columns = [
@@ -93,17 +95,17 @@ function TransactionHistory(props) {
 
   useEffect(() => {
     document.title = "Suplier Transaction History | React Dashboard";
-    dispatch(supplierList(currentPage, perPage));
+    dispatch(transactionHistory(currentPage, perPage));
   }, [currentPage, dispatch, perPage]);
 
   const handlePageChange = (currentPage) => {
     setCurrentPage(currentPage);
-    dispatch(supplierList(currentPage));
+    dispatch(transactionHistory(currentPage));
   };
 
   const handlePerRowsChange = async (perPage, currentPage) => {
     setPerPage(perPage);
-    dispatch(supplierList(currentPage, perPage));
+    dispatch(transactionHistory(currentPage, perPage));
   };
 
   return (

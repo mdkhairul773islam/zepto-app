@@ -24,7 +24,8 @@ const Transaction = (state = initState, action) => {
     case TRANSACTION_SUCCESS:
       return {
         ...state,
-        transactionList: data.length ? data : [],
+        transactionList: data.data,
+        totalRows: data.data.total,
         loading: false,
       };
     case TRANSACTION_ERR:
