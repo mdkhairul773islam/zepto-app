@@ -27,7 +27,7 @@ const Product = (state = initState, action) => {
       return {
         ...state,
         productList: data.data,
-        totalRows: data.data.total,
+        totalRows: data.total,
         loading: false,
       };
     case PRODUCT_GET:

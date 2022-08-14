@@ -28,7 +28,7 @@ const Supplier = (state = initState, action) => {
       return {
         ...state,
         supplierList: data.data,
-        totalRows: data.data.total,
+        totalRows: data.total,
         loading: false,
       };
     case SUPPLIER_GET:

@@ -305,9 +305,25 @@ const TransactionForm = () => {
 
       <Form.Group as={Row} className="mb-3">
         <Form.Label column sm={3} className="text-sm-end">
+          Transaction Amount
+        </Form.Label>
+        <Col sm={5}>
+          <Form.Control
+            type="number"
+            {...register("payment", { required: true })}
+            placeholder="Amount (0.00)"
+          />
+          {errors.payment && errors.payment.type === "required" && (
+            <span className="text-danger">Amount is required</span>
+          )}
+        </Col>
+      </Form.Group>
+
+      <Form.Group as={Row} className="mb-3">
+        <Form.Label column sm={3} className="text-sm-end">
           Transaction Method
         </Form.Label>
-        <Col sm={3}>
+        <Col sm={5}>
           <Select
             onChange={handlePaymentMethodChange}
             ref={(e) => {
@@ -323,30 +339,13 @@ const TransactionForm = () => {
               <span className="text-danger">Payment Method is required</span>
             )}
         </Col>
-        <Col sm={2}>
-          <Form.Control
-            type="number"
-            {...register("payment", { required: true })}
-            placeholder="Amount (0.00)"
-          />
-          {errors.payment && errors.payment.type === "required" && (
-            <span className="text-danger">Amount is required</span>
-          )}
-        </Col>
       </Form.Group>
 
       <Form.Group as={Row} className="mb-3">
         <Form.Label column sm={3} className="text-sm-end">
-          Others Amount
+          Comission
         </Form.Label>
-        <Col sm={3}>
-          <Form.Control
-            type="number"
-            {...register("remission", { required: false })}
-            placeholder="Remission (0.00)"
-          />
-        </Col>
-        <Col sm={2}>
+        <Col sm={5}>
           <Form.Control
             type="number"
             {...register("comission", { required: false })}

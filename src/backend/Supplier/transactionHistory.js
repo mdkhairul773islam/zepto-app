@@ -5,8 +5,6 @@ import Navbar from "./navbar";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import DataTable from "../../components/DataTable/Table";
 
-import { numberFormat, toFilter } from "../../utility/utility";
-
 // use redux
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -17,15 +15,11 @@ import {
 function TransactionHistory(props) {
   // get data from redux
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.suplierTransactionReducerReducer.transactionList);
-  const loading = useSelector((state) => state.suplierTransactionReducerReducer.loading);
-  const totalDataRows = useSelector((state) => state.suplierTransactionReducerReducer.totalRows);
+  const data = useSelector((state) => state.suplierTransactionReducer.transactionList);
+  const loading = useSelector((state) => state.suplierTransactionReducer.loading);
+  const totalDataRows = useSelector((state) => state.suplierTransactionReducer.totalRows);
 
-
-  console.log("data", data);
- 
   const history = useHistory();
-
   const handleDeleteClick = (e) => {
     var id = e.target.id;
     dispatch(transactionDelete(id, history));
@@ -35,11 +29,11 @@ function TransactionHistory(props) {
     {
       name: "Date",
       selector: (row) =>
-        row.date != null ? toFilter(row.date) : "N/A",
+        row.transaction_at != null ? row.transaction_at : "N/A",
     },
     {
       name: "Warehouse",
-      selector: (row) => row.name,
+      selector: (row) => row.warehouse_name,
     },
     {
       name: "Name",
@@ -50,8 +44,13 @@ function TransactionHistory(props) {
       selector: (row) => (row.mobile != null ? row.mobile : "N/A"),
     },
     {
-      name: "Payment",
-      selector: (row) => numberFormat(row.payment),
+      name: "Amount",
+      selector: (row) => row.credit  > 0 ? row.credit : row.debit,
+      center: true,
+    },
+    {
+      name: "Comission/Remission",
+      selector: (row) => row.comission  > 0 ? row.comission : row.remission,
       center: true,
     },
     {
