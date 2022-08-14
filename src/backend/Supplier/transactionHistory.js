@@ -18,8 +18,8 @@ function TransactionHistory(props) {
   // get data from redux
   const dispatch = useDispatch();
   const data = useSelector((state) => state.suplierTransactionReducerReducer.transactionList);
-  const loading = useSelector((state) => state.suplierTransactionReducerReducer.loading);
-  const totalDataRows = useSelector((state) => state.suplierTransactionReducerReducer.totalRows);
+  const loading = useSelector((state) => state.suplierTransactionReducer.loading);
+  const totalDataRows = useSelector((state) => state.suplierTransactionReducer.totalRows);
 
 
   console.log("data", data);
