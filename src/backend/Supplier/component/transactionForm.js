@@ -31,12 +31,10 @@ const TransactionForm = () => {
     balance: 0,
     real_balance: 0,
     balance_status: "",
-    comission: "",
     paid_by: "",
     party_code: "",
     payment: "",
     remark: "",
-    remission: "",
     status: "",
     total_balance: 0,
     transaction_method: "",
@@ -72,8 +70,6 @@ const TransactionForm = () => {
   const currentSuplierStatus = watch("status");
   const paymentAmount = watch("payment");
   const transactionType = watch("transaction_type");
-  const comission = watch("comission");
-  const remission = watch("remission");
 
   /* This code for supplier balance calculation */
   useEffect(() => {
@@ -90,18 +86,14 @@ const TransactionForm = () => {
         transactionType !== "" &&
         currentSuplierStatus === "Receivable"
       ) {
-        total =
-          (!isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0) +
-          (!isNaN(parseFloat(comission)) ? parseFloat(comission) : 0) -
-          (!isNaN(parseFloat(remission)) ? parseFloat(remission) : 0);
-
+        total = (!isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0); 
         if (transactionType === "receive") {
           total =
-            parseFloat(total) -
+            parseFloat(total) - 
             (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0);
         } else {
           total =
-            parseFloat(total) +
+            parseFloat(total)  +
             (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0);
         }
       } else if (
@@ -109,11 +101,7 @@ const TransactionForm = () => {
         transactionType !== "" &&
         currentSuplierStatus === "Payable"
       ) {
-        total =
-          (!isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0) -
-          (!isNaN(parseFloat(comission)) ? parseFloat(comission) : 0) -
-          (!isNaN(parseFloat(remission)) ? parseFloat(remission) : 0);
-
+        total = (!isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0) 
         if (transactionType === "paid") {
           total =
             parseFloat(total) +
@@ -140,8 +128,6 @@ const TransactionForm = () => {
     real_balance,
     setValue,
     transactionType,
-    comission,
-    remission,
     currentSuplierStatus,
     warehouseId,
     partyCode,
@@ -338,19 +324,6 @@ const TransactionForm = () => {
             errors.transaction_method.type === "required" && (
               <span className="text-danger">Payment Method is required</span>
             )}
-        </Col>
-      </Form.Group>
-
-      <Form.Group as={Row} className="mb-3">
-        <Form.Label column sm={3} className="text-sm-end">
-          Comission
-        </Form.Label>
-        <Col sm={5}>
-          <Form.Control
-            type="number"
-            {...register("comission", { required: false })}
-            placeholder="Comission (0.00)"
-          />
         </Col>
       </Form.Group>
 

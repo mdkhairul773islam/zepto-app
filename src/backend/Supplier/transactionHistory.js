@@ -40,17 +40,16 @@ function TransactionHistory(props) {
       selector: (row) => row.name,
     },
     {
-      name: "Mobile",
-      selector: (row) => (row.mobile != null ? row.mobile : "N/A"),
+      name: "Code",
+      selector: (row) => (row.party_code != null ? row.party_code : "N/A"),
+    },
+    {
+      name: "Type Of Transaction / Method",
+      selector: (row) => (row.transaction_method != null ? row.transaction_method : "N/A"),
     },
     {
       name: "Amount",
       selector: (row) => row.credit  > 0 ? row.credit : row.debit,
-      center: true,
-    },
-    {
-      name: "Comission/Remission",
-      selector: (row) => row.comission  > 0 ? row.comission : row.remission,
       center: true,
     },
     {
@@ -130,8 +129,8 @@ function TransactionHistory(props) {
               </Card.Header>
               <Card.Body>
                 <DataTable 
-                columns={columns}
-                 data={data}
+                  columns={columns}
+                  data={data}
                   loading={loading}
                   totalRows={totalRows}
                   currentPage={currentPage}
