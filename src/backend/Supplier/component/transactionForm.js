@@ -24,38 +24,34 @@ const paymentMethodList = getPaymentMethods();
 const transactionTypeList = getTransactionTypes();
 
 const TransactionForm = () => {
+  // get data from redux
+  const dispatch = useDispatch();
+  const warehouseList = useSelector(
+    (state) => state.helperReducer.warehouseList
+  );
+  
+  const { balance, status, real_balance } = useSelector(
+    (state) => state.helperReducer.partyBalance
+  );
+
   const history = useHistory();
   const [startDate, setStartDate] = useState(new Date());
+
   const defaultValues = {
     date: startDate,
     balance: 0,
     real_balance: 0,
     balance_status: "",
-    comission: "",
     paid_by: "",
     party_code: "",
     payment: "",
     remark: "",
-    remission: "",
     status: "",
     total_balance: 0,
     transaction_method: "",
     transaction_type: "",
     warehouse_id: "",
   };
-
-  // get data from redux
-  const dispatch = useDispatch();
-  const warehouseList = useSelector(
-    (state) => state.helperReducer.warehouseList
-  );
-
-  const suplierList = useSelector((state) => state.helperReducer.suplierList);
-  
-  const { balance, status, real_balance } = useSelector(
-    (state) => state.helperReducer.partyBalance
-  );
-
   const {
     control,
     setValue,
@@ -72,8 +68,18 @@ const TransactionForm = () => {
   const currentSuplierStatus = watch("status");
   const paymentAmount = watch("payment");
   const transactionType = watch("transaction_type");
-  const comission = watch("comission");
-  const remission = watch("remission");
+
+  /* suplier list set */
+  const [suplierList, setSuplierList] = useState(null);
+  const getSuplierList = useSelector((state) => state.helperReducer.suplierList);
+  useEffect(() => {
+    if(warehouseId){
+      setValue("party_code", 0);
+      setSuplierList(getSuplierList);
+    }else{
+      setSuplierList([]);
+    }
+  }, [getSuplierList, setValue, warehouseId]);
 
   /* This code for supplier balance calculation */
   useEffect(() => {
@@ -90,18 +96,14 @@ const TransactionForm = () => {
         transactionType !== "" &&
         currentSuplierStatus === "Receivable"
       ) {
-        total =
-          (!isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0) +
-          (!isNaN(parseFloat(comission)) ? parseFloat(comission) : 0) -
-          (!isNaN(parseFloat(remission)) ? parseFloat(remission) : 0);
-
+        total = (!isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0); 
         if (transactionType === "receive") {
           total =
-            parseFloat(total) -
+            parseFloat(total) - 
             (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0);
         } else {
           total =
-            parseFloat(total) +
+            parseFloat(total)  +
             (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0);
         }
       } else if (
@@ -109,11 +111,7 @@ const TransactionForm = () => {
         transactionType !== "" &&
         currentSuplierStatus === "Payable"
       ) {
-        total =
-          (!isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0) -
-          (!isNaN(parseFloat(comission)) ? parseFloat(comission) : 0) -
-          (!isNaN(parseFloat(remission)) ? parseFloat(remission) : 0);
-
+        total = (!isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0) 
         if (transactionType === "paid") {
           total =
             parseFloat(total) +
@@ -132,24 +130,24 @@ const TransactionForm = () => {
       total = Math.abs(total).toFixed();
       setValue("total_balance", total);
     } else {
+      setValue("real_balance", 0);
       setValue("balance", 0);
       setValue("status", "");
+      setValue("total_balance", 0);
+      setValue("balance_status", "");
     }
   }, [
     paymentAmount,
     real_balance,
     setValue,
     transactionType,
-    comission,
-    remission,
     currentSuplierStatus,
     warehouseId,
     partyCode,
   ]);
 
   const handleWarehouseChange = async (e) => {
-    const warehouseId = e.value;
-    await dispatch(suplier(warehouseId));
+    await dispatch(suplier(e.value));
     setValue("warehouse_id", e.value);
   };
 
@@ -166,6 +164,7 @@ const TransactionForm = () => {
   const handlePaymentMethodChange = (e) => {
     setValue("transaction_method", e.value);
   };
+  
   useEffect(() => {
     dispatch(warehouse());
   }, [dispatch]);
@@ -245,8 +244,8 @@ const TransactionForm = () => {
             type="text"
             options={suplierList}
             isSearchable={true}
+            defaultValue={{ code:null, label: "Select Suplier", value: 0, mobile:null }}
             isClearable
-            defaultValue={{ label: "Select Suplier", value: null }}
             required
           ></Select>
           {errors.party_code && errors.party_code.type === "required" && (
@@ -305,9 +304,25 @@ const TransactionForm = () => {
 
       <Form.Group as={Row} className="mb-3">
         <Form.Label column sm={3} className="text-sm-end">
+          Transaction Amount
+        </Form.Label>
+        <Col sm={5}>
+          <Form.Control
+            type="number"
+            {...register("payment", { required: true })}
+            placeholder="Amount (0.00)"
+          />
+          {errors.payment && errors.payment.type === "required" && (
+            <span className="text-danger">Amount is required</span>
+          )}
+        </Col>
+      </Form.Group>
+
+      <Form.Group as={Row} className="mb-3">
+        <Form.Label column sm={3} className="text-sm-end">
           Transaction Method
         </Form.Label>
-        <Col sm={3}>
+        <Col sm={5}>
           <Select
             onChange={handlePaymentMethodChange}
             ref={(e) => {
@@ -322,36 +337,6 @@ const TransactionForm = () => {
             errors.transaction_method.type === "required" && (
               <span className="text-danger">Payment Method is required</span>
             )}
-        </Col>
-        <Col sm={2}>
-          <Form.Control
-            type="number"
-            {...register("payment", { required: true })}
-            placeholder="Amount (0.00)"
-          />
-          {errors.payment && errors.payment.type === "required" && (
-            <span className="text-danger">Amount is required</span>
-          )}
-        </Col>
-      </Form.Group>
-
-      <Form.Group as={Row} className="mb-3">
-        <Form.Label column sm={3} className="text-sm-end">
-          Others Amount
-        </Form.Label>
-        <Col sm={3}>
-          <Form.Control
-            type="number"
-            {...register("remission", { required: false })}
-            placeholder="Remission (0.00)"
-          />
-        </Col>
-        <Col sm={2}>
-          <Form.Control
-            type="number"
-            {...register("comission", { required: false })}
-            placeholder="Comission (0.00)"
-          />
         </Col>
       </Form.Group>
 

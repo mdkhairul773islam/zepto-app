@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import AdminWraper from "../../components/layouts/AdminWraper";
 import Navbar from "./navbar";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import DataTable from "../../components/DataTable/Table";
+import { Controller, useForm } from "react-hook-form"; 
+import DatePicker from "react-datepicker";
 
-import { numberFormat, toFilter } from "../../utility/utility";
+import {getDate} from "../../utility/utility";
 
 // use redux
 import { useDispatch, useSelector } from "react-redux";
@@ -15,17 +17,25 @@ import {
 } from "../../redux/suplierTransaction/actionCreator";
 
 function TransactionHistory(props) {
+
+  const [startDate, setStartDate] = useState(new Date());
+  const defaultValues = {
+    date: startDate
+  };
+
+  const {
+    control, handleSubmit,
+  } = useForm({
+    defaultValues: defaultValues,
+  });
+
   // get data from redux
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.suplierTransactionReducerReducer.transactionList);
+  const data = useSelector((state) => state.suplierTransactionReducer.transactionList);
   const loading = useSelector((state) => state.suplierTransactionReducer.loading);
   const totalDataRows = useSelector((state) => state.suplierTransactionReducer.totalRows);
 
-
-  console.log("data", data);
- 
   const history = useHistory();
-
   const handleDeleteClick = (e) => {
     var id = e.target.id;
     dispatch(transactionDelete(id, history));
@@ -33,25 +43,36 @@ function TransactionHistory(props) {
 
   const columns = [
     {
+      name: "Sl",
+      selector: (row, index) => ++index,
+      maxWidth:"20px",
+      center: true,
+    },
+    {
       name: "Date",
       selector: (row) =>
-        row.date != null ? toFilter(row.date) : "N/A",
+      row.transaction_at != null ? row.transaction_at : "N/A",
+      sortable: true,
     },
     {
       name: "Warehouse",
-      selector: (row) => row.name,
+      selector: (row) => row.warehouse_name,
     },
     {
       name: "Name",
       selector: (row) => row.name,
     },
     {
-      name: "Mobile",
-      selector: (row) => (row.mobile != null ? row.mobile : "N/A"),
+      name: "Code",
+      selector: (row) => (row.party_code != null ? row.party_code : "N/A"),
     },
     {
-      name: "Payment",
-      selector: (row) => numberFormat(row.payment),
+      name: "Type Of Transaction / Method",
+      selector: (row) => (row.transaction_method != null ? row.transaction_method : "N/A"),
+    },
+    {
+      name: "Amount",
+      selector: (row) => row.credit  > 0 ? row.credit : row.debit,
       center: true,
     },
     {
@@ -108,6 +129,16 @@ function TransactionHistory(props) {
     dispatch(transactionHistory(currentPage, perPage));
   };
 
+
+  const onSubmit = async (data, e) => {
+    const { date } = data;
+    const formData = {
+      ...data,
+      date: typeof date !== "undefined" ? getDate(date) : getDate(startDate),
+    };
+    console.log('data', data);
+  };
+  
   return (
     <AdminWraper menuOpen="supplier">
       <Container className="p-0" fluid>
@@ -130,9 +161,43 @@ function TransactionHistory(props) {
                 </Button>
               </Card.Header>
               <Card.Body>
+              <Form onSubmit={handleSubmit(onSubmit)}>
+                <Form.Group as={Row} className="mb-3">
+                  <Col sm={2}>
+                    <Controller
+                      control={control}
+                      name="date"
+                      render={({ field }) => (
+                        <DatePicker
+                          className="form-control"
+                          placeholderText="Date From"
+                          onChange={(date) => field.onChange(date, setStartDate(date))}
+                          selected={startDate}
+                          dateFormat="yyyy-MM-dd"
+                        />
+                      )}
+                    />
+                  </Col>
+                  <Col sm={2}>
+                    <Controller
+                      control={control}
+                      name="date"
+                      render={({ field }) => (
+                        <DatePicker
+                          className="form-control"
+                          placeholderText="Date To"
+                          onChange={(date) => field.onChange(date, setStartDate(date))}
+                          selected={startDate}
+                          dateFormat="yyyy-MM-dd"
+                        />
+                      )}
+                    />
+                  </Col>
+                  </Form.Group>
+                </Form>
                 <DataTable 
-                columns={columns}
-                 data={data}
+                  columns={columns}
+                  data={data}
                   loading={loading}
                   totalRows={totalRows}
                   currentPage={currentPage}

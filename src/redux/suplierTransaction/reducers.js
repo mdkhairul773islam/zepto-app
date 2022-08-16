@@ -4,6 +4,7 @@ const { TRANSACTION_BEGIN, TRANSACTION_SUCCESS, TRANSACTION_ERR } = actions;
 
 const initState = {
   transactionList: [],
+  totalRows: 0,
   loading: false,
   error: "",
 };
@@ -25,7 +26,7 @@ const Transaction = (state = initState, action) => {
       return {
         ...state,
         transactionList: data.data,
-        totalRows: data.data.total,
+        totalRows: data.total,
         loading: false,
       };
     case TRANSACTION_ERR:

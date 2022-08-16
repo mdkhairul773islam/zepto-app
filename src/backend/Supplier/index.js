@@ -36,8 +36,9 @@ function Index(props) {
   const columns = [
     {
       name: "Sl",
-      selector: (row, index) => index + 1,
+      selector: (row, index) => ++index,
       maxWidth: "20px",
+      center: true,
     },
     {
       name: "Name",
