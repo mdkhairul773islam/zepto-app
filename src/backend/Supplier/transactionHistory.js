@@ -6,8 +6,9 @@ import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import DataTable from "../../components/DataTable/Table";
 import { Controller, useForm } from "react-hook-form"; 
 import DatePicker from "react-datepicker";
+import Select from "react-select";
 
-import {getDate} from "../../utility/utility";
+import {getDate, toFilter} from "../../utility/utility";
 
 // use redux
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +16,10 @@ import {
   transactionHistory,
   transactionDelete,
 } from "../../redux/suplierTransaction/actionCreator";
+import {
+  warehouse,
+  suplier,
+} from "../../redux/helper/actionCreator";
 
 function TransactionHistory(props) {
 
@@ -24,13 +29,17 @@ function TransactionHistory(props) {
   };
 
   const {
-    control, handleSubmit,
+    control, setValue,  register, handleSubmit,  formState: { errors },
   } = useForm({
     defaultValues: defaultValues,
   });
 
   // get data from redux
   const dispatch = useDispatch();
+  const warehouseList = useSelector(
+    (state) => state.helperReducer.warehouseList
+  );
+  const suplierList = useSelector((state) => state.helperReducer.suplierList);
   const data = useSelector((state) => state.suplierTransactionReducer.transactionList);
   const loading = useSelector((state) => state.suplierTransactionReducer.loading);
   const totalDataRows = useSelector((state) => state.suplierTransactionReducer.totalRows);
@@ -68,7 +77,7 @@ function TransactionHistory(props) {
     },
     {
       name: "Type Of Transaction / Method",
-      selector: (row) => (row.transaction_method != null ? row.transaction_method : "N/A"),
+      selector: (row) => (row.transaction_method != null ? toFilter(row.transaction_method) : "N/A"),
     },
     {
       name: "Amount",
@@ -129,6 +138,16 @@ function TransactionHistory(props) {
     dispatch(transactionHistory(currentPage, perPage));
   };
 
+  useEffect(() => {
+    dispatch(warehouse());
+  }, [dispatch]);
+
+  const handleWarehouseChange = async (e) => {
+    (await e) && dispatch(suplier(e.value)) && setValue("warehouse_id", e.value);
+  };
+  const handleSupplierChange = async (e) => {
+      setValue("party_code", e.code);
+  };
 
   const onSubmit = async (data, e) => {
     const { date } = data;
@@ -193,6 +212,39 @@ function TransactionHistory(props) {
                       )}
                     />
                   </Col>
+                  <Col sm={3}>
+                    <Select
+                      onChange={handleWarehouseChange}
+                      ref={(e) => {
+                        register("warehouse_id", { required: true });
+                      }}
+                      type="text"
+                      options={warehouseList}
+                      isSearchable={true}
+                      isClearable
+                      placeholder="Chose Warehouse"
+                    ></Select>
+                    {errors.warehouse_id && errors.warehouse_id.type === "required" && (
+                      <span className="text-danger">Warehouse is required</span>
+                    )}
+                  </Col>
+                  <Col sm={3}>
+                  <Select
+                    onChange={handleSupplierChange}
+                    ref={(e) => {
+                      register("party_code", { required: true });
+                    }}
+                    type="text"
+                    options={suplierList}
+                    isSearchable={true}
+                    defaultValue={{code:null, label: "Select Suplier", value: 0, mobile:null }}
+                    isClearable
+                    required
+                  ></Select>
+                  {errors.party_code && errors.party_code.type === "required" && (
+                    <span className="text-danger">Supplier name is required</span>
+                  )}
+                </Col>
                   </Form.Group>
                 </Form>
                 <DataTable 

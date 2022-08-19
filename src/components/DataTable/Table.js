@@ -60,7 +60,7 @@ function Table(props) {
       paginationDefaultPage={props.currentPage}
       onChangeRowsPerPage={handlePerRowsChange}
       onChangePage={handlePageChange}
-      pointerOnHover
+      pointerOnHover={true}
       responsive
       striped
       subHeader
