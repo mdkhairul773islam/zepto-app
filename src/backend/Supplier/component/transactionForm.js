@@ -33,7 +33,7 @@ const TransactionForm = () => {
   const { balance, status, real_balance } = useSelector(
     (state) => state.helperReducer.partyBalance
   );
-
+  
   const history = useHistory();
   const [startDate, setStartDate] = useState(new Date());
 
@@ -74,7 +74,6 @@ const TransactionForm = () => {
   const getSuplierList = useSelector((state) => state.helperReducer.suplierList);
   useEffect(() => {
     if(warehouseId){
-      setValue("party_code", 0);
       setSuplierList(getSuplierList);
     }else{
       setSuplierList([]);
@@ -147,8 +146,7 @@ const TransactionForm = () => {
   ]);
 
   const handleWarehouseChange = async (e) => {
-    await dispatch(suplier(e.value));
-    setValue("warehouse_id", e.value);
+    (await e) && dispatch(suplier(e.value)) && setValue("warehouse_id", e.value);
   };
 
   const handleSupplierChange = async (e) => {
@@ -184,8 +182,7 @@ const TransactionForm = () => {
     await dispatch(transaction(formData, history));
     await e.target.reset();
   };
-
-  console.log("watch", watch());
+  // console.log("watch", watch());
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Form.Group as={Row} className="mb-3">
@@ -244,7 +241,7 @@ const TransactionForm = () => {
             type="text"
             options={suplierList}
             isSearchable={true}
-            defaultValue={{ code:null, label: "Select Suplier", value: 0, mobile:null }}
+            defaultValue={{code:null, label: "Select Suplier", value: 0, mobile:null }}
             isClearable
             required
           ></Select>
