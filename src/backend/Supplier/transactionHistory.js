@@ -4,6 +4,7 @@ import AdminWraper from "../../components/layouts/AdminWraper";
 import Navbar from "./navbar";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import DataTable from "../../components/DataTable/Table";
+import ColoredLine from "../../components/UI/ColoredLine";
 import { Controller, useForm } from "react-hook-form"; 
 import DatePicker from "react-datepicker";
 import Select from "react-select";
@@ -23,9 +24,10 @@ import {
 
 function TransactionHistory(props) {
 
-  const [startDate, setStartDate] = useState(new Date());
+  const [fromDate, setFromDate] = useState(new Date());
+  const [toDate, setToDate] = useState(new Date());
   const defaultValues = {
-    date: startDate
+    date: fromDate
   };
 
   const {
@@ -153,9 +155,10 @@ function TransactionHistory(props) {
     const { date } = data;
     const formData = {
       ...data,
-      date: typeof date !== "undefined" ? getDate(date) : getDate(startDate),
+      from_date: typeof date !== "undefined" ? getDate(date) : getDate(fromDate),
+      to_date: typeof date !== "undefined" ? getDate(date) : getDate(toDate),
     };
-    console.log('data', data);
+    console.log('data', formData);
   };
   
   return (
@@ -190,8 +193,8 @@ function TransactionHistory(props) {
                         <DatePicker
                           className="form-control"
                           placeholderText="Date From"
-                          onChange={(date) => field.onChange(date, setStartDate(date))}
-                          selected={startDate}
+                          onChange={(date) => field.onChange(date, setFromDate(date))}
+                          selected={fromDate}
                           dateFormat="yyyy-MM-dd"
                         />
                       )}
@@ -205,8 +208,8 @@ function TransactionHistory(props) {
                         <DatePicker
                           className="form-control"
                           placeholderText="Date To"
-                          onChange={(date) => field.onChange(date, setStartDate(date))}
-                          selected={startDate}
+                          onChange={(date) => field.onChange(date, setToDate(date))}
+                          selected={toDate}
                           dateFormat="yyyy-MM-dd"
                         />
                       )}
@@ -245,8 +248,15 @@ function TransactionHistory(props) {
                     <span className="text-danger">Supplier name is required</span>
                   )}
                 </Col>
+
+                  <Col>
+                      <Button variant="primary" type="submit">
+                        Save
+                      </Button>
+                  </Col>
                   </Form.Group>
                 </Form>
+                <ColoredLine options={{color:"#2a378b", height:2}}/>
                 <DataTable 
                   columns={columns}
                   data={data}
