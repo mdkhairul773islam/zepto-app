@@ -20,12 +20,27 @@ const transaction = (data, history) => {
   };
 };
 
-const transactionHistory = (currentPage = 1, perPage = 10) => {
+const transactionHistory = (currentPage = 1, perPage = 10, customSerch = null) => {
   return async (dispatch) => {
     try {
       dispatch(transactionBegin());
       const res = await DataService.get(
         `party-transaction?page=${currentPage}&per_page=${perPage}&delay=1`
+      );
+      dispatch(transactionSuccess(res.data));
+    } catch (err) {
+      dispatch(transactionErr(err));
+    }
+  };
+};
+
+const transactionHistoryWithSearch = (searchItem = null, currentPage = 1, perPage = 10) => {
+  console.log("currentPage", currentPage,"perPage", perPage , "customSerch", searchItem);
+  return async (dispatch) => {
+    try {
+      dispatch(transactionBegin());
+      const res = await DataService.get(
+        `party-transaction?searchItem=${searchItem}&page=${currentPage}&per_page=${perPage}&delay=1`
       );
       dispatch(transactionSuccess(res.data));
     } catch (err) {
@@ -83,4 +98,4 @@ const transactionDelete = (id) => {
   };
 };
 
-export { transaction, transactionHistory, transactionUpdate, transactionDelete };
+export { transaction, transactionHistory, transactionHistoryWithSearch, transactionUpdate, transactionDelete };

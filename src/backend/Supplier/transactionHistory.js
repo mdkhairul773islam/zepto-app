@@ -15,6 +15,7 @@ import {getDate, toFilter} from "../../utility/utility";
 import { useDispatch, useSelector } from "react-redux";
 import {
   transactionHistory,
+  transactionHistoryWithSearch,
   transactionDelete,
 } from "../../redux/suplierTransaction/actionCreator";
 import {
@@ -36,7 +37,6 @@ function TransactionHistory(props) {
   } = useForm({
     defaultValues: defaultValues,
   });
-
   const warehouseId = watch('warehouse_id');
 
   // get data from redux
@@ -167,12 +167,13 @@ function TransactionHistory(props) {
 
   const onSubmit = async (data, e) => {
     const { from_date, to_date } = data;
-    const formData = {
+    const searchItem = {
       ...data,
       from_date: typeof from_date !== "undefined" ? getDate(from_date) : getDate(fromDate),
       to_date: typeof to_date !== "undefined" ? getDate(to_date) : getDate(toDate),
     };
-    console.log(formData);
+
+    dispatch(transactionHistoryWithSearch(searchItem));
   };
   
   return (
