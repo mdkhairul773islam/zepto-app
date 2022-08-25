@@ -27,21 +27,35 @@ function TransactionHistory(props) {
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   const defaultValues = {
-    date: fromDate
+    from_date: fromDate,
+    to_date: toDate,
   };
 
   const {
-    control, setValue,  register, handleSubmit,  formState: { errors },
+    control, setValue,  register, handleSubmit, watch, formState: { errors },
   } = useForm({
     defaultValues: defaultValues,
   });
+
+  const warehouseId = watch('warehouse_id');
 
   // get data from redux
   const dispatch = useDispatch();
   const warehouseList = useSelector(
     (state) => state.helperReducer.warehouseList
   );
-  const suplierList = useSelector((state) => state.helperReducer.suplierList);
+  const supliers = useSelector((state) => state.helperReducer.suplierList);
+  const [suplierList, setSuplierList] = useState([]);
+  
+  useEffect(() => {
+    if(typeof warehouseId !=="undefined" && warehouseId !==""){
+      setSuplierList(supliers);
+    }else{
+      setSuplierList([]);
+    }
+  }, [supliers, warehouseId]);
+
+
   const data = useSelector((state) => state.suplierTransactionReducer.transactionList);
   const loading = useSelector((state) => state.suplierTransactionReducer.loading);
   const totalDataRows = useSelector((state) => state.suplierTransactionReducer.totalRows);
@@ -152,13 +166,13 @@ function TransactionHistory(props) {
   };
 
   const onSubmit = async (data, e) => {
-    const { date } = data;
+    const { from_date, to_date } = data;
     const formData = {
       ...data,
-      from_date: typeof date !== "undefined" ? getDate(date) : getDate(fromDate),
-      to_date: typeof date !== "undefined" ? getDate(date) : getDate(toDate),
+      from_date: typeof from_date !== "undefined" ? getDate(from_date) : getDate(fromDate),
+      to_date: typeof to_date !== "undefined" ? getDate(to_date) : getDate(toDate),
     };
-    console.log('data', formData);
+    console.log(formData);
   };
   
   return (
@@ -188,7 +202,7 @@ function TransactionHistory(props) {
                   <Col sm={2}>
                     <Controller
                       control={control}
-                      name="date"
+                      name="from_date"
                       render={({ field }) => (
                         <DatePicker
                           className="form-control"
@@ -203,7 +217,7 @@ function TransactionHistory(props) {
                   <Col sm={2}>
                     <Controller
                       control={control}
-                      name="date"
+                      name="to_date"
                       render={({ field }) => (
                         <DatePicker
                           className="form-control"
@@ -219,7 +233,7 @@ function TransactionHistory(props) {
                     <Select
                       onChange={handleWarehouseChange}
                       ref={(e) => {
-                        register("warehouse_id", { required: true });
+                        register("warehouse_id", { required: false });
                       }}
                       type="text"
                       options={warehouseList}
@@ -235,7 +249,7 @@ function TransactionHistory(props) {
                   <Select
                     onChange={handleSupplierChange}
                     ref={(e) => {
-                      register("party_code", { required: true });
+                      register("party_code", { required: false });
                     }}
                     type="text"
                     options={suplierList}
