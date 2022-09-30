@@ -36,12 +36,16 @@ const transactionHistory = (currentPage = 1, perPage = 10, customSerch = null) =
 
 const transactionHistoryWithSearch = (searchItem = null, currentPage = 1, perPage = 10) => {
   console.log("currentPage", currentPage,"perPage", perPage , "customSerch", searchItem);
+  const {from_date, to_date, warehouse_id,party_code  } = searchItem;
   return async (dispatch) => {
     try {
       dispatch(transactionBegin());
       const res = await DataService.get(
-        `party-transaction?searchItem=${searchItem}&page=${currentPage}&per_page=${perPage}&delay=1`
+        `party-transaction?from_date=${from_date}&to_date=${to_date}
+        &warehouse_id=${warehouse_id}&party_code=${party_code}
+        &page=${currentPage}&per_page=${perPage}&delay=1`
       );
+      console.log("res", res);
       dispatch(transactionSuccess(res.data));
     } catch (err) {
       dispatch(transactionErr(err));

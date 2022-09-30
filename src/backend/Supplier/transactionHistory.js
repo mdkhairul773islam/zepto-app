@@ -166,13 +166,13 @@ function TransactionHistory(props) {
   };
 
   const onSubmit = async (data, e) => {
+
     const { from_date, to_date } = data;
     const searchItem = {
       ...data,
       from_date: typeof from_date !== "undefined" ? getDate(from_date) : getDate(fromDate),
       to_date: typeof to_date !== "undefined" ? getDate(to_date) : getDate(toDate),
     };
-
     dispatch(transactionHistoryWithSearch(searchItem));
   };
   
