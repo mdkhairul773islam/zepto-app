@@ -266,7 +266,7 @@ function TransactionHistory(props) {
 
                   <Col>
                       <Button variant="primary" type="submit">
-                        Save
+                        Search
                       </Button>
                   </Col>
                   </Form.Group>
