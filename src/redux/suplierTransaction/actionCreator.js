@@ -20,22 +20,13 @@ const transaction = (data, history) => {
   };
 };
 
-const transactionHistory = (currentPage = 1, perPage = 10, customSerch = null) => {
-  return async (dispatch) => {
-    try {
-      dispatch(transactionBegin());
-      const res = await DataService.get(
-        `party-transaction?page=${currentPage}&per_page=${perPage}&delay=1`
-      );
-      dispatch(transactionSuccess(res.data));
-    } catch (err) {
-      dispatch(transactionErr(err));
-    }
-  };
-};
-
 const transactionHistoryWithSearch = (searchItem = null, currentPage = 1, perPage = 10) => {
-  const {from_date, to_date, warehouse_id,party_code  } = searchItem;
+  
+  const from_date = typeof searchItem.from_date !="undefined" && searchItem.from_date !=null ? searchItem.from_date : '';
+  const to_date = typeof searchItem.to_date !="undefined" && searchItem.to_date !=null ? searchItem.to_date : '';
+  const warehouse_id = typeof searchItem.warehouse_id !="undefined" && searchItem.warehouse_id !=null ? searchItem.warehouse_id : '';
+  const party_code = typeof searchItem.party_code !="undefined" && searchItem.party_code !=null ? searchItem.party_code : '';
+
   return async (dispatch) => {
     try {
       dispatch(transactionBegin());
@@ -100,4 +91,4 @@ const transactionDelete = (id) => {
   };
 };
 
-export { transaction, transactionHistory, transactionHistoryWithSearch, transactionUpdate, transactionDelete };
+export { transaction, transactionHistoryWithSearch, transactionUpdate, transactionDelete };

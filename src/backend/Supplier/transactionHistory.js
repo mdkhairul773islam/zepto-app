@@ -14,7 +14,6 @@ import {getDate, toFilter} from "../../utility/utility";
 // use redux
 import { useDispatch, useSelector } from "react-redux";
 import {
-  transactionHistory,
   transactionHistoryWithSearch,
   transactionDelete,
 } from "../../redux/suplierTransaction/actionCreator";
@@ -147,15 +146,12 @@ function TransactionHistory(props) {
 
   const handlePageChange = (currentPage) => {
     setCurrentPage(currentPage);
-    //dispatch(transactionHistory(currentPage));
     dispatch(transactionHistoryWithSearch(searchItem, currentPage, perPage));
   };
 
   const handlePerRowsChange = async (perPage, currentPage) => {
-    console.log("perPage");
     setPerPage(perPage);
-    //dispatch(transactionHistory(currentPage, perPage));
-    dispatch(transactionHistoryWithSearch(searchItem, currentPage, perPage));
+    dispatch(transactionHistoryWithSearch(searchItem, currentPage, perPage))
   };
 
   useEffect(() => {
