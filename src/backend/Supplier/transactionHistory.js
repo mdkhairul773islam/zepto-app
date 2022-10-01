@@ -134,6 +134,7 @@ function TransactionHistory(props) {
   const [totalRows, setTotalRows] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
+  const [searchItem, setSearchItem] = useState({});
 
   useEffect(() => {
     setTotalRows(totalDataRows);
@@ -141,17 +142,20 @@ function TransactionHistory(props) {
 
   useEffect(() => {
     document.title = "Suplier Transaction History | React Dashboard";
-    dispatch(transactionHistory(currentPage, perPage));
-  }, [currentPage, dispatch, perPage]);
+    dispatch(transactionHistoryWithSearch(searchItem, currentPage, perPage));
+  }, [currentPage, dispatch, perPage, searchItem]);
 
   const handlePageChange = (currentPage) => {
     setCurrentPage(currentPage);
-    dispatch(transactionHistory(currentPage));
+    //dispatch(transactionHistory(currentPage));
+    dispatch(transactionHistoryWithSearch(searchItem, currentPage, perPage));
   };
 
   const handlePerRowsChange = async (perPage, currentPage) => {
+    console.log("perPage");
     setPerPage(perPage);
-    dispatch(transactionHistory(currentPage, perPage));
+    //dispatch(transactionHistory(currentPage, perPage));
+    dispatch(transactionHistoryWithSearch(searchItem, currentPage, perPage));
   };
 
   useEffect(() => {
@@ -168,14 +172,14 @@ function TransactionHistory(props) {
   const onSubmit = async (data, e) => {
 
     const { from_date, to_date } = data;
-    const searchItem = {
+    const filterItem = await {
       ...data,
       from_date: typeof from_date !== "undefined" ? getDate(from_date) : getDate(fromDate),
       to_date: typeof to_date !== "undefined" ? getDate(to_date) : getDate(toDate),
     };
-    dispatch(transactionHistoryWithSearch(searchItem));
+    setSearchItem(filterItem);
+    dispatch(transactionHistoryWithSearch(filterItem));
   };
-  
   return (
     <AdminWraper menuOpen="supplier">
       <Container className="p-0" fluid>
