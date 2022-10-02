@@ -62,7 +62,10 @@ function TransactionHistory(props) {
   const history = useHistory();
   const handleDeleteClick = (e) => {
     var id = e.target.id;
-    dispatch(transactionDelete(id, history));
+    var confirmDelete = window.confirm("Want to delete?");
+    if(confirmDelete){
+      dispatch(transactionDelete(id, history));
+    }
   };
 
   const columns = [

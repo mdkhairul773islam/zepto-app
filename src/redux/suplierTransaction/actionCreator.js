@@ -72,20 +72,23 @@ const transactionDelete = (id) => {
   return async (dispatch) => {
     try {
       dispatch(transactionBegin());
-      const res = await DataService.get(`/transaction-histrory/${id}`);
+      const res = await DataService.get(`/party-transaction-destroy/${id}`);
       if (res.data) {
-        toast.success("transaction successfully deleted", {
+        toast.success("Transaction successfully deleted", {
           position: toast.POSITION.TOP_CENTER
         });
         dispatch(transactionSuccess(res.data));
-      }
-
-      if (res.data.warning) {
+      }else{
         toast.warn(res.data.warning, {
           position: toast.POSITION.TOP_CENTER
         });
       }
     } catch (err) {
+      if(err.response.data.message){
+        toast.success(err.response.data.message, {
+          position: toast.POSITION.TOP_CENTER
+        });
+      }
       dispatch(transactionErr(err));
     }
   };
