@@ -24,7 +24,7 @@ import {
 
 function TransactionHistory(props) {
 
-  const [fromDate, setFromDate] = useState(new Date());
+  const [fromDate, setFromDate] = useState(new Date()); // Or useState(null)
   const [toDate, setToDate] = useState(new Date());
   const defaultValues = {
     from_date: fromDate,
@@ -173,8 +173,8 @@ function TransactionHistory(props) {
     const { from_date, to_date } = data;
     const filterItem = await {
       ...data,
-      from_date: typeof from_date !== "undefined" ? getDate(from_date) : getDate(fromDate),
-      to_date: typeof to_date !== "undefined" ? getDate(to_date) : getDate(toDate),
+      from_date: typeof from_date !== "undefined" ? getDate(from_date) : "",
+      to_date: typeof to_date !== "undefined" ? getDate(to_date) : "",
     };
     setSearchItem(filterItem);
     dispatch(transactionHistoryWithSearch(filterItem));
@@ -214,6 +214,7 @@ function TransactionHistory(props) {
                           onChange={(date) => field.onChange(date, setFromDate(date))}
                           selected={fromDate}
                           dateFormat="yyyy-MM-dd"
+                          isClearable={true}
                         />
                       )}
                     />
@@ -229,6 +230,7 @@ function TransactionHistory(props) {
                           onChange={(date) => field.onChange(date, setToDate(date))}
                           selected={toDate}
                           dateFormat="yyyy-MM-dd"
+                          isClearable={true}
                         />
                       )}
                     />
