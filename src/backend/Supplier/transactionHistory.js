@@ -240,11 +240,12 @@ function TransactionHistory(props) {
                       onChange={handleWarehouseChange}
                       ref={(e) => {
                         register("warehouse_id", { required: false });
-                      }}
+                      }} 
                       type="text"
                       options={warehouseList}
                       isSearchable={true}
-                      isClearable
+                      isClearable={true}
+                      isLoading={warehouseList.length ? false: true}
                       placeholder="Chose Warehouse"
                     ></Select>
                     {errors.warehouse_id && errors.warehouse_id.type === "required" && (
@@ -261,7 +262,8 @@ function TransactionHistory(props) {
                     options={suplierList}
                     isSearchable={true}
                     defaultValue={{code:null, label: "Select Suplier", value: 0, mobile:null }}
-                    isClearable
+                    isClearable={true}
+                    isLoading={suplierList.length ? false: true}
                     required
                   ></Select>
                   {errors.party_code && errors.party_code.type === "required" && (
