@@ -1,5 +1,5 @@
 const ColoredLine = ({options}) => (
-    <hr
+    <hr 
         style={{
             color: typeof options.color !=="undefined" ? options.color: "#2a378b",
             backgroundColor: typeof options.color !=="undefined" ? options.color: "#2a378b",

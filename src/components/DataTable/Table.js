@@ -4,7 +4,8 @@ import FilterComponent from "./FilterComponent";
 
 function Table(props) {
   // Filter Code Start
-  const data = props.data.length > 0 ? props.data : [];
+  const data = typeof props.data !="undefined" && props.data !=="" ? props.data : [];
+
   const [filterText, setFilterText] = React.useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 
