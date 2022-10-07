@@ -1,7 +1,9 @@
 const actions = {
   HELPER_BEGIN: "HELPER_BEGIN",
   WAREHOUSE_SUCCESS: "WAREHOUSE_SUCCESS",
+  WAREHOUSE_SUCCESS_FOR_SEARCH: "WAREHOUSE_SUCCESS_FOR_SEARCH",
   SUPLIER_SUCCESS: "SUPLIER_SUCCESS",
+  SUPLIER_SUCCESS_FOR_SEARCH: "SUPLIER_SUCCESS_FOR_SEARCH",
   SUPLIER_TRANSACTION_DETAILS_SUCCESS: "SUPLIER_TRANSACTION_DETAILS_SUCCESS", 
   HELPER_ERR: "HELPER_ERR",
 
@@ -14,6 +16,18 @@ const actions = {
   warehouseSuccess: (data) => {
     return {
       type: actions.WAREHOUSE_SUCCESS,
+      data,
+    };
+  },
+  warehouseSuccessForSearch: (data) => {
+    return {
+      type: actions.WAREHOUSE_SUCCESS_FOR_SEARCH,
+      data,
+    };
+  },
+  suplierSuccessForSearch: (data) => {
+    return {
+      type: actions.SUPLIER_SUCCESS_FOR_SEARCH,
       data,
     };
   },

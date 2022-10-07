@@ -1,6 +1,6 @@
 import actions from "./actions";
 
-const { HELPER_BEGIN, WAREHOUSE_SUCCESS, SUPLIER_SUCCESS, SUPLIER_TRANSACTION_DETAILS_SUCCESS, HELPER_ERR } =
+const { HELPER_BEGIN, WAREHOUSE_SUCCESS, WAREHOUSE_SUCCESS_FOR_SEARCH, SUPLIER_SUCCESS, SUPLIER_SUCCESS_FOR_SEARCH, SUPLIER_TRANSACTION_DETAILS_SUCCESS, HELPER_ERR } =
   actions;
 
 const initState = {
@@ -30,10 +30,22 @@ const Helper = (state = initState, action) => {
         warehouseList: data.length ? data : [],
         loading: false,
       };
+    case WAREHOUSE_SUCCESS_FOR_SEARCH:
+      return {
+        ...state,
+        warehouseList: [{value: 0, label: 'Nothing Select', mobile: '', disabled: true}, ...data],
+        loading: false,
+      };
     case SUPLIER_SUCCESS:
       return {
         ...state,
-        suplierList: data.length ? data : [],
+        suplierList:  data.length ? data : [],
+        loading: false,
+      };
+    case SUPLIER_SUCCESS_FOR_SEARCH:
+      return {
+        ...state,
+        suplierList: [{value: 0, code: '', label: 'Nothing Select', mobile: ''}, ...data],
         loading: false,
       };
     case SUPLIER_TRANSACTION_DETAILS_SUCCESS:

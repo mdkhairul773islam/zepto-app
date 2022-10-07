@@ -3,7 +3,9 @@ import { DataService } from "../../config/dataService/dataService";
 const {
   helperBegin,
   warehouseSuccess,
+  warehouseSuccessForSearch,
   suplierSuccess,
+  suplierSuccessForSearch,
   suplierTransactionDetailsSuccess,
   helperErr,
 } = actions;
@@ -20,12 +22,36 @@ const warehouse = () => {
   };
 };
 
+const warehouseForSearch = () => {
+  return async (dispatch) => {
+    try {
+      dispatch(helperBegin());
+      const res = await DataService.get("warehouse-list");
+      dispatch(warehouseSuccessForSearch(res.data));
+    } catch (err) {
+      dispatch(helperErr(err));
+    }
+  };
+};
+
 const suplier = (warehouse_id) => {
   return async (dispatch) => {
     try {
       dispatch(helperBegin());
       const res = await DataService.get(`supplier-list/${warehouse_id}`);
       dispatch(suplierSuccess(res.data));
+    } catch (err) {
+      dispatch(helperErr(err));
+    }
+  };
+};
+
+const suplierForSearch = (warehouse_id) => {
+  return async (dispatch) => {
+    try {
+      dispatch(helperBegin());
+      const res = await DataService.get(`supplier-list/${warehouse_id}`);
+      dispatch(suplierSuccessForSearch(res.data));
     } catch (err) {
       dispatch(helperErr(err));
     }
@@ -45,4 +71,4 @@ const supplierTransactionDetailsFn = (e) => {
   };
 };
 
-export { warehouse, suplier, supplierTransactionDetailsFn };
+export { warehouse, warehouseForSearch, suplier, suplierForSearch, supplierTransactionDetailsFn };

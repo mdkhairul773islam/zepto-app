@@ -18,8 +18,8 @@ import {
   transactionDelete,
 } from "../../redux/suplierTransaction/actionCreator";
 import {
-  warehouse,
-  suplier,
+  warehouseForSearch,
+  suplierForSearch,
 } from "../../redux/helper/actionCreator";
 
 function TransactionHistory(props) {
@@ -158,14 +158,14 @@ function TransactionHistory(props) {
   };
 
   useEffect(() => {
-    dispatch(warehouse());
+    dispatch(warehouseForSearch());
   }, [dispatch]);
 
   const handleWarehouseChange = async (e) => {
-    (await e) && dispatch(suplier(e.value)) && setValue("warehouse_id", e.value);
+    (await e) && dispatch(suplierForSearch(e.value)) && setValue("warehouse_id", e.value);
   };
-  const handleSupplierChange = async (e) => {
-      setValue("party_code", e.code);
+  const handleSupplierChange = async (e) => { 
+    setValue("party_code", e.code);
   };
 
   const onSubmit = async (data, e) => {
@@ -241,6 +241,7 @@ function TransactionHistory(props) {
                       ref={(e) => {
                         register("warehouse_id", { required: false });
                       }} 
+                      defaultValue={null}
                       type="text"
                       options={warehouseList}
                       isSearchable={true}
