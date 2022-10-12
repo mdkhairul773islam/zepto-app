@@ -43,6 +43,7 @@ function Index(props) {
     {
       name: "Name",
       selector: (row) => row.name,
+      sortable: true,
     },
     {
       name: "Contact Person",
@@ -60,8 +61,15 @@ function Index(props) {
     },
     {
       name: "Current Balance",
-      selector: (row) => "0",
+      selector: (row) =>  Math.abs(row.balance),
       center: true,
+      sortable: true,
+    },
+    {
+      name: "Status",
+      selector: (row) => row.status,
+      center: true,
+      sortable: true,
     },
     {
       name: "Action",
@@ -121,6 +129,10 @@ function Index(props) {
     (totalBalance, row) => totalBalance + parseFloat(row.initial_balance),
     0
   );
+  const totalCurrentBalance = data.reduce(
+    (totalBalance, row) => totalBalance + parseFloat(row.balance),
+    0
+  );
 
   return (
     <AdminWraper menuOpen="supplier">
@@ -155,7 +167,7 @@ function Index(props) {
                   handlePageChange={handlePageChange}
                 />
                 <p className="text-center fw-bold">
-                  Total Initial Balance: {totalInitialBalance} Tk
+                  Total Initial Balance: {totalInitialBalance} Tk. Total Current Balance: {totalCurrentBalance} Tk.
                 </p>
               </Card.Body>
               <Card.Footer className="text-muted">&nbsp;</Card.Footer>
