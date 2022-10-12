@@ -126,12 +126,10 @@ function Index(props) {
   };
 
   const totalInitialBalance = data.reduce(
-    (totalBalance, row) => totalBalance + parseFloat(row.initial_balance),
-    0
+    (totalBalance, row) => totalBalance + parseFloat(row.initial_balance), 0
   );
   const totalCurrentBalance = data.reduce(
-    (totalBalance, row) => totalBalance + parseFloat(row.balance),
-    0
+    (totalBalance, row) => totalBalance + parseFloat(row.balance), 0
   );
 
   return (
