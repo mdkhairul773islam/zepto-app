@@ -8,7 +8,7 @@ import SupplierDetails from "../backend/Supplier/show";
 import SupplierEdit from "../backend/Supplier/edit";
 import AddTransaction from "../backend/Supplier/addTransaction";
 import TransactionHistory from "../backend/Supplier/transactionHistory";
-import TransactionDetails from "../backend/Supplier/transactionDetails";
+import Invoice from "../backend/Supplier/invoice";
 import TransactionEdit from "../backend/Supplier/transactionEdit";
 
 const Supplier = [
@@ -37,8 +37,8 @@ const Supplier = [
   />,
 
   <ProtectedRoute
-    path="/supplier/transaction-view/:id"
-    component={TransactionDetails}
+    path="/supplier/transaction-invoice/:id"
+    component={Invoice}
     key="show"
   />,
   <ProtectedRoute

@@ -1,23 +1,32 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AdminWraper from "../../components/layouts/AdminWraper";
 import Navbar from "./navbar";
 import { Container, Row, Col, Card, Button, Table } from "react-bootstrap";
-
-// use redux
-import { useDispatch, useSelector } from "react-redux";
-import { supplierInfo } from "../../redux/supplier/actionCreator";
+import { DataService } from "../../config/dataService/dataService";
 
 function TransactionDetails(props) {
-  const dispatch = useDispatch();
-  const { address, contact_person, name, mobile, remarks, initial_balance } = useSelector((state) => state.supplierReducer.supplier);
-
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({});
   const id = props.match.params.id;
 
+  const getTransactionById = async function getTransactionById(id=null) {
+    setLoading(true);
+    try {
+        const res = await DataService.get(`party-transaction/${id}`);
+        res.data ? await setData(res.data) && setLoading(false) : setLoading(false);
+    } catch (error) {
+        console.log("error");
+        setLoading(false);
+    }
+};
+
   useEffect(() => {
-    document.title = "Supplier Transaction Details | React Dashboard";
-    dispatch(supplierInfo(id));
-  }, [dispatch, id]);
+    document.title = "Supplier Transaction Invoice | React Dashboard";
+    getTransactionById(id);
+  }, [id]);
+
+  console.log('data', data.relation, data.party.address);
 
   return (
     <AdminWraper menuOpen="supplier">
@@ -31,7 +40,7 @@ function TransactionDetails(props) {
           <Col>
             <Card>
               <Card.Header as="h4" className="fw-bold">
-                Transaction Details
+                Transaction Invoice
                 <Button
                   to="#"
                   className="btn btn-light btn-xl float-end px-1 py-0"
@@ -58,35 +67,35 @@ function TransactionDetails(props) {
                   <tbody>
                     <tr>
                       <th>Supplier Name</th>
-                      <td>{name}</td>
-                    </tr>
-                    <tr>
-                      <th>Contact Person</th>
-                      <td>{contact_person}</td>
-                    </tr>
-                    <tr>
+                      <td></td>
                       <th>Mobile</th>
-                      <td>{mobile}</td>
+                      <td></td>
+                      <th>Invoice No</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Amount</th>
+                      <td>0</td>
+                      <th>Commission</th>
+                      <td>0</td>
+                      <th>Transaction Method</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Transaction Generation</th>
+                      <td></td>
+                      <th>Previous Balance</th>
+                      <td></td>
+                      <th>Current Balance</th>
+                      <td></td>
                     </tr>
                     <tr>
                       <th>Address</th>
-                      <td>{address}</td>
+                      <td colSpan="5"></td>
                     </tr>
                     <tr>
                       <th>Remarks</th>
-                      <td>{remarks}</td>
-                    </tr>
-                    <tr>
-                      <th>Initial Balance</th>
-                      <td>{initial_balance}</td>
-                    </tr>
-                    <tr>
-                      <th>Current Balance</th>
-                      <td>0</td>
-                    </tr>
-                    <tr>
-                      <th>Supplier Type</th>
-                      <td>{initial_balance > 0 ? 'Receivable' : 'Payable'}</td>
+                      <td colSpan="5"></td>
                     </tr>
                   </tbody>
                 </Table>

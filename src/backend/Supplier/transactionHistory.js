@@ -107,7 +107,7 @@ function TransactionHistory(props) {
       cell: (row) => (
         <>
           <Link
-            to={`/supplier/transaction-view/${row.id}`}
+            to={`/supplier/transaction-invoice/${row.id}`}
             className="btn btn-primary btn-sm m-1"
           >
             <i className="fas fa-eye fa-sm"></i>

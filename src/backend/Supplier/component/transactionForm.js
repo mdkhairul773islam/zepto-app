@@ -18,7 +18,7 @@ import {
   supplierTransactionDetailsFn,
 } from "../../../redux/helper/actionCreator";
 
-import { transaction } from "../../../redux/suplierTransaction/actionCreator";
+import { newTransactionStore } from "../../../redux/suplierTransaction/actionCreator";
 
 const paymentMethodList = getPaymentMethods();
 const transactionTypeList = getTransactionTypes();
@@ -179,7 +179,7 @@ const TransactionForm = () => {
       ...data,
       date: typeof date !== "undefined" ? getDate(date) : getDate(startDate),
     };
-    await dispatch(transaction(formData, history));
+    await dispatch(newTransactionStore(formData, history));
     await e.target.reset();
   };
   // console.log("watch", watch());
@@ -314,7 +314,6 @@ const TransactionForm = () => {
           )}
         </Col>
       </Form.Group>
-
       <Form.Group as={Row} className="mb-3">
         <Form.Label column sm={3} className="text-sm-end">
           Transaction Method

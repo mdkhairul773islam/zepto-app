@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { DataService } from "../../config/dataService/dataService";
 const { transactionBegin, transactionSuccess, transactionErr } = actions;
 
-const transaction = (data, history) => {
+const newTransactionStore = (data, history) => {
   return async (dispatch) => {
     try {
       dispatch(transactionBegin());
@@ -94,4 +94,4 @@ const transactionDelete = (id) => {
   };
 };
 
-export { transaction, transactionHistoryWithSearch, transactionUpdate, transactionDelete };
+export { newTransactionStore, transactionHistoryWithSearch, transactionUpdate, transactionDelete };
