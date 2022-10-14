@@ -14,19 +14,24 @@ function TransactionDetails(props) {
     setLoading(true);
     try {
         const res = await DataService.get(`party-transaction/${id}`);
-        res.data ? await setData(res.data) && setLoading(false) : setLoading(false);
+        if(res.data){
+          await setData(res.data);
+          setLoading(false)
+        }
     } catch (error) {
         console.log("error");
         setLoading(false);
     }
 };
 
-  useEffect(() => {
-    document.title = "Supplier Transaction Invoice | React Dashboard";
-    getTransactionById(id);
-  }, [id]);
+useEffect(() => {
+  getTransactionById(id);
+}, [id]);
 
-  console.log('data', data.relation, data.party.address);
+  useEffect(() => {
+    document.title = `${data.party ? data.party.name : ''} Transaction Invoice | React Dashboard`;
+  }, [data.party]);
+  console.log('loading', loading);
 
   return (
     <AdminWraper menuOpen="supplier">
@@ -57,7 +62,7 @@ function TransactionDetails(props) {
                 </Link>
               </Card.Header>
               <Card.Body>
-                <Table
+                <Table 
                   bordered
                   striped
                   hover
@@ -67,38 +72,37 @@ function TransactionDetails(props) {
                   <tbody>
                     <tr>
                       <th>Supplier Name</th>
-                      <td></td>
+                      <td>{data.party ? data.party.name : ''}</td>
                       <th>Mobile</th>
-                      <td></td>
+                      <td>{data.party ? data.party.mobile : ''}</td>
                       <th>Invoice No</th>
-                      <td></td>
+                      <td>{data ? data.relation: ''}</td>
                     </tr>
                     <tr>
                       <th>Amount</th>
-                      <td>0</td>
+                      <td>{data ? data.credit > 0 ? data.credit : data.debit: ''}</td>
                       <th>Commission</th>
-                      <td>0</td>
-                      <th>Transaction Method</th>
                       <td></td>
+                      <th>Transaction Method</th>
+                      <td>{data ? data.transaction_method : ''}</td>
                     </tr>
                     <tr>
-                      <th>Transaction Generation</th>
-                      <td></td>
                       <th>Previous Balance</th>
                       <td></td>
                       <th>Current Balance</th>
-                      <td></td>
+                      <td colSpan="3"></td>
                     </tr>
                     <tr>
                       <th>Address</th>
-                      <td colSpan="5"></td>
+                      <td colSpan="5">{data.party ? data.party.address: ''}</td>
                     </tr>
                     <tr>
                       <th>Remarks</th>
-                      <td colSpan="5"></td>
+                      <td colSpan="5">{data.party ? data.party.remark: ''}</td>
                     </tr>
                   </tbody>
                 </Table>
+                <p className="hide">This record not found in database. Please tray agin thank you.</p>
               </Card.Body>
               <Card.Footer className="text-muted">&nbsp;</Card.Footer>
             </Card>
