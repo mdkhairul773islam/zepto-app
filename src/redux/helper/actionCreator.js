@@ -71,4 +71,16 @@ const supplierTransactionDetailsFn = (e) => {
   };
 };
 
-export { warehouse, warehouseForSearch, suplier, suplierForSearch, supplierTransactionDetailsFn };
+const supplierEditTransactionDetailsFn = (code) => {
+  return async (dispatch) => {
+    try {
+      dispatch(helperBegin());
+      const res = await DataService.get(`supplier-transaction-details/${code}`);
+      dispatch(suplierTransactionDetailsSuccess(res.data));
+    } catch (err) {
+      dispatch(helperErr(err));
+    }
+  };
+};
+
+export { warehouse, warehouseForSearch, suplier, suplierForSearch, supplierTransactionDetailsFn, supplierEditTransactionDetailsFn };

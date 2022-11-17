@@ -6,21 +6,17 @@ import { Container, Row, Col, Card, Button, Table } from "react-bootstrap";
 import { DataService } from "../../config/dataService/dataService";
 
 function TransactionDetails(props) {
-  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({});
   const id = props.match.params.id;
 
   const getTransactionById = async function getTransactionById(id=null) {
-    setLoading(true);
     try {
         const res = await DataService.get(`party-transaction/${id}`);
         if(res.data){
           await setData(res.data);
-          setLoading(false)
         }
     } catch (error) {
         console.log("error");
-        setLoading(false);
     }
 };
 
@@ -28,10 +24,9 @@ useEffect(() => {
   getTransactionById(id);
 }, [id]);
 
-  useEffect(() => {
-    document.title = `${data.party ? data.party.name : ''} Transaction Invoice | React Dashboard`;
-  }, [data.party]);
-  console.log('loading', loading);
+useEffect(() => {
+  document.title = `${data.party ? data.party.name : ''} Transaction Invoice | React Dashboard`;
+}, [data.party]);
 
   return (
     <AdminWraper menuOpen="supplier">
@@ -62,7 +57,7 @@ useEffect(() => {
                 </Link>
               </Card.Header>
               <Card.Body>
-                <Table 
+                <Table
                   bordered
                   striped
                   hover
@@ -80,7 +75,7 @@ useEffect(() => {
                     </tr>
                     <tr>
                       <th>Amount</th>
-                      <td>{data ? data.credit > 0 ? data.credit : data.debit: ''}</td>
+                      <td>{data && data.credit > 0 ? data.credit : data.debit}</td>
                       <th>Commission</th>
                       <td></td>
                       <th>Transaction Method</th>
@@ -102,7 +97,6 @@ useEffect(() => {
                     </tr>
                   </tbody>
                 </Table>
-                <p className="hide">This record not found in database. Please tray agin thank you.</p>
               </Card.Body>
               <Card.Footer className="text-muted">&nbsp;</Card.Footer>
             </Card>
