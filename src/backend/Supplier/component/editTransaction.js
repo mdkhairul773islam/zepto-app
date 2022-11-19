@@ -21,16 +21,15 @@ import { newTransactionStore } from "../../../redux/suplierTransaction/actionCre
 const paymentMethodList = getPaymentMethods();
 const transactionTypeList = getTransactionTypes();
 
-const EditTransaction = () => {
-  // get data from redux
+const EditTransaction = ({details}) => { 
+ // get data from redux
   const dispatch = useDispatch();
   const { balance, status, real_balance } = useSelector(
     (state) => state.helperReducer.partyBalance
   );
   
   const history = useHistory();
-  const [startDate, setStartDate] = useState(new Date());
-
+  const [startDate, setStartDate] = useState(new Date());  
   const defaultValues = {
     date: startDate,
     balance: 0,
@@ -38,7 +37,7 @@ const EditTransaction = () => {
     balance_status: "",
     paid_by: "",
     party_code: "",
-    payment: "",
+    payment:"",
     remark: "",
     status: "",
     total_balance: 0,
@@ -53,9 +52,17 @@ const EditTransaction = () => {
     handleSubmit,
     watch,
     formState: { errors },
+    reset
   } = useForm({
     defaultValues: defaultValues,
   });
+
+  useEffect(() => {
+    reset({
+      details,
+    });
+  }, [reset, details])
+  
 
   const warehouseId = watch("warehouse_id");
   const partyCode = watch("party_code");
@@ -116,14 +123,7 @@ const EditTransaction = () => {
       setValue("total_balance", 0);
       setValue("balance_status", "");
     }
-  }, [
-    paymentAmount,
-    real_balance,
-    setValue,
-    transactionType,
-    currentSuplierStatus,
-    partyCode,
-  ]);
+  }, [paymentAmount, real_balance, setValue, transactionType, currentSuplierStatus, partyCode]);
 
   const handleTransactionTypeChange = (e) => {
     setValue("transaction_type", e.value);
@@ -138,11 +138,14 @@ const EditTransaction = () => {
     dispatch(supplierEditTransactionDetailsFn(code))
   }, [dispatch]);
 
+  const {credit, debit, name } = details;
   useEffect(() => {
     setValue("balance", balance);
     setValue("status", status);
     setValue("real_balance", real_balance);
-  }, [balance, real_balance, setValue, status]);
+    setValue("name", name);
+    setValue("payment", credit > 0 ? credit: debit);
+  }, [balance, credit, debit, name, real_balance, setValue, status]);
 
   const onSubmit = async (data, e) => {
     const { date } = data;
@@ -153,6 +156,7 @@ const EditTransaction = () => {
     await dispatch(newTransactionStore(formData, history));
     await e.target.reset();
   };
+
   // console.log("watch", watch());
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
@@ -184,6 +188,7 @@ const EditTransaction = () => {
         <Col sm={5}>
         <Form.Control
             type="text"
+            {...register("name", { required: false })}
             placeholder="Supllier Name"
             readOnly
           />
@@ -220,7 +225,7 @@ const EditTransaction = () => {
           Transaction Type
         </Form.Label>
         <Col sm={5}>
-          <Select
+          {/* <Select
             onChange={handleTransactionTypeChange}
             ref={(e) => {
               register("transaction_type", { required: true });
@@ -234,7 +239,14 @@ const EditTransaction = () => {
           {errors.transaction_type &&
             errors.transaction_type.type === "required" && (
               <span className="text-danger">Transaction Type is required</span>
-            )}
+            )} */}
+          <Select
+            options={transactionTypeList}
+            isSearchable={true}
+            placeholder="Chose Transaction Type"
+            required
+          ></Select>
+
         </Col>
       </Form.Group>
 
