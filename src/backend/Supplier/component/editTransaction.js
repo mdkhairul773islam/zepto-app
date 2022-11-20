@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import Select from "react-select";
-import { Controller, useForm } from "react-hook-form"; 
+import { Controller, useForm, useController } from "react-hook-form"; 
 import DatePicker from "react-datepicker";
 import {
   getDate,
@@ -12,22 +12,12 @@ import {
 
 // use redux
 import { useDispatch, useSelector } from "react-redux";
-import {
-  supplierEditTransactionDetailsFn,
-} from "../../../redux/helper/actionCreator";
-
 import { newTransactionStore } from "../../../redux/suplierTransaction/actionCreator";
 
 const paymentMethodList = getPaymentMethods();
 const transactionTypeList = getTransactionTypes();
 
 const EditTransaction = ({details}) => { 
- // get data from redux
-  const dispatch = useDispatch();
-  const { balance, status, real_balance } = useSelector(
-    (state) => state.helperReducer.partyBalance
-  );
-  
   const history = useHistory();
   const [startDate, setStartDate] = useState(new Date());  
   const defaultValues = {
@@ -56,28 +46,24 @@ const EditTransaction = ({details}) => {
   } = useForm({
     defaultValues: defaultValues,
   });
-
+  
+  const { field } = useController({name:'transaction_type', control});
+  // console.log("field", field);
   useEffect(() => {
     reset({
       details,
     });
   }, [reset, details])
-  
+  const {id, credit, debit, name, transaction_type, transaction_method, real_balance, previous_balance, previous_status } = details;
 
   const warehouseId = watch("warehouse_id");
-  const partyCode = watch("party_code");
   const currentSuplierStatus = watch("status");
   const paymentAmount = watch("payment");
   const transactionType = watch("transaction_type");
-
   /* This code for supplier balance calculation */
   useEffect(() => {
-    if (
-      typeof partyCode !== "undefined" &&
-      partyCode !== ""
-    ) {
+    if (typeof id !== "undefined" && id !== "") {
       var total = 0;
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       if (
         typeof transactionType != "undefined" &&
         transactionType !== "" &&
@@ -123,29 +109,21 @@ const EditTransaction = ({details}) => {
       setValue("total_balance", 0);
       setValue("balance_status", "");
     }
-  }, [paymentAmount, real_balance, setValue, transactionType, currentSuplierStatus, partyCode]);
-
-  const handleTransactionTypeChange = (e) => {
-    setValue("transaction_type", e.value);
-  };
-
+  }, [id, paymentAmount, real_balance, setValue, transactionType, currentSuplierStatus]);
+  
   const handlePaymentMethodChange = (e) => {
     setValue("transaction_method", e.value);
   };
   
-  const code = "SI-221558";
   useEffect(() => {
-    dispatch(supplierEditTransactionDetailsFn(code))
-  }, [dispatch]);
-
-  const {credit, debit, name } = details;
-  useEffect(() => {
-    setValue("balance", balance);
-    setValue("status", status);
+    setValue("balance", previous_balance);
+    setValue("status", previous_status);
     setValue("real_balance", real_balance);
     setValue("name", name);
     setValue("payment", credit > 0 ? credit: debit);
-  }, [balance, credit, debit, name, real_balance, setValue, status]);
+    setValue("transaction_type", transaction_type);
+    setValue("transaction_method", transaction_method);
+  }, [credit, debit, name, previous_balance, previous_status, real_balance, setValue, transaction_type, transaction_method]);
 
   const onSubmit = async (data, e) => {
     const { date } = data;
@@ -153,11 +131,11 @@ const EditTransaction = ({details}) => {
       ...data,
       date: typeof date !== "undefined" ? getDate(date) : getDate(startDate),
     };
-    await dispatch(newTransactionStore(formData, history));
-    await e.target.reset();
+    //await dispatch(newTransactionStore(formData, history));
+    //await e.target.reset();
+    console.log("data", formData);
   };
-
-  // console.log("watch", watch());
+  //console.log("watch", watch());
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Form.Group as={Row} className="mb-3">
@@ -188,7 +166,7 @@ const EditTransaction = ({details}) => {
         <Col sm={5}>
         <Form.Control
             type="text"
-            {...register("name", { required: false })}
+            {...register("name", { required: true })}
             placeholder="Supllier Name"
             readOnly
           />
@@ -225,12 +203,9 @@ const EditTransaction = ({details}) => {
           Transaction Type
         </Form.Label>
         <Col sm={5}>
-          {/* <Select
-            onChange={handleTransactionTypeChange}
-            ref={(e) => {
-              register("transaction_type", { required: true });
-            }}
-            type="text"
+          <Select
+            value={transactionTypeList.find(({value})=>value===field.value)}
+            onChange={(e)=>field.onChange(e.value)}
             options={transactionTypeList}
             isSearchable={true}
             placeholder="Chose Transaction Type"
@@ -239,14 +214,7 @@ const EditTransaction = ({details}) => {
           {errors.transaction_type &&
             errors.transaction_type.type === "required" && (
               <span className="text-danger">Transaction Type is required</span>
-            )} */}
-          <Select
-            options={transactionTypeList}
-            isSearchable={true}
-            placeholder="Chose Transaction Type"
-            required
-          ></Select>
-
+            )}
         </Col>
       </Form.Group>
 
@@ -320,7 +288,7 @@ const EditTransaction = ({details}) => {
           <Form.Control
             as="textarea"
             rows={3}
-            {...register("remark", { required: false })}
+            {...register("remark", { required: true })}
             placeholder="Remark"
           />
         </Col>
@@ -333,7 +301,7 @@ const EditTransaction = ({details}) => {
         <Col sm={5}>
           <Form.Control
             type="text"
-            {...register("paid_by", { required: false })}
+            {...register("paid_by", { required: true })}
             placeholder="Paid By"
           />
         </Col>
