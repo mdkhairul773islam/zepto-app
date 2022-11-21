@@ -34,12 +34,12 @@ class DataService {
     });
   }
 
-  static patch(path = "", data = {}) {
+  static patch(path = "", data = {}, optionalHeader = {}) {
     return client({
       method: "PATCH",
       url: path,
-      data: JSON.stringify(data),
-      headers: { ...authHeader() },
+      data,
+      headers: { ...authHeader(), ...optionalHeader },
     });
   }
 
@@ -51,12 +51,12 @@ class DataService {
     });
   }
 
-  static put(path = "", data = {}) {
+  static put(path = "", data = {}, optionalHeader = {}) {
     return client({
       method: "PUT",
       url: path,
-      data: JSON.stringify(data),
-      headers: { ...authHeader() },
+      data,
+      headers: { ...authHeader(), ...optionalHeader },
     });
   }
 }

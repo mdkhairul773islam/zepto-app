@@ -43,17 +43,17 @@ const transactionHistoryWithSearch = (searchItem = null, currentPage = 1, perPag
 };
 
 const transactionUpdate = (data, history) => {
+  const { id } = data;
   return async (dispatch) => {
     try {
       dispatch(transactionBegin());
-      const res = await DataService.post("/transaction-histrory", data);
+      const res = await DataService.patch(`/party-transaction/${id}`, data);
       if (res.data.success) {
         toast.success(res.data.success, {
           position: toast.POSITION.TOP_CENTER
         });
         history.push("/supplier/transaction-histrory");
       }
-
       if (res.data.warning) {
         toast.warn(res.data.warning, {
           position: toast.POSITION.TOP_CENTER
@@ -61,7 +61,7 @@ const transactionUpdate = (data, history) => {
       }
     } catch (err) {
       dispatch(transactionErr(err));
-      toast.error("Transaction history delete error.", {
+      toast.error(err.message, {
           position: toast.POSITION.TOP_CENTER
         });
     }
@@ -72,7 +72,7 @@ const transactionDelete = (id) => {
   return async (dispatch) => {
     try {
       dispatch(transactionBegin());
-      const res = await DataService.get(`/party-transaction-destroy/${id}`);
+      const res = await DataService.delete(`/party-transaction/${id}`);
       if (res.data) {
         toast.success("Transaction successfully deleted", {
           position: toast.POSITION.TOP_CENTER

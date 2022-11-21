@@ -11,14 +11,15 @@ import {
 } from "../../../utility/utility";
 
 // use redux
-//import { useDispatch, useSelector } from "react-redux";
-//import { newTransactionStore } from "../../../redux/suplierTransaction/actionCreator";
+import { useDispatch } from "react-redux";
+import { transactionUpdate } from "../../../redux/suplierTransaction/actionCreator";
 
 const paymentMethodList = getPaymentMethods();
 const transactionTypeList = getTransactionTypes();
 
 const EditTransaction = ({details}) => { 
-  //const history = useHistory();
+  const dispatch = useDispatch();
+  const history = useHistory();
   const [startDate, setStartDate] = useState(new Date());  
   const defaultValues = {
     date: startDate,
@@ -33,7 +34,6 @@ const EditTransaction = ({details}) => {
     total_balance: 0,
     transaction_method: "",
     transaction_type: "",
-    warehouse_id: "",
   };
   const {
     control,
@@ -53,7 +53,7 @@ const EditTransaction = ({details}) => {
     });
   }, [reset, details])
   
-  const {id, credit, debit, name, transaction_type, transaction_method, real_balance, previous_balance, previous_status } = details;
+  const {id, credit, debit, name, transaction_type, transaction_method, real_balance, previous_balance, previous_status, remark, paid_by } = details;
   const currentSuplierStatus = watch("status");
   const paymentAmount = watch("payment");
   const transactionType = watch("transaction_type");
@@ -116,19 +116,19 @@ const EditTransaction = ({details}) => {
     setValue("payment", credit > 0 ? credit: debit);
     setValue("transaction_type", transaction_type);
     setValue("transaction_method", transaction_method);
-  }, [credit, debit, name, previous_balance, previous_status, real_balance, setValue, transaction_type, transaction_method]);
+    setValue("remark", remark);
+    setValue("paid_by", paid_by);
+  }, [credit, debit, name, previous_balance, previous_status, real_balance, setValue, transaction_type, transaction_method, remark, paid_by]);
 
   const onSubmit = async (data, e) => {
     const { date } = data;
-    const formData = {
+    const  formData = await {
       ...data,
+      id:id,
       date: typeof date !== "undefined" ? getDate(date) : getDate(startDate),
     };
-    //await dispatch(newTransactionStore(formData, history));
-    //await e.target.reset();
-    console.log("data", formData);
+    await dispatch(transactionUpdate(formData, history));
   };
-  //console.log("watch", watch());
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Form.Group as={Row} className="mb-3">
@@ -198,9 +198,10 @@ const EditTransaction = ({details}) => {
         <Col sm={5}>
           <Select
             value={transactionTypeList.find(({value})=>value===field.value)}
-            onChange={(e)=>field.onChange(e.value)}
+            onChange={(e)=>field.onChange(e ? e.value: '')}
             options={transactionTypeList}
             isSearchable={true}
+            isClearable
             placeholder="Chose Transaction Type"
             required
           ></Select>
@@ -238,7 +239,10 @@ const EditTransaction = ({details}) => {
                 <Select
                 value={paymentMethodList.find(({value})=>value===field.value)}
                 options={paymentMethodList}
-                onChange={(e)=>field.onChange(e.value)}
+                onChange={(e)=>field.onChange(e ? e.value: '')}
+                placeholder="Chose Transaction Method"
+                isSearchable={true}
+                isClearable
                  {...field.value} 
                  label="Text field" />
               )}
@@ -283,7 +287,7 @@ const EditTransaction = ({details}) => {
           <Form.Control
             as="textarea"
             rows={3}
-            {...register("remark", { required: true })}
+            {...register("remark", { required: false })}
             placeholder="Remark"
           />
         </Col>
@@ -296,7 +300,7 @@ const EditTransaction = ({details}) => {
         <Col sm={5}>
           <Form.Control
             type="text"
-            {...register("paid_by", { required: true })}
+            {...register("paid_by", { required: false })}
             placeholder="Paid By"
           />
         </Col>
