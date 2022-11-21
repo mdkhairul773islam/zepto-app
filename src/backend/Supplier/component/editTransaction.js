@@ -11,14 +11,14 @@ import {
 } from "../../../utility/utility";
 
 // use redux
-import { useDispatch, useSelector } from "react-redux";
-import { newTransactionStore } from "../../../redux/suplierTransaction/actionCreator";
+//import { useDispatch, useSelector } from "react-redux";
+//import { newTransactionStore } from "../../../redux/suplierTransaction/actionCreator";
 
 const paymentMethodList = getPaymentMethods();
 const transactionTypeList = getTransactionTypes();
 
 const EditTransaction = ({details}) => { 
-  const history = useHistory();
+  //const history = useHistory();
   const [startDate, setStartDate] = useState(new Date());  
   const defaultValues = {
     date: startDate,
@@ -46,17 +46,14 @@ const EditTransaction = ({details}) => {
   } = useForm({
     defaultValues: defaultValues,
   });
-  
   const { field } = useController({name:'transaction_type', control});
-  // console.log("field", field);
   useEffect(() => {
     reset({
       details,
     });
   }, [reset, details])
+  
   const {id, credit, debit, name, transaction_type, transaction_method, real_balance, previous_balance, previous_status } = details;
-
-  const warehouseId = watch("warehouse_id");
   const currentSuplierStatus = watch("status");
   const paymentAmount = watch("payment");
   const transactionType = watch("transaction_type");
@@ -110,10 +107,6 @@ const EditTransaction = ({details}) => {
       setValue("balance_status", "");
     }
   }, [id, paymentAmount, real_balance, setValue, transactionType, currentSuplierStatus]);
-  
-  const handlePaymentMethodChange = (e) => {
-    setValue("transaction_method", e.value);
-  };
   
   useEffect(() => {
     setValue("balance", previous_balance);
@@ -238,16 +231,18 @@ const EditTransaction = ({details}) => {
           Transaction Method
         </Form.Label>
         <Col sm={5}>
-          <Select
-            onChange={handlePaymentMethodChange}
-            ref={(e) => {
-              register("transaction_method", { required: true });
-            }}
-            type="text"
-            options={paymentMethodList}
-            isSearchable={true}
-            placeholder="Chose Payment Method"
-          ></Select>
+        <Controller
+              name="transaction_method"
+              control={control}
+              render={({ field }) => (
+                <Select
+                value={paymentMethodList.find(({value})=>value===field.value)}
+                options={paymentMethodList}
+                onChange={(e)=>field.onChange(e.value)}
+                 {...field.value} 
+                 label="Text field" />
+              )}
+            />
           {errors.transaction_method &&
             errors.transaction_method.type === "required" && (
               <span className="text-danger">Payment Method is required</span>
