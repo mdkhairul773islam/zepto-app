@@ -207,7 +207,6 @@ const EditTransaction = ({details}) => {
             isSearchable={true}
             isClearable
             placeholder="Chose Transaction Type"
-            required
           ></Select>
           {errors.transaction_type &&
             errors.transaction_type.type === "required" && (
