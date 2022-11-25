@@ -4,6 +4,7 @@ import { Row, Col, Form, Button } from "react-bootstrap";
 import Select from "react-select";
 import { Controller, useForm, useController } from "react-hook-form"; 
 import DatePicker from "react-datepicker";
+import moment from 'moment';
 import {
   getDate,
   getPaymentMethods,
@@ -20,7 +21,8 @@ const transactionTypeList = getTransactionTypes();
 const EditTransaction = ({details}) => { 
   const dispatch = useDispatch();
   const history = useHistory();
-  const [startDate, setStartDate] = useState(new Date());  
+
+  const [startDate, setStartDate] = useState();  
   const defaultValues = {
     date: startDate,
     balance: 0,
@@ -53,7 +55,8 @@ const EditTransaction = ({details}) => {
     });
   }, [reset, details])
   
-  const {id, credit, debit, name, transaction_type, transaction_method, real_balance, previous_balance, previous_status, remark, paid_by } = details;
+  const {id, credit, debit, name, transaction_at, transaction_type, transaction_method, real_balance, previous_balance, previous_status, remark, paid_by } = details;
+
   const currentSuplierStatus = watch("status");
   const paymentAmount = watch("payment");
   const transactionType = watch("transaction_type");
@@ -118,7 +121,8 @@ const EditTransaction = ({details}) => {
     setValue("transaction_method", transaction_method);
     setValue("remark", remark);
     setValue("paid_by", paid_by);
-  }, [credit, debit, name, previous_balance, previous_status, real_balance, setValue, transaction_type, transaction_method, remark, paid_by]);
+    setValue("date", moment(transaction_at).toDate());
+  }, [credit, debit, name, previous_balance, previous_status, real_balance, setValue, transaction_type, transaction_method, remark, paid_by, transaction_at]);
 
   const onSubmit = async (data, e) => {
     const { date } = data;
@@ -144,7 +148,7 @@ const EditTransaction = ({details}) => {
                 className="form-control"
                 placeholderText="Select date"
                 onChange={(date) => field.onChange(date, setStartDate(date))}
-                selected={startDate}
+                selected={startDate ? startDate: moment(transaction_at).toDate()}
                 dateFormat="yyyy-MM-dd"
               />
             )}
