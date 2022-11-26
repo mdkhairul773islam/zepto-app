@@ -46,8 +46,8 @@ const getDate = (str) => {
 const getPaymentMethods = () => {
   return [
     { label: "Cash", value: "cash" },
-    { label: "Commission", value: "Commission" },
-    { label: "Remission", value: "Remission" },
+    { label: "Commission", value: "commission" },
+    { label: "Remission", value: "remission" },
     { label: "Bank", value: "bank" },
     { label: "Cheque", value: "cheque" },
     { label: "bKsah", value: "bKash" },
