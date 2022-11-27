@@ -49,7 +49,7 @@ useEffect(() => {
                   <i className="fa fa-print" aria-hidden="true"></i>
                 </Button>
                 <Link
-                  to="/supplier/transaction-edit/1"
+                  to={`/supplier/transaction-edit/${id}`}
                   className="btn btn-light btn-xl float-end px-2 py-0"
                   type="button"
                 >
@@ -144,11 +144,16 @@ useEffect(() => {
                             </div>
                           </div>
 
-                          <div className="row my-2 mx-1 justify-content-center">
-                            <table className="table table-striped table-borderless">
-                              <thead style={{ backgroundColor:'#84B0CA' }} className="text-white">
+                          <div className="row justify-content-center">
+                              <Table
+                              borderless={true}
+                              hover={false}
+                              striped
+                              responsive
+                            >
+                              <thead style={{ backgroundColor: '#303f9f' }} className="text-white">
                                 <tr>
-                                  <th scope="col">#</th>
+                                  <th scope="col">Sl</th>
                                   <th scope="col">Description</th>
                                   <th scope="col">Qty</th>
                                   <th scope="col">Unit Price</th>
@@ -178,13 +183,11 @@ useEffect(() => {
                                   <td>$300</td>
                                 </tr>
                               </tbody>
-
-                            </table>
+                            </Table>
                           </div>
                           <div className="row">
                             <div className="col-xl-8">
                               <p className="ms-3">Add additional notes and payment information</p>
-
                             </div>
                             <div className="col-xl-3">
                               <ul className="list-unstyled">
@@ -197,12 +200,20 @@ useEffect(() => {
                           </div>
                           <hr />
                           <div className="row">
-                            <div className="col-xl-10">
-                              <p>Thank you for your purchase</p>
+                            <div className="col-xl-4">
+                              <p className="mt-5">Thank you for your purchase</p>
                             </div>
-                            <div className="col-xl-2">
-                              <button type="button" className="btn btn-primary text-capitalize"
-                                style={{ 'backgroundColor':'#60bdf3' }}>Pay Now</button>
+                            <div className="col-xl-4">
+                              <p className="text-center mt-5">
+                                ---------------------- <br/>
+                                Signature of Suplier
+                              </p>
+                            </div>
+                            <div className="col-xl-4">
+                              <p className="text-center mt-5">
+                                ---------------------- <br/>
+                                Signature of Authority
+                              </p>
                             </div>
                           </div>
 
