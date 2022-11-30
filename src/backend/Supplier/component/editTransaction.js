@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import Select from "react-select";
-import { Controller, useForm, useController } from "react-hook-form"; 
+import { Controller, useForm, useController } from "react-hook-form";
 import DatePicker from "react-datepicker";
-import moment from 'moment';
+import moment from "moment";
 import {
   getDate,
   getPaymentMethods,
@@ -18,11 +18,11 @@ import { transactionUpdate } from "../../../redux/suplierTransaction/actionCreat
 const paymentMethodList = getPaymentMethods();
 const transactionTypeList = getTransactionTypes();
 
-const EditTransaction = ({details}) => { 
+const EditTransaction = ({ details }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const [startDate, setStartDate] = useState();  
+  const [startDate, setStartDate] = useState();
   const defaultValues = {
     date: startDate,
     balance: 0,
@@ -30,7 +30,7 @@ const EditTransaction = ({details}) => {
     balance_status: "",
     paid_by: "",
     party_code: "",
-    payment:"",
+    payment: "",
     remark: "",
     status: "",
     total_balance: 0,
@@ -44,18 +44,31 @@ const EditTransaction = ({details}) => {
     handleSubmit,
     watch,
     formState: { errors },
-    reset
+    reset,
   } = useForm({
     defaultValues: defaultValues,
   });
-  const { field } = useController({name:'transaction_type', control});
+  const { field } = useController({ name: "transaction_type", control });
   useEffect(() => {
     reset({
       details,
     });
-  }, [reset, details])
-  
-  const {id, credit, debit, name, transaction_at, transaction_type, transaction_method, real_balance, previous_balance, previous_status, remark, paid_by } = details;
+  }, [reset, details]);
+
+  const {
+    id,
+    credit,
+    debit,
+    name,
+    transaction_at,
+    transaction_type,
+    transaction_method,
+    real_balance,
+    previous_balance,
+    previous_status,
+    remark,
+    paid_by,
+  } = details;
 
   const currentSuplierStatus = watch("status");
   const paymentAmount = watch("payment");
@@ -69,14 +82,14 @@ const EditTransaction = ({details}) => {
         transactionType !== "" &&
         currentSuplierStatus === "Receivable"
       ) {
-        total = (!isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0); 
+        total = !isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0;
         if (transactionType === "receive") {
           total =
-            parseFloat(total) - 
+            parseFloat(total) -
             (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0);
         } else {
           total =
-            parseFloat(total)  +
+            parseFloat(total) +
             (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0);
         }
       } else if (
@@ -84,7 +97,7 @@ const EditTransaction = ({details}) => {
         transactionType !== "" &&
         currentSuplierStatus === "Payable"
       ) {
-        total = (!isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0) 
+        total = !isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0;
         if (transactionType === "paid") {
           total =
             parseFloat(total) +
@@ -109,26 +122,46 @@ const EditTransaction = ({details}) => {
       setValue("total_balance", 0);
       setValue("balance_status", "");
     }
-  }, [id, paymentAmount, real_balance, setValue, transactionType, currentSuplierStatus]);
-  
+  }, [
+    id,
+    paymentAmount,
+    real_balance,
+    setValue,
+    transactionType,
+    currentSuplierStatus,
+  ]);
+
   useEffect(() => {
     setValue("balance", previous_balance);
     setValue("status", previous_status);
     setValue("real_balance", real_balance);
     setValue("name", name);
-    setValue("payment", credit > 0 ? credit: debit);
+    setValue("payment", credit > 0 ? credit : debit);
     setValue("transaction_type", transaction_type);
     setValue("transaction_method", transaction_method);
     setValue("remark", remark);
     setValue("paid_by", paid_by);
     setValue("date", moment(transaction_at).toDate());
-  }, [credit, debit, name, previous_balance, previous_status, real_balance, setValue, transaction_type, transaction_method, remark, paid_by, transaction_at]);
+  }, [
+    credit,
+    debit,
+    name,
+    previous_balance,
+    previous_status,
+    real_balance,
+    setValue,
+    transaction_type,
+    transaction_method,
+    remark,
+    paid_by,
+    transaction_at,
+  ]);
 
   const onSubmit = async (data, e) => {
     const { date } = data;
-    const  formData = await {
+    const formData = await {
       ...data,
-      id:id,
+      id: id,
       date: typeof date !== "undefined" ? getDate(date) : getDate(startDate),
     };
     await dispatch(transactionUpdate(formData, history));
@@ -148,7 +181,9 @@ const EditTransaction = ({details}) => {
                 className="form-control"
                 placeholderText="Select date"
                 onChange={(date) => field.onChange(date, setStartDate(date))}
-                selected={startDate ? startDate: moment(transaction_at).toDate()}
+                selected={
+                  startDate ? startDate : moment(transaction_at).toDate()
+                }
                 dateFormat="yyyy-MM-dd"
               />
             )}
@@ -161,7 +196,7 @@ const EditTransaction = ({details}) => {
           Name
         </Form.Label>
         <Col sm={5}>
-        <Form.Control
+          <Form.Control
             type="text"
             {...register("name", { required: true })}
             placeholder="Supllier Name"
@@ -201,8 +236,10 @@ const EditTransaction = ({details}) => {
         </Form.Label>
         <Col sm={5}>
           <Select
-            value={transactionTypeList.find(({value})=>value===field.value)}
-            onChange={(e)=>field.onChange(e ? e.value: '')}
+            value={transactionTypeList.find(
+              ({ value }) => value === field.value
+            )}
+            onChange={(e) => field.onChange(e ? e.value : "")}
             options={transactionTypeList}
             isSearchable={true}
             isClearable
@@ -235,21 +272,24 @@ const EditTransaction = ({details}) => {
           Transaction Method
         </Form.Label>
         <Col sm={5}>
-        <Controller
-              name="transaction_method"
-              control={control}
-              render={({ field }) => (
-                <Select
-                value={paymentMethodList.find(({value})=>value===field.value)}
+          <Controller
+            name="transaction_method"
+            control={control}
+            render={({ field }) => (
+              <Select
+                value={paymentMethodList.find(
+                  ({ value }) => value === field.value
+                )}
                 options={paymentMethodList}
-                onChange={(e)=>field.onChange(e ? e.value: '')}
+                onChange={(e) => field.onChange(e ? e.value : "")}
                 placeholder="Chose Transaction Method"
                 isSearchable={true}
                 isClearable
-                 {...field.value} 
-                 label="Text field" />
-              )}
-            />
+                {...field.value}
+                label="Text field"
+              />
+            )}
+          />
           {errors.transaction_method &&
             errors.transaction_method.type === "required" && (
               <span className="text-danger">Payment Method is required</span>
