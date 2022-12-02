@@ -249,6 +249,9 @@ const EditTransaction = ({details}) => {
                  {...field.value} 
                  label="Text field" />
               )}
+              rules={{
+                required: true
+              }}
             />
           {errors.transaction_method &&
             errors.transaction_method.type === "required" && (

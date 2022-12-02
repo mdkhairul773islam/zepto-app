@@ -45,6 +45,7 @@ const TransactionForm = () => {
     paid_by: "",
     party_code: "",
     payment: "",
+    commission: "",
     remark: "",
     status: "",
     total_balance: 0,
@@ -67,18 +68,18 @@ const TransactionForm = () => {
   const partyCode = watch("party_code");
   const currentSuplierStatus = watch("status");
   const paymentAmount = watch("payment");
+  const commissionAmount = watch("commission");
   const transactionType = watch("transaction_type");
-
+  
   /* suplier list set */
   const [suplierList, setSuplierList] = useState(null);
   const getSuplierList = useSelector((state) => state.helperReducer.suplierList);
   useEffect(() => {
+    setSuplierList([]);
     if(warehouseId){
       setSuplierList(getSuplierList);
-    }else{
-      setSuplierList([]);
     }
-  }, [getSuplierList, setValue, warehouseId]);
+  }, [getSuplierList, warehouseId]);
 
   /* This code for supplier balance calculation */
   useEffect(() => {
@@ -99,7 +100,7 @@ const TransactionForm = () => {
         if (transactionType === "receive") {
           total =
             parseFloat(total) - 
-            (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0);
+            ((!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0) + (!isNaN(parseFloat(commissionAmount)) ? parseFloat(commissionAmount) : 0));
         } else {
           total =
             parseFloat(total)  +
@@ -135,15 +136,7 @@ const TransactionForm = () => {
       setValue("total_balance", 0);
       setValue("balance_status", "");
     }
-  }, [
-    paymentAmount,
-    real_balance,
-    setValue,
-    transactionType,
-    currentSuplierStatus,
-    warehouseId,
-    partyCode,
-  ]);
+  }, [paymentAmount, real_balance, setValue, transactionType, currentSuplierStatus, warehouseId, partyCode, commissionAmount]);
 
   const handleWarehouseChange = async (e) => {
     (await e) && dispatch(suplier(e.value)) && setValue("warehouse_id", e.value);
@@ -230,7 +223,7 @@ const TransactionForm = () => {
 
       <Form.Group as={Row} className="mb-3">
         <Form.Label column sm={3} className="text-sm-end">
-          Name
+          Name <span className="text-danger">*</span>
         </Form.Label>
         <Col sm={5}>
           <Select
@@ -253,7 +246,7 @@ const TransactionForm = () => {
 
       <Form.Group as={Row} className="mb-3">
         <Form.Label column sm={3} className="text-sm-end">
-          Balance (TK) <span className="text-danger">*</span>
+          Balance (TK)
         </Form.Label>
         <Col sm={3}>
           <Form.Control
@@ -262,9 +255,6 @@ const TransactionForm = () => {
             placeholder="0.00"
             readOnly
           />
-          {errors.balance && errors.balance.type === "required" && (
-            <span className="text-danger">Balance amount is required</span>
-          )}
         </Col>
         <Col sm={2}>
           <Form.Control
@@ -278,7 +268,7 @@ const TransactionForm = () => {
 
       <Form.Group as={Row} className="mb-3">
         <Form.Label column sm={3} className="text-sm-end">
-          Transaction Type
+          Transaction Type <span className="text-danger">*</span>
         </Form.Label>
         <Col sm={5}>
           <Select
@@ -298,25 +288,10 @@ const TransactionForm = () => {
             )}
         </Col>
       </Form.Group>
-
+      
       <Form.Group as={Row} className="mb-3">
         <Form.Label column sm={3} className="text-sm-end">
-          Transaction Amount
-        </Form.Label>
-        <Col sm={5}>
-          <Form.Control
-            type="number"
-            {...register("payment", { required: true })}
-            placeholder="Amount (0.00)"
-          />
-          {errors.payment && errors.payment.type === "required" && (
-            <span className="text-danger">Amount is required</span>
-          )}
-        </Col>
-      </Form.Group>
-      <Form.Group as={Row} className="mb-3">
-        <Form.Label column sm={3} className="text-sm-end">
-          Transaction Method
+          Transaction Method <span className="text-danger">*</span>
         </Form.Label>
         <Col sm={5}>
           <Select
@@ -335,10 +310,38 @@ const TransactionForm = () => {
             )}
         </Col>
       </Form.Group>
-
       <Form.Group as={Row} className="mb-3">
         <Form.Label column sm={3} className="text-sm-end">
-          Total Balance (TK) <span className="text-danger">*</span>
+          Transaction Amount <span className="text-danger">*</span>
+        </Form.Label>
+        <Col sm={5}>
+          <Form.Control
+            type="number"
+            {...register("payment", { required: true })}
+            placeholder="Amount (0.00)"
+          />
+          {errors.payment && errors.payment.type === "required" && (
+            <span className="text-danger">Amount is required</span>
+          )}
+        </Col>
+      </Form.Group>
+      {
+        currentSuplierStatus === "Receivable" && transactionType==='receive' && <Form.Group as={Row} className="mb-3">
+        <Form.Label column sm={3} className="text-sm-end">
+            Commission
+        </Form.Label>
+        <Col sm={5}>
+          <Form.Control
+            type="number"
+            {...register("commission", { required: false })}
+            placeholder="Amount (0.00)"
+          />
+        </Col>
+      </Form.Group>
+      }
+      <Form.Group as={Row} className="mb-3">
+        <Form.Label column sm={3} className="text-sm-end">
+          Total Balance (TK)
         </Form.Label>
         <Col sm={3}>
           <Form.Control
@@ -356,7 +359,6 @@ const TransactionForm = () => {
             })}
             placeholder="Balance Status"
             readOnly
-            required
           />
         </Col>
       </Form.Group>
