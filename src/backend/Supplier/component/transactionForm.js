@@ -77,16 +77,9 @@ const TransactionForm = () => {
     (state) => state.helperReducer.suplierList
   );
   useEffect(() => {
-<<<<<<< HEAD
     setSuplierList([]);
     if(warehouseId){
       setSuplierList(getSuplierList);
-=======
-    if (warehouseId) {
-      setSuplierList(getSuplierList);
-    } else {
-      setSuplierList([]);
->>>>>>> 75c02a4f6edf8ac08f8be3bbbe508b754d9aca4f
     }
   }, [getSuplierList, warehouseId]);
 
@@ -108,13 +101,8 @@ const TransactionForm = () => {
         total = !isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0;
         if (transactionType === "receive") {
           total =
-<<<<<<< HEAD
             parseFloat(total) - 
             ((!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0) + (!isNaN(parseFloat(commissionAmount)) ? parseFloat(commissionAmount) : 0));
-=======
-            parseFloat(total) -
-            (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0);
->>>>>>> 75c02a4f6edf8ac08f8be3bbbe508b754d9aca4f
         } else {
           total =
             parseFloat(total) +
