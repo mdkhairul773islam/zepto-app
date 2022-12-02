@@ -59,7 +59,7 @@ const suplierForSearch = (warehouse_id) => {
 };
 
 const supplierTransactionDetailsFn = (e) => {
-  const {code} = e;
+  const { code } = e;
   return async (dispatch) => {
     try {
       dispatch(helperBegin());
@@ -83,4 +83,11 @@ const supplierEditTransactionDetailsFn = (code) => {
   };
 };
 
-export { warehouse, warehouseForSearch, suplier, suplierForSearch, supplierTransactionDetailsFn, supplierEditTransactionDetailsFn };
+export {
+  warehouse,
+  warehouseForSearch,
+  suplier,
+  suplierForSearch,
+  supplierTransactionDetailsFn,
+  supplierEditTransactionDetailsFn,
+};

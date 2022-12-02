@@ -5,11 +5,11 @@ import Navbar from "./navbar";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import DataTable from "../../components/DataTable/Table";
 import ColoredLine from "../../components/UI/ColoredLine";
-import { Controller, useForm } from "react-hook-form"; 
+import { Controller, useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 
-import {getDate, toFilter} from "../../utility/utility";
+import { getDate, toFilter } from "../../utility/utility";
 
 // use redux
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +23,6 @@ import {
 } from "../../redux/helper/actionCreator";
 
 function TransactionHistory(props) {
-
   const [fromDate, setFromDate] = useState(new Date()); // Or useState(null)
   const [toDate, setToDate] = useState(new Date());
   const defaultValues = {
@@ -32,11 +31,16 @@ function TransactionHistory(props) {
   };
 
   const {
-    control, setValue,  register, handleSubmit, watch, formState: { errors },
+    control,
+    setValue,
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
   } = useForm({
     defaultValues: defaultValues,
   });
-  const warehouseId = watch('warehouse_id');
+  const warehouseId = watch("warehouse_id");
 
   // get data from redux
   const dispatch = useDispatch();
@@ -45,25 +49,30 @@ function TransactionHistory(props) {
   );
   const supliers = useSelector((state) => state.helperReducer.suplierList);
   const [suplierList, setSuplierList] = useState([]);
-  
+
   useEffect(() => {
-    if(typeof warehouseId !=="undefined" && warehouseId !==""){
+    if (typeof warehouseId !== "undefined" && warehouseId !== "") {
       setSuplierList(supliers);
-    }else{
+    } else {
       setSuplierList([]);
     }
   }, [supliers, warehouseId]);
 
-
-  const data = useSelector((state) => state.suplierTransactionReducer.transactionList);
-  const loading = useSelector((state) => state.suplierTransactionReducer.loading);
-  const totalDataRows = useSelector((state) => state.suplierTransactionReducer.totalRows);
+  const data = useSelector(
+    (state) => state.suplierTransactionReducer.transactionList
+  );
+  const loading = useSelector(
+    (state) => state.suplierTransactionReducer.loading
+  );
+  const totalDataRows = useSelector(
+    (state) => state.suplierTransactionReducer.totalRows
+  );
 
   const history = useHistory();
   const handleDeleteClick = (e) => {
     var id = e.target.id;
     var confirmDelete = window.confirm("Want to delete?");
-    if(confirmDelete){
+    if (confirmDelete) {
       dispatch(transactionDelete(id, history));
     }
   };
@@ -72,13 +81,13 @@ function TransactionHistory(props) {
     {
       name: "Sl",
       selector: (row, index) => ++index,
-      maxWidth:"20px",
+      maxWidth: "20px",
       center: true,
     },
     {
       name: "Date",
       selector: (row) =>
-      row.transaction_at != null ? row.transaction_at : "N/A",
+        row.transaction_at != null ? row.transaction_at : "N/A",
       sortable: true,
     },
     {
@@ -95,11 +104,14 @@ function TransactionHistory(props) {
     },
     {
       name: "Type Of Transaction / Method",
-      selector: (row) => (row.transaction_method != null ? toFilter(row.transaction_method) : "N/A"),
+      selector: (row) =>
+        row.transaction_method != null
+          ? toFilter(row.transaction_method)
+          : "N/A",
     },
     {
       name: "Amount",
-      selector: (row) => row.credit  > 0 ? row.credit : row.debit,
+      selector: (row) => (row.credit > 0 ? row.credit : row.debit),
       center: true,
     },
     {
@@ -154,7 +166,7 @@ function TransactionHistory(props) {
 
   const handlePerRowsChange = async (perPage, currentPage) => {
     setPerPage(perPage);
-    dispatch(transactionHistoryWithSearch(searchItem, currentPage, perPage))
+    dispatch(transactionHistoryWithSearch(searchItem, currentPage, perPage));
   };
 
   useEffect(() => {
@@ -162,14 +174,15 @@ function TransactionHistory(props) {
   }, [dispatch]);
 
   const handleWarehouseChange = async (e) => {
-    (await e) && dispatch(suplierForSearch(e.value)) && setValue("warehouse_id", e.value);
+    (await e) &&
+      dispatch(suplierForSearch(e.value)) &&
+      setValue("warehouse_id", e.value);
   };
-  const handleSupplierChange = async (e) => { 
+  const handleSupplierChange = async (e) => {
     setValue("party_code", e.code);
   };
 
   const onSubmit = async (data, e) => {
-
     const { from_date, to_date } = data;
     const filterItem = await {
       ...data,
@@ -201,86 +214,101 @@ function TransactionHistory(props) {
                 </Button>
               </Card.Header>
               <Card.Body>
-              <Form onSubmit={handleSubmit(onSubmit)}>
-                <Form.Group as={Row} className="mb-3">
-                  <Col sm={2}>
-                    <Controller
-                      control={control}
-                      name="from_date"
-                      render={({ field }) => (
-                        <DatePicker
-                          className="form-control"
-                          placeholderText="Date From"
-                          onChange={(date) => field.onChange(date, setFromDate(date))}
-                          selected={fromDate}
-                          dateFormat="yyyy-MM-dd"
-                          isClearable={true}
-                        />
-                      )}
-                    />
-                  </Col>
-                  <Col sm={2}>
-                    <Controller
-                      control={control}
-                      name="to_date"
-                      render={({ field }) => (
-                        <DatePicker
-                          className="form-control"
-                          placeholderText="Date To"
-                          onChange={(date) => field.onChange(date, setToDate(date))}
-                          selected={toDate}
-                          dateFormat="yyyy-MM-dd"
-                          isClearable={true}
-                        />
-                      )}
-                    />
-                  </Col>
-                  <Col sm={3}>
-                    <Select
-                      onChange={handleWarehouseChange}
-                      ref={(e) => {
-                        register("warehouse_id", { required: false });
-                      }} 
-                      defaultValue={null}
-                      type="text"
-                      options={warehouseList}
-                      isSearchable={true}
-                      isClearable={true}
-                      isLoading={warehouseList.length ? false: true}
-                      placeholder="Chose Warehouse"
-                    ></Select>
-                    {errors.warehouse_id && errors.warehouse_id.type === "required" && (
-                      <span className="text-danger">Warehouse is required</span>
-                    )}
-                  </Col>
-                  <Col sm={3}>
-                  <Select
-                    onChange={handleSupplierChange}
-                    ref={(e) => {
-                      register("party_code", { required: false });
-                    }}
-                    type="text"
-                    options={suplierList}
-                    isSearchable={true}
-                    defaultValue={{code:null, label: "Select Suplier", value: 0, mobile:null }}
-                    isClearable={true}
-                    isLoading={suplierList.length ? false: true}
-                    required
-                  ></Select>
-                  {errors.party_code && errors.party_code.type === "required" && (
-                    <span className="text-danger">Supplier name is required</span>
-                  )}
-                </Col>
+                <Form onSubmit={handleSubmit(onSubmit)}>
+                  <Form.Group as={Row} className="mb-3">
+                    <Col sm={2}>
+                      <Controller
+                        control={control}
+                        name="from_date"
+                        render={({ field }) => (
+                          <DatePicker
+                            className="form-control"
+                            placeholderText="Date From"
+                            onChange={(date) =>
+                              field.onChange(date, setFromDate(date))
+                            }
+                            selected={fromDate}
+                            dateFormat="yyyy-MM-dd"
+                            isClearable={true}
+                          />
+                        )}
+                      />
+                    </Col>
+                    <Col sm={2}>
+                      <Controller
+                        control={control}
+                        name="to_date"
+                        render={({ field }) => (
+                          <DatePicker
+                            className="form-control"
+                            placeholderText="Date To"
+                            onChange={(date) =>
+                              field.onChange(date, setToDate(date))
+                            }
+                            selected={toDate}
+                            dateFormat="yyyy-MM-dd"
+                            isClearable={true}
+                          />
+                        )}
+                      />
+                    </Col>
+                    <Col sm={3}>
+                      <Select
+                        onChange={handleWarehouseChange}
+                        ref={(e) => {
+                          register("warehouse_id", { required: false });
+                        }}
+                        defaultValue={null}
+                        type="text"
+                        options={warehouseList}
+                        isSearchable={true}
+                        isClearable={true}
+                        isLoading={warehouseList.length ? false : true}
+                        placeholder="Chose Warehouse"
+                      ></Select>
+                      {errors.warehouse_id &&
+                        errors.warehouse_id.type === "required" && (
+                          <span className="text-danger">
+                            Warehouse is required
+                          </span>
+                        )}
+                    </Col>
+                    <Col sm={3}>
+                      <Select
+                        onChange={handleSupplierChange}
+                        ref={(e) => {
+                          register("party_code", { required: false });
+                        }}
+                        type="text"
+                        options={suplierList}
+                        isSearchable={true}
+                        defaultValue={{
+                          code: null,
+                          label: "Select Suplier",
+                          value: 0,
+                          mobile: null,
+                        }}
+                        isClearable={true}
+                        isLoading={suplierList.length ? false : true}
+                        required
+                      ></Select>
+                      {errors.party_code &&
+                        errors.party_code.type === "required" && (
+                          <span className="text-danger">
+                            Supplier name is required
+                          </span>
+                        )}
+                    </Col>
 
-                  <Col>
+                    <Col>
                       <Button variant="primary" type="submit">
                         Search
                       </Button>
-                  </Col>
+                    </Col>
                   </Form.Group>
                 </Form>
-                <ColoredLine options={{color:"#2a378b", height:2}}/>
-                <DataTable 
+                <ColoredLine options={{ color: "#2a378b", height: 2 }} />
+                <DataTable
                   columns={columns}
                   data={data}
                   loading={loading}
