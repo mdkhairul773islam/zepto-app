@@ -31,6 +31,7 @@ const EditTransaction = ({ details }) => {
     paid_by: "",
     party_code: "",
     payment: "",
+    commission: "",
     remark: "",
     status: "",
     total_balance: 0,
@@ -64,6 +65,7 @@ const EditTransaction = ({ details }) => {
     transaction_type,
     transaction_method,
     real_balance,
+    commission,
     previous_balance,
     previous_status,
     remark,
@@ -71,8 +73,9 @@ const EditTransaction = ({ details }) => {
   } = details;
 
   const currentSuplierStatus = watch("status");
-  const paymentAmount = watch("payment");
   const transactionType = watch("transaction_type");
+  const paymentAmount = watch("payment");
+  const commissionAmount = watch("commission");
   /* This code for supplier balance calculation */
   useEffect(() => {
     if (typeof id !== "undefined" && id !== "") {
@@ -86,7 +89,12 @@ const EditTransaction = ({ details }) => {
         if (transactionType === "receive") {
           total =
             parseFloat(total) -
-            (!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0);
+            ((!isNaN(parseFloat(paymentAmount))
+              ? parseFloat(paymentAmount)
+              : 0) +
+              (!isNaN(parseFloat(commissionAmount))
+                ? parseFloat(commissionAmount)
+                : 0));
         } else {
           total =
             parseFloat(total) +
@@ -129,6 +137,7 @@ const EditTransaction = ({ details }) => {
     setValue,
     transactionType,
     currentSuplierStatus,
+    commissionAmount,
   ]);
 
   useEffect(() => {
@@ -137,6 +146,7 @@ const EditTransaction = ({ details }) => {
     setValue("real_balance", real_balance);
     setValue("name", name);
     setValue("payment", credit > 0 ? credit : debit);
+    setValue("commission", commission);
     setValue("transaction_type", transaction_type);
     setValue("transaction_method", transaction_method);
     setValue("remark", remark);
@@ -155,6 +165,7 @@ const EditTransaction = ({ details }) => {
     remark,
     paid_by,
     transaction_at,
+    commission,
   ]);
 
   const onSubmit = async (data, e) => {
@@ -267,6 +278,21 @@ const EditTransaction = ({ details }) => {
           )}
         </Col>
       </Form.Group>
+      {currentSuplierStatus === "Receivable" &&
+        transactionType === "receive" && (
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={3} className="text-sm-end">
+              Commission
+            </Form.Label>
+            <Col sm={5}>
+              <Form.Control
+                type="number"
+                {...register("commission", { required: false })}
+                placeholder="Amount (0.00)"
+              />
+            </Col>
+          </Form.Group>
+        )}
       <Form.Group as={Row} className="mb-3">
         <Form.Label column sm={3} className="text-sm-end">
           Transaction Method
@@ -290,7 +316,7 @@ const EditTransaction = ({ details }) => {
               />
             )}
             rules={{
-              required: true
+              required: true,
             }}
           />
           {errors.transaction_method &&

@@ -70,7 +70,7 @@ const TransactionForm = () => {
   const paymentAmount = watch("payment");
   const commissionAmount = watch("commission");
   const transactionType = watch("transaction_type");
-  
+
   /* suplier list set */
   const [suplierList, setSuplierList] = useState(null);
   const getSuplierList = useSelector(
@@ -78,7 +78,7 @@ const TransactionForm = () => {
   );
   useEffect(() => {
     setSuplierList([]);
-    if(warehouseId){
+    if (warehouseId) {
       setSuplierList(getSuplierList);
     }
   }, [getSuplierList, warehouseId]);
@@ -101,8 +101,13 @@ const TransactionForm = () => {
         total = !isNaN(parseFloat(real_balance)) ? parseFloat(real_balance) : 0;
         if (transactionType === "receive") {
           total =
-            parseFloat(total) - 
-            ((!isNaN(parseFloat(paymentAmount)) ? parseFloat(paymentAmount) : 0) + (!isNaN(parseFloat(commissionAmount)) ? parseFloat(commissionAmount) : 0));
+            parseFloat(total) -
+            ((!isNaN(parseFloat(paymentAmount))
+              ? parseFloat(paymentAmount)
+              : 0) +
+              (!isNaN(parseFloat(commissionAmount))
+                ? parseFloat(commissionAmount)
+                : 0));
         } else {
           total =
             parseFloat(total) +
@@ -138,7 +143,16 @@ const TransactionForm = () => {
       setValue("total_balance", 0);
       setValue("balance_status", "");
     }
-  }, [paymentAmount, real_balance, setValue, transactionType, currentSuplierStatus, warehouseId, partyCode, commissionAmount]);
+  }, [
+    paymentAmount,
+    real_balance,
+    setValue,
+    transactionType,
+    currentSuplierStatus,
+    warehouseId,
+    partyCode,
+    commissionAmount,
+  ]);
 
   const handleWarehouseChange = async (e) => {
     (await e) &&
@@ -297,7 +311,7 @@ const TransactionForm = () => {
             )}
         </Col>
       </Form.Group>
-      
+
       <Form.Group as={Row} className="mb-3">
         <Form.Label column sm={3} className="text-sm-end">
           Transaction Method <span className="text-danger">*</span>
@@ -334,20 +348,21 @@ const TransactionForm = () => {
           )}
         </Col>
       </Form.Group>
-      {
-        currentSuplierStatus === "Receivable" && transactionType==='receive' && <Form.Group as={Row} className="mb-3">
-        <Form.Label column sm={3} className="text-sm-end">
-            Commission
-        </Form.Label>
-        <Col sm={5}>
-          <Form.Control
-            type="number"
-            {...register("commission", { required: false })}
-            placeholder="Amount (0.00)"
-          />
-        </Col>
-      </Form.Group>
-      }
+      {currentSuplierStatus === "Receivable" &&
+        transactionType === "receive" && (
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={3} className="text-sm-end">
+              Commission
+            </Form.Label>
+            <Col sm={5}>
+              <Form.Control
+                type="number"
+                {...register("commission", { required: false })}
+                placeholder="Amount (0.00)"
+              />
+            </Col>
+          </Form.Group>
+        )}
       <Form.Group as={Row} className="mb-3">
         <Form.Label column sm={3} className="text-sm-end">
           Total Balance (TK)
