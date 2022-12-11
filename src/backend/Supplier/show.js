@@ -6,18 +6,25 @@ import { Container, Row, Col, Card, Button, Table } from "react-bootstrap";
 
 // use redux
 import { useDispatch, useSelector } from "react-redux";
-import { supplierInfo } from "../../redux/supplier/actionCreator";
+import { supplierShowInfo } from "../../redux/supplier/actionCreator";
 
 function Show(props) {
   const dispatch = useDispatch();
-  const { address, contact_person, name, mobile, remarks, initial_balance } =
-    useSelector((state) => state.supplierReducer.supplier);
+  const {
+    address,
+    contact_person,
+    current_balance,
+    name,
+    mobile,
+    remarks,
+    initial_balance,
+  } = useSelector((state) => state.supplierReducer.supplier);
 
   const id = props.match.params.id;
 
   useEffect(() => {
     document.title = "Supplier Details | React Dashboard";
-    dispatch(supplierInfo(id));
+    dispatch(supplierShowInfo(id));
   }, [dispatch, id]);
 
   return (
@@ -41,7 +48,7 @@ function Show(props) {
                   <i className="fa fa-print" aria-hidden="true"></i>
                 </Button>
                 <Link
-                  to="/supplier/edit/1"
+                  to={`/supplier/edit/${id}`}
                   className="btn btn-light btn-xl float-end px-2 py-0"
                   type="button"
                 >
@@ -83,7 +90,7 @@ function Show(props) {
                     </tr>
                     <tr>
                       <th>Current Balance</th>
-                      <td>0</td>
+                      <td>{current_balance}</td>
                     </tr>
                     <tr>
                       <th>Supplier Type</th>

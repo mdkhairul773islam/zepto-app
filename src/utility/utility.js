@@ -4,31 +4,46 @@
  * @param {number} size
  */
 const ellipsis = (text, size) => {
-  return `${text.split(" ").slice(0, size).join(" ")}...`;
+  if (text && size) {
+    return `${text.split(" ").slice(0, size).join(" ")}...`;
+  }
+  return;
 };
 
 const toUpperCase = (text) => {
-  return text.toUpperCase();
+  if (text) {
+    return text.toUpperCase();
+  }
+  return;
 };
 //Output: FLEXIPLE
 
 const toCapitalize = (text) => {
-  return text.charAt(0).toUpperCase() + text.slice(1);
+  if (text) {
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  }
+  return;
 };
 //Output: Abc efg
 
 const toFilter = (str) => {
-  var i,
-    frags = str.split("_");
-  for (i = 0; i < frags.length; i++) {
-    frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+  if (str) {
+    var i,
+      frags = str.split("_");
+    for (i = 0; i < frags.length; i++) {
+      frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+    }
+    return frags.join(" ");
   }
-  return frags.join(" ");
+  return;
 };
 //Output: Humpdey Dumpdey
 
 const numberFormat = (x) => {
-  return Number.parseFloat(x).toFixed(0);
+  if (x) {
+    return Number.parseFloat(x).toFixed(0);
+  }
+  return;
 };
 
 // Get Date YYYY-MM-DD
@@ -46,8 +61,6 @@ const getDate = (str) => {
 const getPaymentMethods = () => {
   return [
     { label: "Cash", value: "cash" },
-    { label: "Commission", value: "commission" },
-    { label: "Remission", value: "remission" },
     { label: "Bank", value: "bank" },
     { label: "Cheque", value: "cheque" },
     { label: "bKsah", value: "bKash" },

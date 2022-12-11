@@ -11,21 +11,21 @@ const supplier = (data, history) => {
 
       if (res.data.success) {
         toast.success(res.data.success, {
-          position: toast.POSITION.TOP_CENTER
+          position: toast.POSITION.TOP_CENTER,
         });
         history.push("/supplier/all");
       }
 
       if (res.data.warning) {
         toast.warn(res.data.warning, {
-          position: toast.POSITION.TOP_CENTER
+          position: toast.POSITION.TOP_CENTER,
         });
       }
     } catch (err) {
       dispatch(supplierErr(err));
       toast.error("Supplier not getting added.", {
-          position: toast.POSITION.TOP_CENTER
-        });
+        position: toast.POSITION.TOP_CENTER,
+      });
     }
   };
 };
@@ -57,12 +57,24 @@ const showroomWiseSupplierList = (showroom_id) => {
     }
   };
 };
-
+/* Get Suplier edit information*/
 const supplierInfo = (id) => {
   return async (dispatch) => {
     try {
       dispatch(supplierBegin());
       const res = await DataService.get(`/supplier-edit/${id}`);
+      dispatch(supplierGet(res.data));
+    } catch (err) {
+      dispatch(supplierErr(err));
+    }
+  };
+};
+/* Get Suplier show information */
+const supplierShowInfo = (id) => {
+  return async (dispatch) => {
+    try {
+      dispatch(supplierBegin());
+      const res = await DataService.get(`/supplier-show/${id}`);
       dispatch(supplierGet(res.data));
     } catch (err) {
       dispatch(supplierErr(err));
@@ -77,21 +89,21 @@ const supplierUpdate = (data, history) => {
       const res = await DataService.post("supplier-update", data);
       if (res.data.success) {
         toast.success(res.data.success, {
-          position: toast.POSITION.TOP_CENTER
+          position: toast.POSITION.TOP_CENTER,
         });
         history.push("/supplier/all");
       }
 
       if (res.data.warning) {
         toast.warn(res.data.warning, {
-          position: toast.POSITION.TOP_CENTER
+          position: toast.POSITION.TOP_CENTER,
         });
       }
     } catch (err) {
       dispatch(supplierErr(err));
       toast.error("Supplier not getting added.", {
-          position: toast.POSITION.TOP_CENTER
-        });
+        position: toast.POSITION.TOP_CENTER,
+      });
     }
   };
 };
@@ -103,14 +115,14 @@ const supplierDelete = (id) => {
       const res = await DataService.get(`/supplier-destroy/${id}`);
       if (res.data) {
         toast.success("Supplier successfully deleted", {
-          position: toast.POSITION.TOP_CENTER
+          position: toast.POSITION.TOP_CENTER,
         });
         dispatch(supplierSuccess(res.data));
       }
 
       if (res.data.warning) {
         toast.warn(res.data.warning, {
-          position: toast.POSITION.TOP_CENTER
+          position: toast.POSITION.TOP_CENTER,
         });
       }
     } catch (err) {
@@ -124,6 +136,7 @@ export {
   supplierList,
   showroomWiseSupplierList,
   supplierInfo,
+  supplierShowInfo,
   supplierUpdate,
   supplierDelete,
 };

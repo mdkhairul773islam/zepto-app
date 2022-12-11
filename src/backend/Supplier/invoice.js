@@ -4,6 +4,7 @@ import AdminWraper from "../../components/layouts/AdminWraper";
 import Navbar from "./navbar";
 import { Container, Row, Col, Card, Button, Table } from "react-bootstrap";
 import { DataService } from "../../config/dataService/dataService";
+import { toCapitalize } from "../../utility/utility";
 
 function TransactionDetails(props) {
   const [data, setData] = useState({});
@@ -26,7 +27,7 @@ function TransactionDetails(props) {
 
   useEffect(() => {
     document.title = `${
-      data.party ? data.party.name : ""
+      data.party ? data.party.name + "-" + data.party.mobile : ""
     } Transaction Invoice | React Dashboard`;
   }, [data.party]);
 
@@ -59,64 +60,26 @@ function TransactionDetails(props) {
                 </Link>
               </Card.Header>
               <Card.Body>
-                {/* <Table
-                  bordered
-                  striped
-                  hover
-                  responsive
-                  className="custom-table"
-                >
-                  <tbody>
-                    <tr>
-                      <th>Supplier Name</th>
-                      <td>{data.party ? data.party.name : ''}</td>
-                      <th>Mobile</th>
-                      <td>{data.party ? data.party.mobile : ''}</td>
-                      <th>Invoice No</th>
-                      <td>{data ? data.relation: ''}</td>
-                    </tr>
-                    <tr>
-                      <th>Amount</th>
-                      <td>{data && data.credit > 0 ? data.credit : data.debit}</td>
-                      <th>Commission</th>
-                      <td></td>
-                      <th>Transaction Method</th>
-                      <td>{data ? data.transaction_method : ''}</td>
-                    </tr>
-                    <tr>
-                      <th>Previous Balance</th>
-                      <td></td>
-                      <th>Current Balance</th>
-                      <td colSpan="3"></td>
-                    </tr>
-                    <tr>
-                      <th>Address</th>
-                      <td colSpan="5">{data.party ? data.party.address: ''}</td>
-                    </tr>
-                    <tr>
-                      <th>Remarks</th>
-                      <td colSpan="5">{data.party ? data.party.remark: ''}</td>
-                    </tr>
-                  </tbody>
-                </Table> */}
-
                 <div className="card">
                   <div className="card-body">
                     <div className="container mb-5 mt-3">
                       <div className="row d-flex align-items-baseline">
                         <div className="col-xl-9">
                           <p style={{ color: "#7e8d9f", fontSize: "20px" }}>
-                            Invoice <strong>ID: #123-123</strong>
+                            Invoice
+                            <strong>ID: {data ? data.relation : ""}</strong>
                           </p>
                         </div>
                         <div className="col-xl-3 float-end">
                           <Link
+                            to="#"
                             className="btn btn-light text-capitalize border-0"
                             data-mdb-ripple-color="dark"
                           >
                             <i className="fas fa-print text-primary"></i> Print
                           </Link>
                           <Link
+                            to="#"
                             className="btn btn-light text-capitalize"
                             data-mdb-ripple-color="dark"
                           >
@@ -138,15 +101,20 @@ function TransactionDetails(props) {
                           <div className="col-xl-8">
                             <ul className="list-unstyled">
                               <li className="text-muted">
-                                To:{" "}
+                                To:
                                 <span style={{ color: "#5d9fc5" }}>
-                                  John Lorem
+                                  {data.party ? data.party.name : ""}
                                 </span>
                               </li>
-                              <li className="text-muted">Street, City</li>
-                              <li className="text-muted">State, Country</li>
                               <li className="text-muted">
-                                <i className="fas fa-phone"></i> 123-456-789
+                                {data.party ? data.party.address : ""}
+                              </li>
+                              <li className="text-muted">
+                                Mymensingh, Bangladesh
+                              </li>
+                              <li className="text-muted">
+                                <i className="fas fa-phone"></i>{" "}
+                                {data.party ? data.party.mobile : ""}
                               </li>
                             </ul>
                           </div>
@@ -158,7 +126,8 @@ function TransactionDetails(props) {
                                   className="fas fa-circle"
                                   style={{ color: "#84B0CA" }}
                                 ></i>{" "}
-                                <span className="fw-bold">ID:</span>#123-456
+                                <span className="fw-bold">Code: </span>
+                                {data ? data.party_code : ""}
                               </li>
                               <li className="text-muted">
                                 <i
@@ -166,7 +135,7 @@ function TransactionDetails(props) {
                                   style={{ color: "#84B0CA" }}
                                 ></i>
                                 <span className="fw-bold">Creation Date: </span>
-                                Jun 23,2021
+                                {data ? data.transaction_at : ""}
                               </li>
                               <li className="text-muted">
                                 <i
@@ -175,7 +144,7 @@ function TransactionDetails(props) {
                                 ></i>{" "}
                                 <span className="me-1 fw-bold">Status:</span>
                                 <span className="badge bg-warning text-black fw-bold">
-                                  Unpaid
+                                  Paid
                                 </span>
                               </li>
                             </ul>
@@ -196,63 +165,60 @@ function TransactionDetails(props) {
                               <tr>
                                 <th scope="col">Sl</th>
                                 <th scope="col">Description</th>
-                                <th scope="col">Qty</th>
-                                <th scope="col">Unit Price</th>
-                                <th scope="col">Amount</th>
+                                <th scope="col">Credit</th>
+                                <th scope="col">Debit</th>
+                                <th scope="col">Commission</th>
                               </tr>
                             </thead>
                             <tbody>
                               <tr>
                                 <th scope="row">1</th>
-                                <td>Pro Package</td>
-                                <td>4</td>
-                                <td>$200</td>
-                                <td>$800</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">2</th>
-                                <td>Web hosting</td>
-                                <td>1</td>
-                                <td>$10</td>
-                                <td>$10</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">3</th>
-                                <td>Consulting</td>
-                                <td>1 year</td>
-                                <td>$300</td>
-                                <td>$300</td>
+                                <td>
+                                  Transaction Type :
+                                  {data
+                                    ? toCapitalize(data.transaction_type)
+                                    : ""}
+                                  <br />
+                                  Method :
+                                  {data
+                                    ? toCapitalize(data.transaction_method)
+                                    : ""}
+                                  <br />
+                                  Paid By : {data ? data.paid_by : ""}
+                                </td>
+                                <td>TK {data ? data.credit : 0}</td>
+                                <td>TK {data ? data.debit : 0}</td>
+                                <td>TK {data ? data.commission : 0}</td>
                               </tr>
                             </tbody>
                           </Table>
                         </div>
                         <div className="row">
-                          <div className="col-xl-8">
-                            <p className="ms-3">
-                              Add additional notes and payment information
+                          <div className="col-xl-7">
+                            <p className="ms-4">
+                              Remark: {data ? toCapitalize(data.remark) : ""}
                             </p>
                           </div>
-                          <div className="col-xl-3">
+                          <div className="col-xl-5">
                             <ul className="list-unstyled">
                               <li className="text-muted ms-3">
                                 <span className="text-black me-4">
-                                  SubTotal
+                                  Previuse Balance
                                 </span>
-                                $1110
+                                TK {data ? data.previuse_balance : 0}
                               </li>
                               <li className="text-muted ms-3 mt-2">
-                                <span className="text-black me-4">
-                                  Tax(15%)
-                                </span>
-                                $111
+                                <span className="text-black me-4">Tax(0%)</span>
+                                TK 0
                               </li>
                             </ul>
                             <p className="text-black float-start">
                               <span className="text-black me-3">
-                                {" "}
-                                Total Amount
+                                Current Balance
                               </span>
-                              <span style={{ fontSize: "25px" }}>$1221</span>
+                              <span style={{ fontSize: "20px" }}>
+                                TK {data ? data.current_balance : 0}
+                              </span>
                             </p>
                           </div>
                         </div>
